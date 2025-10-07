@@ -50,29 +50,35 @@ button {
 }
 .main-slider-prev-button {
   position: absolute;
-  right: 0;
+  right: 20px;
   top: 179px;
+  transform: translateX(50%);
   transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
   background: white;
   border-radius: 50%;
   height: 40px;
+  display: flex;
   align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 12px #0000001a;
   border: 1px solid var(--arrow-border-color, #d1d1d1);
 }
 .main-slider-next-button {
-  align-items: center;
   position: absolute;
-  left: 0;
+  left: 20px;
   top: 179px;
+  transform: translateX(-50%);
   transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
   background: white;
   border-radius: 50%;
   height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 12px #0000001a;
   border: 1px solid var(--arrow-border-color, #d1d1d1);
 }
@@ -429,13 +435,19 @@ button {
   }
   .embla {
     max-width: 860px;
-    padding: 0 0;
+    padding: 0 40px;
   }
   .embla__slide.inactive-slide {
     flex: 0 0 32%;
   }
   .embla__slide.active-slide {
     flex: 0 0 38%;
+  }
+  .main-slider-prev-button {
+    right: 40px;
+  }
+  .main-slider-next-button {
+    left: 40px;
   }
 }
 .swiper-disabled .swiper.main-swiper-tiktok {
@@ -451,6 +463,12 @@ button {
   .embla {
     max-width: 750px;
     padding: 0 45px;
+  }
+  .main-slider-prev-button {
+    right: 45px;
+  }
+  .main-slider-next-button {
+    left: 45px;
   }
 }
 @media (max-width: 767px) {
