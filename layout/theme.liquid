@@ -1,0 +1,1063 @@
+{%- assign text_direction = 'localization.text_direction_trigger' | t | downcase -%}
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}"
+  {%- if text_direction == 'rtl' %} dir="rtl"{% endif -%}
+>
+  <head>
+    <meta name="robots" content="index, follow">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <meta name="google-site-verification" content="-4Orm47-n2KTUKkAguREZjc7Du0k3J7KDBE5u6pP0rM" />
+    {% if template contains 'page' and page.metafields.custom.canonical_url %}
+      <link rel="canonical" href="{{ page.metafields.custom.canonical_url }}">
+    {% else %}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N8LRVNHB');</script>
+<!-- End Google Tag Manager -->
+    
+    <script src="{{ 'vendor-v4.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+
+    {{ content_for_header }}
+
+    {%- liquid
+      render 'css-variables'
+      echo 'base.css' | asset_url | stylesheet_tag: preload: true
+      
+      if text_direction == 'rtl'
+        echo 'rtl.css' | asset_url | stylesheet_tag
+      endif
+    -%}
+
+    {%- unless settings.type_body_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+    {%- unless settings.type_header_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+    
+    {%- if settings.predictive_search_enabled -%}
+      <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    {%- if settings.quick_view_enabled -%}
+      <link rel="stylesheet" href="{{ 'component-quick-view.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    {%- if settings.color_swatches_enabled -%}
+      <link rel="stylesheet" href="{{ 'component-color-swatches.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    {%- if linklists.gift-wrapping.links != blank and linklists.gift-wrapping.links.first.type == 'product_link' -%}
+      <link rel="stylesheet" href="{{ 'component-gift-wrapping.css' | asset_url }}" media="print" onload="this.media='all'">
+      <noscript>{{ 'component-gift-wrapping.css' | asset_url | stylesheet_tag }}</noscript>
+    {%- endif -%}
+    {% render 'preorder' %}
+    {%- render 'js-variables' -%}
+    {% if settings.waitlist_mode %}
+  <script>
+    window.Shopify = window.Shopify || {};
+    window.Shopify.theme = window.Shopify.theme || {};
+    window.Shopify.theme.settings = window.Shopify.theme.settings || {};
+    window.Shopify.theme.settings.waitlist_mode = {{ settings.waitlist_mode | json }};
+  </script>
+{% endif %}
+  </head>
+
+  <body class="template-{{ request.page_type }}{% if request.design_mode %} shopify-design-mode{% endif %}"
+    {%- if settings.image_zoom_effect_enabled %} data-animate-image{% endif -%}
+    {%- if settings.image_loading_bar_enabled %} data-lazy-image{% endif -%}
+    {%- if settings.heading_capitalize %} data-heading-capitalize{% endif -%}
+    {%- if settings.heading_center %} data-heading-center{% endif -%}
+    {%- if settings.price_superscript %} data-price-superscript{% endif -%}
+    {%- if settings.button_corner_radius > 0 %} data-button-round{% endif -%}
+  >
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8LRVNHB"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <a class="skip-to-content-link button button--small visually-hidden" href="#MainContent">
+      {{ "accessibility.skip_to_text" | t }}
+    </a>
+
+    {% render 'transition-cover' %}
+
+    <div class="transition-body">
+      {% sections 'header-group' %}
+
+      <div class="jhg">
+        {% if settings.enable_breadcrumbs %}
+          {% render 'breadcrumbs-custom' %}
+        {% endif %}
+      </div>
+
+      <div class="transition-content">
+        <main id="MainContent" class="content-for-layout focus-none shopify-section" role="main" tabindex="-1">
+          {{ content_for_layout }}
+        </main>
+
+        {% sections 'footer-group' %}
+      </div>
+    </div>
+
+    {% sections 'overlay-group' %}
+
+    <ul hidden>
+      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+    </ul>
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+      <symbol id="icon-cart" fill="none" viewbox="0 0 18 19">
+        <path d="M3.09333 5.87954L16.2853 5.87945V5.87945C16.3948 5.8795 16.4836 5.96831 16.4836 6.07785V11.4909C16.4836 11.974 16.1363 12.389 15.6603 12.4714C11.3279 13.2209 9.49656 13.2033 5.25251 13.9258C4.68216 14.0229 4.14294 13.6285 4.0774 13.0537C3.77443 10.3963 2.99795 3.58502 2.88887 2.62142C2.75288 1.42015 0.905376 1.51528 0.283581 1.51478" stroke="currentColor"/>
+        <path d="M13.3143 16.8554C13.3143 17.6005 13.9183 18.2045 14.6634 18.2045C15.4085 18.2045 16.0125 17.6005 16.0125 16.8554C16.0125 16.1104 15.4085 15.5063 14.6634 15.5063C13.9183 15.5063 13.3143 16.1104 13.3143 16.8554Z" fill="currentColor"/>
+        <path d="M3.72831 16.8554C3.72831 17.6005 4.33233 18.2045 5.07741 18.2045C5.8225 18.2045 6.42651 17.6005 6.42651 16.8554C6.42651 16.1104 5.8225 15.5063 5.07741 15.5063C4.33233 15.5063 3.72831 16.1104 3.72831 16.8554Z" fill="currentColor"/>
+      </symbol>
+    </svg>
+
+    {%- if settings.image_loading_bar_enabled %}
+      <script src="{{ 'lazyimage.js' | asset_url }}" async></script>
+    {% endif -%}
+    {%- if settings.predictive_search_enabled -%}
+      <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.quick_view_enabled -%}
+      <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.color_swatches_enabled -%}
+      <script src="{{ 'color-swatches.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if linklists.gift-wrapping.links != blank and linklists.gift-wrapping.links.first.type == 'product_link' -%}
+      <script src="{{ 'gift-wrapping.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}">
+    <script src="{{ 'cart-upsell.js' | asset_url }}" defer></script>
+    {% render 'changable-upsell' %} 
+          {% comment %} <script>
+  window.addEventListener('load', function() {
+    document.querySelectorAll('video').forEach(function(video) {
+      video.muted = true;
+      video.autoplay = true;
+      
+      video.play().catch(function(error) {
+        console.log('autoplay is blocked:', error);
+      });
+    });
+  });
+</script> {% endcomment %}
+
+<script>
+(function() {
+    'use strict';
+    const OMNISEND_API_KEY = '66b4f08d3245832d9dfc8e4c-pGw52OhTA5rgmbd7iyaBEfnhHqwMJ317fyvHhAqsumBn1H1gES';
+    let selectedProduct = {};
+
+    function showStatus(message, type) {
+        const indicator = document.getElementById('waitlistStatus');
+        if (indicator) {
+            indicator.textContent = message;
+            indicator.className = `waitlist-status-indicator ${type}`;
+            indicator.style.display = 'block';
+            setTimeout(() => { indicator.style.display = 'none'; }, 3000);
+        }
+    }
+
+    function showSuccess() {
+        const form = document.getElementById('waitlistForm');
+        const successMsg = document.getElementById('waitlistSuccessMessage');
+        if (form) form.style.display = 'none';
+        if (successMsg) successMsg.style.display = 'block';
+    }
+
+    function showError(message) {
+        const errorMsg = document.getElementById('waitlistErrorMessage');
+        if (errorMsg) {
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
+        }
+    }
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email) && email.length <= 100;
+    }
+
+    async function getExistingContact(email, apiKey) {
+        try {
+            const res = await fetch(`https://api.omnisend.com/v3/contacts?email=${encodeURIComponent(email)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': apiKey
+                }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.contacts && data.contacts.length > 0) {
+                    return data.contacts[0];
+                }
+            }
+        } catch (e) {}
+        return null;
+    }
+
+    function mergeWaitlistProducts(existingProducts, newProduct) {
+        let products = [];
+        if (existingProducts) {
+            if (typeof existingProducts === 'string') {
+                try { products = JSON.parse(existingProducts); } catch { products = []; }
+            } else if (Array.isArray(existingProducts)) {
+                products = [...existingProducts];
+            }
+        }
+        if (!Array.isArray(products)) products = [];
+        const idx = products.findIndex(p => p && p.id === newProduct.id);
+        const entry = {
+            id: String(newProduct.id),
+            name: newProduct.name || 'Unknown Product',
+            handle: newProduct.handle || 'unknown',
+            url: `${window.location.origin}/products/${newProduct.handle || 'unknown'}`,
+            image: newProduct.image || '',
+            date_added: new Date().toISOString()
+        };
+        if (idx >= 0) {
+            products[idx] = entry;
+            return { products, isUpdate: true };
+        } else {
+            products.push(entry);
+            return { products, isUpdate: false };
+        }
+    }
+
+    async function trySimpleApproach(email, products, productData, apiKey, existingContact) {
+        try {
+            const simpleProps = {
+                waitlist_latest_product_id: String(productData.id),
+                waitlist_latest_product_name: productData.name,
+                waitlist_count: String(products.length),
+                waitlist_last_updated: new Date().toISOString(),
+                waitlist_all_products: products.map(p => p.name).join(', ')
+            };
+            let res;
+            if (existingContact) {
+                res = await fetch(`https://api.omnisend.com/v3/contacts/${existingContact.contactID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey
+                    },
+                    body: JSON.stringify({ customProperties: simpleProps, tags: ['waitlist'] })
+                });
+            } else {
+                res = await fetch('https://api.omnisend.com/v3/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey
+                    },
+                    body: JSON.stringify({ email, tags: ['waitlist'], customProperties: simpleProps })
+                });
+            }
+            if (res.ok) {
+                showStatus('Simple approach worked!', 'success');
+                return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    async function trySDKFallback(email, productData) {
+        try {
+            if (typeof window.omnisend === 'function') {
+                window.omnisend('identify', {
+                    email,
+                    tags: ['waitlist'],
+                    properties: {
+                        waitlist_product_id: String(productData.id),
+                        waitlist_product_name: productData.name,
+                        waitlist_date: new Date().toISOString()
+                    }
+                });
+                showStatus('SDK worked!', 'success');
+                return true;
+            } else if (window.omnisend && Array.isArray(window.omnisend)) {
+                window.omnisend.push(['identify', {
+                    email,
+                    tags: ['waitlist'],
+                    properties: {
+                        waitlist_product_id: String(productData.id),
+                        waitlist_product_name: productData.name,
+                        waitlist_date: new Date().toISOString()
+                    }
+                }]);
+                showStatus('SDK push worked!', 'success');
+                return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    function normalizeImageUrl(imageUrl) {
+        if (!imageUrl) return '';
+        
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+            return imageUrl;
+        }
+        
+        if (imageUrl.startsWith('//')) {
+            return `https:${imageUrl}`;
+        }
+        
+        if (imageUrl.startsWith('/')) {
+            return `https://${window.location.hostname}${imageUrl}`;
+        }
+        
+        return `https://${window.location.hostname}/${imageUrl}`;
+    }
+
+    async function sendWaitinglistEvent(email, productData) {
+        const eventFields = {
+            preorder_product_name: productData.name,
+            preorder_product_url: `${window.location.origin}/products/${productData.handle}`,
+            preorder_product_image: normalizeImageUrl(productData.image),
+            
+            waitlist_products: [
+                {
+                    name: productData.name || 'Unknown Product',
+                    url: `${window.location.origin}/products/${productData.handle || 'unknown'}`,
+                    image: normalizeImageUrl(productData.image)
+                }
+            ]
+        };
+
+        try {
+            let res = await fetch('https://api.omnisend.com/v3/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': OMNISEND_API_KEY
+                },
+                body: JSON.stringify({
+                    email,
+                    eventName: 'product_waitinglist_added',
+                    fields: eventFields
+                })
+            });
+            
+            if (res.ok) {
+                return true;
+            }
+        } catch (e) {}
+
+        try {
+            let res = await fetch('https://api.omnisend.com/v5/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': OMNISEND_API_KEY
+                },
+                body: JSON.stringify({
+                    eventName: 'product_waitinglist_added',
+                    origin: 'api',
+                    contact: { email },
+                    properties: eventFields
+                })
+            });
+            
+            if (res.ok) {
+                return true;
+            }
+        } catch (e) {}
+
+        return false;
+    }
+
+    async function sendToOmnisend(email, productData) {
+        showStatus('Sending...', 'sending');
+        let success = false;
+        try {
+            if (!isValidEmail(email)) {
+                showStatus('Invalid email format', 'error');
+                return false;
+            }
+            const existingContact = await getExistingContact(email, OMNISEND_API_KEY);
+            const { products, isUpdate } = mergeWaitlistProducts(existingContact?.customProperties?.waitlist_products, productData);
+            const customProperties = {
+                waitlist_products: JSON.stringify(products),
+                waitlist_count: String(products.length),
+                waitlist_last_updated: new Date().toISOString(),
+                waitlist_latest_product: productData.name || 'Unknown',
+                waitlist_source: 'website_popup'
+            };
+            let response;
+            if (existingContact) {
+                response = await fetch(`https://api.omnisend.com/v3/contacts/${existingContact.contactID}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': OMNISEND_API_KEY
+                    },
+                    body: JSON.stringify({ customProperties, tags: ['waitlist'] })
+                });
+            } else {
+                response = await fetch('https://api.omnisend.com/v3/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': OMNISEND_API_KEY
+                    },
+                    body: JSON.stringify({
+                        email,
+                        status: 'subscribed',
+                        statusDate: new Date().toISOString(),
+                        tags: ['waitlist'],
+                        customProperties
+                    })
+                });
+            }
+            if (response.ok) {
+                try { 
+                    await sendWaitinglistEvent(email, productData); 
+                } catch (e) {}
+                if (isUpdate) {
+                    showStatus('Updated in waitlist!', 'success');
+                } else if (existingContact) {
+                    showStatus(`Added to waitlist! (${products.length} products)`, 'success');
+                } else {
+                    showStatus('Successfully added!', 'success');
+                }
+                success = true;
+            } else {  
+                success = await trySimpleApproach(email, products, productData, OMNISEND_API_KEY, existingContact);
+            }
+        } catch (e) {
+            success = await trySDKFallback(email, productData);
+        }
+        setTimeout(() => {
+            if (success) showStatus('Saved successfully!', 'success');
+            else showStatus('Failed', 'error');
+        }, 1000);
+        return success;
+    }
+
+    function openPopup(productData) {
+        selectedProduct = productData;
+        const overlay = document.getElementById('waitlistPopupOverlay');
+        if (!overlay) return;
+        const nameEl = document.getElementById('waitlistProductName');
+        const imageEl = document.getElementById('waitlistProductImage');
+        const placeholderEl = document.getElementById('waitlistProductPlaceholder');
+        if (nameEl) nameEl.textContent = productData.name || 'Product';
+        if (productData.image && imageEl && placeholderEl) {
+            imageEl.src = productData.image;
+            imageEl.style.display = 'block';
+            placeholderEl.style.display = 'none';
+        }
+        document.getElementById('waitlistForm').reset();
+        document.getElementById('waitlistForm').style.display = 'block';
+        document.getElementById('waitlistSuccessMessage').style.display = 'none';
+        document.getElementById('waitlistErrorMessage').style.display = 'none';
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => { document.getElementById('waitlistEmail').focus(); }, 300);
+    }
+
+    function closePopup() {
+        const overlay = document.getElementById('waitlistPopupOverlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    function bindEvents() {
+        document.addEventListener('click', e => {
+            const trigger = e.target.closest('.waitlist-trigger');
+            if (trigger) {
+                e.preventDefault(); e.stopPropagation();
+                openPopup({
+                    id: trigger.getAttribute('data-product-id'),
+                    name: trigger.getAttribute('data-product-name'),
+                    handle: trigger.getAttribute('data-product-handle'),
+                    image: trigger.getAttribute('data-product-image')
+                });
+            }
+        });
+        document.getElementById('waitlistCloseBtn').addEventListener('click', closePopup);
+        document.getElementById('waitlistPopupOverlay').addEventListener('click', e => {
+            if (e.target.id === 'waitlistPopupOverlay') closePopup();
+        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+        document.getElementById('waitlistForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const emailInput = document.getElementById('waitlistEmail');
+            const email = emailInput.value.trim();
+            if (!email) { showError('Please enter your email address'); return; }
+            if (!isValidEmail(email)) { showError('Please enter a valid email address'); return; }
+            const btn = document.getElementById('waitlistSubmitBtn');
+            btn.innerHTML = '<span class="waitlist-spinner"></span>Sending...';
+            btn.disabled = true;
+            emailInput.disabled = true;
+            sendToOmnisend(email, selectedProduct)
+                .then(ok => { if (ok) showSuccess(); else showError('Unable to connect. Please try again later.'); })
+                .catch(() => { showError('An error occurred. Please try again.'); })
+                .finally(() => {
+                    btn.innerHTML = 'SIGN UP';
+                    btn.disabled = false;
+                    emailInput.disabled = false;
+                });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindEvents);
+    } else {
+        bindEvents();
+    }
+
+    window.openWaitlistPopup = openPopup;
+    window.closeWaitlistPopup = closePopup;
+})();
+</script>
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: 'view_cart',
+  ecommerce: {
+    items: [
+      {% for item in cart.items %}
+      {
+        item_name: '{{ item.product.title | escape }}',
+        item_id: '{{ item.variant.id }}',
+        price: '{{ item.price | money_without_currency | remove: "," }}',
+        currency: '{{ cart.currency.iso_code }}',
+        item_brand: '{{ item.product.vendor | escape }}',
+        item_category: '{{ item.product.type | escape }}',
+        item_variant: '{{ item.variant.title | escape }}',
+        quantity: {{ item.quantity }}
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+});
+</script>
+          <script>
+// Remove from cart tracking
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(e) {
+    const removeLink = e.target.closest('a[href*="/cart/change"][href*="quantity=0"]');
+    
+    if (removeLink) {
+      const href = removeLink.getAttribute('href');
+      const variantIdMatch = href.match(/id=([^:&]+)/);
+      const variantId = variantIdMatch ? variantIdMatch[1] : 'unknown';
+      
+      const ariaLabel = removeLink.getAttribute('aria-label');
+      const productName = ariaLabel ? ariaLabel.replace('Remove ', '') : 'Unknown Product';
+      
+      fetch('/cart.js')
+        .then(response => response.json())
+        .then(cart => {
+          const cartItem = cart.items.find(item => item.variant_id == variantId);
+          
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'remove_from_cart',
+            ecommerce: {
+              items: [{
+                item_name: cartItem ? cartItem.product_title : productName,
+                item_id: variantId,
+                price: cartItem ? (cartItem.price / 100).toFixed(2) : '0.00',
+                currency: cart.currency,
+                item_brand: cartItem ? cartItem.vendor : 'Unknown',
+                item_category: cartItem ? cartItem.product_type : 'Unknown',
+                quantity: cartItem ? cartItem.quantity : 1
+              }]
+            }
+          });
+        });
+    }
+  });
+});
+</script>
+          <script>
+// Add shipping info tracking
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.includes('/checkout') || window.location.pathname.includes('/cart')) {
+    document.addEventListener('change', function(e) {
+      if (e.target.type === 'radio' && (e.target.name === 'checkout[shipping_rate][id]' || e.target.name.includes('shipping'))) {
+        const shippingMethod = e.target.closest('label')?.textContent?.trim() || 'Standard';
+        
+        fetch('/cart.js')
+          .then(response => response.json())
+          .then(cart => {
+            const items = cart.items.map(item => ({
+              item_name: item.product_title,
+              item_id: item.variant_id,
+              price: (item.price / 100).toFixed(2),
+              currency: cart.currency,
+              item_brand: item.vendor || 'Unknown',
+              item_category: item.product_type || 'Unknown',
+              quantity: item.quantity
+            }));
+
+            window.dataLayer.push({
+              event: 'add_shipping_info',
+              ecommerce: {
+                shipping_tier: shippingMethod,
+                items: items
+              }
+            });
+          });
+      }
+    });
+  }
+});
+</script>
+       <script>
+// Express payment tracking
+document.addEventListener('DOMContentLoaded', function() {
+  // ShopPay button tracking
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('[data-shopify-buttonpay]') || 
+        e.target.closest('.shopify-payment-button') ||
+        e.target.textContent.toLowerCase().includes('shop pay')) {
+      
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'event': 'express_shoppay'});
+    }
+    
+    // Google Pay button tracking
+    if (e.target.closest('[data-google-pay]') || 
+        e.target.closest('.google-pay-button') ||
+        e.target.textContent.toLowerCase().includes('google pay') ||
+        e.target.textContent.toLowerCase().includes('g pay')) {
+      
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'event': 'express_gpay'});
+    }
+  });
+});
+</script>
+          <script>
+// Newsletter subscription tracking
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('submit', function(e) {
+    const form = e.target;
+    
+    // Check if it's newsletter form
+    if (form.querySelector('input[type="email"]') && 
+        (form.action.includes('customer') || 
+         form.querySelector('[name*="email"]') ||
+         form.classList.contains('newsletter') ||
+         form.id.includes('newsletter'))) {
+      
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'event': 'submit_subscription_form'});
+    }
+  });
+});
+</script>
+          <script>
+// Registration and login tracking - synchronous version
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('submit', function(e) {
+    const form = e.target;
+    const formAction = form.action || '';
+    
+    // Login form
+    if (formAction.includes('/account/login') || 
+        (form.querySelector('input[name="customer[email]"]') && 
+         form.querySelector('input[name="customer[password]"]'))) {
+      
+      // Send event immediately and synchronously
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'event': 'log_in_form'});
+      
+      // Also try to send via beacon API for better reliability
+      if (navigator.sendBeacon) {
+        const data = JSON.stringify({event: 'log_in_form'});
+        navigator.sendBeacon('/api/track', data);
+      }
+      
+      console.log('Login event sent synchronously');
+    }
+    
+    // Registration form  
+    if (formAction.includes('register') || form.querySelector('input[name*="first_name"]')) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({'event': 'sign_up_form'});
+      console.log('Registration event sent');
+    }
+  });
+});
+</script>
+
+<script>
+(function () {
+  const ERROR_SELECTORS = [
+    '.note--error',
+    '.form__message.errors',
+    '.errors',
+    '[role="alert"]'
+  ];
+
+  const MATCHERS = [
+    'email address is already associated',
+    'already associated with an account',
+    'already have an account',
+    'already registered'
+  ];
+
+  const replacementHTML = `
+    Looks like you already have an account with us.<br>
+    <a href="{{ routes.account_login_url }}" style="color: inherit; text-decoration: none; border-bottom: 1px solid currentColor;">
+      Log in here
+    </a>.
+  `;
+
+  function shouldReplace(text) {
+    if (!text) return false;
+    const t = text.toLowerCase();
+    return MATCHERS.some(m => t.includes(m));
+  }
+
+  function tryReplaceIn(node) {
+    if (!node) return;
+    const text = (node.textContent || '').trim();
+    if (shouldReplace(text)) {
+      node.innerHTML = replacementHTML;
+    }
+  }
+
+  function scanOnce() {
+    ERROR_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => tryReplaceIn(el));
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', scanOnce);
+
+  const mo = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      m.addedNodes && m.addedNodes.forEach(n => {
+        if (n.nodeType === 1) {
+          if ([...ERROR_SELECTORS].some(sel => n.matches?.(sel))) {
+            tryReplaceIn(n);
+          }
+          ERROR_SELECTORS.forEach(sel => {
+            n.querySelectorAll?.(sel).forEach(el => tryReplaceIn(el));
+          });
+        }
+      });
+    }
+  });
+
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+
+
+<script>
+(function() {
+  'use strict';
+
+  function getPageType() {
+    const path = window.location.pathname;
+    
+    if (path === '/' || path === '') return 'home';
+    if (path.includes('/products/')) return 'product';
+    if (path.includes('/collections/')) return 'collection';
+    if (path.includes('/pages/')) return 'page';
+    if (path.includes('/blogs/')) return 'blog';
+    
+    return 'other';
+  }
+
+  function formatTitle(slug) {
+    return slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  function generateBreadcrumbSchema() {
+    const pageType = getPageType();
+    const path = window.location.pathname;
+    const origin = window.location.origin;
+    
+    const itemListElement = [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": origin + "/"
+    }];
+
+    let position = 2;
+
+    if (pageType === 'product') {
+      const productTitle = document.querySelector('.product__title, h1')?.textContent?.trim();
+      const pathParts = path.split('/').filter(p => p);
+      
+      if (window.ShopifyAnalytics?.meta?.product?.type) {
+        const collectionHandle = window.ShopifyAnalytics.meta.product.type.toLowerCase().replace(/\s+/g, '-');
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": window.ShopifyAnalytics.meta.product.type,
+          "item": `${origin}/collections/${collectionHandle}`
+        });
+        position++;
+      }
+
+      if (productTitle) {
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": productTitle,
+          "item": window.location.href
+        });
+      }
+    }
+
+    if (pageType === 'collection') {
+      const collectionTitle = document.querySelector('.collection-hero__title, h1')?.textContent?.trim();
+      const pathParts = path.split('/').filter(p => p);
+      
+      const collectionHandle = pathParts[pathParts.indexOf('collections') + 1];
+      
+      if (collectionTitle) {
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": collectionTitle,
+          "item": window.location.href
+        });
+      } else if (collectionHandle) {
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": formatTitle(collectionHandle),
+          "item": window.location.href
+        });
+      }
+    }
+
+    if (pageType === 'page') {
+      const pageTitle = document.querySelector('h1')?.textContent?.trim();
+      
+      if (pageTitle) {
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": pageTitle,
+          "item": window.location.href
+        });
+      }
+    }
+
+    if (pageType === 'blog') {
+      const pathParts = path.split('/').filter(p => p);
+      const blogIndex = pathParts.indexOf('blogs');
+      
+      if (blogIndex !== -1) {
+        const blogHandle = pathParts[blogIndex + 1];
+        
+        itemListElement.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": formatTitle(blogHandle),
+          "item": `${origin}/blogs/${blogHandle}`
+        });
+        position++;
+
+        if (pathParts[blogIndex + 2]) {
+          const articleTitle = document.querySelector('.article__title, h1')?.textContent?.trim();
+          
+          if (articleTitle) {
+            itemListElement.push({
+              "@type": "ListItem",
+              "position": position,
+              "name": articleTitle,
+              "item": window.location.href
+            });
+          }
+        }
+      }
+    }
+
+    if (itemListElement.length === 1) return null;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": itemListElement
+    };
+  }
+
+  function injectBreadcrumbSchema(schema) {
+    if (!schema) return;
+
+    const existingBreadcrumb = document.querySelector('script[type="application/ld+json"][data-breadcrumb-schema]');
+    if (existingBreadcrumb) {
+      existingBreadcrumb.remove();
+    }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-breadcrumb-schema', 'true');
+    script.textContent = JSON.stringify(schema, null, 2);
+    document.head.appendChild(script);
+  }
+
+  function init() {
+    const schema = generateBreadcrumbSchema();
+    injectBreadcrumbSchema(schema);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+
+<script>
+(function() {
+  'use strict';
+
+  function isHomePage() {
+    return window.location.pathname === '/' || window.location.pathname === '';
+  }
+
+  function getLanguage() {
+    return document.documentElement.lang || 'en';
+  }
+
+  function generateOrganizationSchema() {
+    return {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Lunesi - Premium hair care and beauty products",
+      "legalName": "LUNESI LTD",
+      "url": "https://lunesi.co.uk/",
+      "logo": "https://cdn.shopify.com/s/files/1/0580/3769/8691/files/lunesi_sky_grey_logo_1.png?v=1749473955",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "128 City Road",
+        "addressLocality": "London",
+        "postalCode": "EC1V 2NX",
+        "addressCountry": "GB"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "info.lunesibeauty@gmail.com",
+        "contactType": "customer service",
+        "availableLanguage": ["English", "Albanian"]
+      },
+      "sameAs": [
+        "https://www.instagram.com/lunesibeauty"
+      ]
+    };
+  }
+
+  function generateWebSiteSchema() {
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://lunesi.co.uk/",
+      "name": "Lunesi - Premium hair care and beauty products"
+    };
+  }
+
+  function generateBreadcrumbSchema() {
+    const lang = getLanguage();
+    const homeText = lang === 'sq' ? 'Kryefaqja' : 'Home';
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": homeText,
+          "item": "https://lunesi.co.uk/"
+        }
+      ]
+    };
+  }
+
+  function injectSchema(schema, type) {
+    const existing = document.querySelector(`script[type="application/ld+json"][data-schema="${type}"]`);
+    if (existing) {
+      existing.remove();
+    }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-schema', type);
+    script.textContent = JSON.stringify(schema, null, 2);
+    document.head.appendChild(script);
+  }
+
+  function init() {
+    if (!isHomePage()) return;
+
+    const organizationSchema = generateOrganizationSchema();
+    const websiteSchema = generateWebSiteSchema();
+    const breadcrumbSchema = generateBreadcrumbSchema();
+
+    injectSchema(organizationSchema, 'organization');
+    injectSchema(websiteSchema, 'website');
+    injectSchema(breadcrumbSchema, 'breadcrumb-home');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+
+{{ "upsell-swiper.js" | asset_url| script_tag }}
+    {% render 'quit-redirect' %}
+  </body>
+</html>

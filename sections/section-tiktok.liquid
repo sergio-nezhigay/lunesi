@@ -1,0 +1,415 @@
+{{ 'section-tiktok.css' | asset_url | stylesheet_tag }}
+
+<div class="embla">
+    <div class="embla__viewport">
+        <div class="embla__container">
+            {% for block in section.blocks %}
+                <div class="embla__slide ">
+                    <div class="swiper-slide">
+                        <div>
+                            <div class="video-item video-item-tiktok">
+                                <div>
+                                    <video class="myVideo" src="{{block.settings.video_file.sources[1].url}}" loop playsinline></video>
+                                </div>
+                                    <a class="main-link-video" href='{{ block.settings.main_product.url }}'>
+                                        <img src="{{ 'Vector112.svg' | asset_url }}" alt="Icon"/>
+                                    </a>
+                                <div class="start_video">
+                                    {{ "Vector1234.svg" | asset_url | img_tag: "Play Icon", "playBtn" }}
+                                    <svg class="pauseBtn" xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" style="color: white; cursor:pointer; display:none;" viewBox="0 0 16 16">
+                                        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="continer-bottom-tiktok">
+                                {% if block.settings.main_product.featured_image != blank %}
+                                    <a class="main-url-tiktok-product" href="{{ block.settings.main_product.url }}">
+                                        {% if block.settings.main_img != blank %}
+                                            {{ block.settings.main_img | image_url: width: block.settings.main_img.width | image_tag }}
+                                        {% else %}
+                                            {{ block.settings.main_product.featured_image | image_url: width: block.settings.main_product.featured_image.width | image_tag }}
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+                                <div>
+                                    <a class="main-url-tiktok-product" href="{{ block.settings.main_product.url }}">
+                                        <div class="main-slide-tiktok">
+                                            {{ block.settings.main_product.title  }}
+                                        </div>
+                                    </a>
+                                    {% if product.compare_at_price > product.price %}
+                                        <span class="old-price price-slide-tiktok-product">
+                                            {{ block.settings.main_product.compare_at_price | money }}
+                                        </span>
+                                        <span class="sale-price price-slide-tiktok-product">
+                                            {{ block.settings.main_product.price | money }}
+                                        </span>
+                                    {% else %}
+                                        <span class="price price-slide-tiktok-product">
+                                            {{ block.settings.main_product.price | money }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="embla__buttons">
+        <button class="main-slider-prev-button" id="prev">
+            <svg viewBox="0 0 24 24">
+                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+            </svg>
+        </button>
+        <button class="main-slider-next-button" id="next">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/embla-carousel/embla-carousel.umd.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const emblaNode = document.querySelector('.embla__viewport');
+        const slides = document.querySelectorAll('.embla__slide');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        let embla = null;
+
+        function setControlsVisible(visible) {
+            const display = visible ? 'flex' : 'none';
+            if (prevBtn) prevBtn.style.display = display;
+            if (nextBtn) nextBtn.style.display = display;
+        }
+        
+        function initCarousel() {
+            const slideCount = slides.length;
+            const screenWidth = window.innerWidth;
+            
+            let enableCarousel = false;
+            
+            if (screenWidth >= 1440 && slideCount >= 6) {
+                enableCarousel = true;
+            } else if (screenWidth >= 767 && screenWidth < 1440 && slideCount >= 4) {
+                enableCarousel = true;
+            } else if (screenWidth < 767 && slideCount >= 4) {
+                enableCarousel = true;
+            }
+            
+            if (!enableCarousel) {
+                if (embla) {
+                    embla.destroy();
+                    embla = null;
+                }
+                
+                slides.forEach(slide => {
+                    slide.classList.remove('active-slide', 'inactive-slide');
+                    slide.style.display = 'block';
+                });
+                
+                setControlsVisible(false);
+                emblaNode.style.overflow = 'visible';
+                emblaNode.style.cursor = 'default';
+                
+                slides.forEach(slide => {
+                    const video = slide.querySelector('video');
+                    const playBtn = slide.querySelector('.playBtn');
+                    const pauseBtn = slide.querySelector('.pauseBtn');
+                    if (video) video.pause();
+                    if (playBtn) playBtn.style.display = 'block';
+                    if (pauseBtn) pauseBtn.style.display = 'none';
+                });
+            return;
+        }
+        
+        slides.forEach(slide => slide.style.display = '');
+        
+        if (!embla) {
+            embla = EmblaCarousel(emblaNode, {
+                loop: true,
+                align: 'center',
+                slidesToScroll: 1,
+                speed: 20
+            });
+            
+            setControlsVisible(true);
+            emblaNode.style.overflow = '';
+            emblaNode.style.cursor = '';
+            
+            updateActiveClassMain(embla.selectedScrollSnap());
+            
+            embla.on('select', () => {
+                updateActiveClassMain(embla.selectedScrollSnap());
+            });
+        }
+    }
+
+
+    function updateActiveClass(selectedIndex) {
+        slides.forEach((slide, index) => {
+            const video = slide.querySelector('video');
+            const playBtn = slide.querySelector('.playBtn');
+            const pauseBtn = slide.querySelector('.pauseBtn');
+
+            if (index === selectedIndex) {
+                slide.classList.add('active-slide');
+                slide.classList.remove('inactive-slide');
+
+                if (video) {
+                    video.muted = true;
+                    video.play().catch(err => console.log(err));
+                }
+
+                if (playBtn) playBtn.style.display = 'block';
+                if (pauseBtn) pauseBtn.style.display = 'none';
+            } else {
+                slide.classList.remove('active-slide');
+                slide.classList.add('inactive-slide');
+
+                if (video) video.pause();
+
+                if (playBtn) playBtn.style.display = 'block';
+                if (pauseBtn) pauseBtn.style.display = 'none';
+            }
+        });
+    }
+
+    function updateActiveClassMain(selectedIndex) {
+        slides.forEach((slide, index) => {
+            const video = slide.querySelector('video');
+            const playBtn = slide.querySelector('.playBtn');
+            const pauseBtn = slide.querySelector('.pauseBtn');
+
+            if (index === selectedIndex) {
+                slide.classList.add('active-slide');
+                slide.classList.remove('inactive-slide');
+
+                if (video) {
+                    video.muted = false;
+                    video.play();
+                }
+
+                if (playBtn) playBtn.style.display = 'none';
+                if (pauseBtn) pauseBtn.style.display = 'block';
+            } else {
+                slide.classList.remove('active-slide');
+                slide.classList.add('inactive-slide');
+
+                if (video) {
+                    video.muted = true;
+                    video.pause();
+                }
+
+                if (playBtn) playBtn.style.display = 'block';
+                if (pauseBtn) pauseBtn.style.display = 'none';
+            }
+        });
+    }
+    
+    let lastActiveVideo = null;
+    
+    slides.forEach((slide, index) => {
+        const startBtn = slide.querySelector('.start_video');
+        const video = slide.querySelector('video');
+        const playBtn = slide.querySelector('.playBtn');
+        const pauseBtn = slide.querySelector('.pauseBtn');
+        
+        if (!startBtn || !video) return;
+        
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            slides.forEach((s, i) => {
+                const v = s.querySelector('video');
+                const pBtn = s.querySelector('.playBtn');
+                const pauseBtn = s.querySelector('.pauseBtn');
+                if (v && i !== index) {
+                    v.pause();
+                    v.currentTime = 0;
+                    if (pBtn) pBtn.style.display = 'block';
+                    if (pauseBtn) pauseBtn.style.display = 'none';
+                }
+            });
+            
+            if (embla) {
+                const activeIndex = embla.selectedScrollSnap();
+                if (index !== activeIndex) {
+                    updateActiveClass(index);
+                    setTimeout(() => embla.scrollTo(index), 50);
+                }
+            }
+            
+            video.muted = false;
+            const playPromise = video.play();
+            if (playPromise !== undefined) playPromise.catch(err => console.log(err));
+            
+            if (playBtn) playBtn.style.display = 'none';
+            if (pauseBtn) pauseBtn.style.display = 'block';
+            
+            lastActiveVideo = video;
+        });
+        slides.forEach((slide, index) => {
+            const startBtn = slide.querySelector('.start_video');
+            const video = slide.querySelector('video');
+            const playBtn = slide.querySelector('.playBtn');
+            const pauseBtn = slide.querySelector('.pauseBtn');
+            
+            if (!video) return;
+            
+            if (startBtn) {
+                startBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    slides.forEach((s, i) => {
+                        const v = s.querySelector('video');
+                        const pBtn = s.querySelector('.playBtn');
+                        const pauseBtn = s.querySelector('.pauseBtn');
+                        if (v && i !== index) {
+                            v.pause();
+                            v.currentTime = 0;
+                            if (pBtn) pBtn.style.display = 'block';
+                            if (pauseBtn) pauseBtn.style.display = 'none';
+                        }
+                    });
+                    
+                    if (embla) {
+                        const activeIndex = embla.selectedScrollSnap();
+                        if (index !== activeIndex) {
+                            updateActiveClass(index);
+                            setTimeout(() => embla.scrollTo(index), 50);
+                        }
+                    }
+                    
+                    video.muted = false;
+                    video.play().catch(err => console.log(err));
+                    
+                    if (playBtn) playBtn.style.display = 'none';
+                    if (pauseBtn) pauseBtn.style.display = 'block';
+                });
+            }
+            
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (video && !video.paused) {
+                        video.pause();
+                        if (playBtn) playBtn.style.display = 'block';
+                        if (pauseBtn) pauseBtn.style.display = 'none';
+                    }
+                });
+            }
+        });
+    });
+    
+    function checkLastActiveVideoVisibility() {
+        if (embla) return;
+        if (!lastActiveVideo) return;
+        
+        const rect = lastActiveVideo.closest('.embla__slide').getBoundingClientRect();
+        const playBtn = lastActiveVideo.closest('.embla__slide').querySelector('.playBtn');
+        const pauseBtn = lastActiveVideo.closest('.embla__slide').querySelector('.pauseBtn');
+        const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (inViewport) {
+            if (lastActiveVideo.paused) {
+                lastActiveVideo.muted = true;
+                lastActiveVideo.play().catch(err => console.log(err));
+                
+                if (playBtn) playBtn.style.display = 'block';
+                if (pauseBtn) pauseBtn.style.display = 'none';
+            }
+        } else {
+            if (!lastActiveVideo.paused) {
+                lastActiveVideo.pause();
+            }
+        }
+    }
+    
+    window.addEventListener('scroll', () => {
+        checkLastActiveVideoVisibility();
+    });
+
+
+
+    function scrollWithClass(next = true) {
+        if (!embla) return;
+
+        const currentIndex = embla.selectedScrollSnap();
+        const targetIndex = next
+            ? (currentIndex + 1) % slides.length
+            : (currentIndex - 1 + slides.length) % slides.length;
+
+        updateActiveClass(targetIndex);
+
+        setTimeout(() => {
+            if (next) embla.scrollNext();
+            else embla.scrollPrev();
+        }, 0);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => scrollWithClass(false));
+    if (nextBtn) nextBtn.addEventListener('click', () => scrollWithClass(true));
+
+    initCarousel();
+
+    window.addEventListener('resize', () => {
+        if (embla) {
+            embla.destroy();
+            embla = null;
+        }
+        initCarousel();
+    });
+
+    window.addEventListener('scroll', () => {
+        if (embla) {
+            updateActiveClass(embla.selectedScrollSnap());
+        }
+    });
+});
+</script>
+
+
+{% schema %}
+{
+    "name": "Slider Products",
+    "settings": [
+        {
+            "type": "richtext",
+            "id": "main_title",
+            "label": "Title"
+        },
+    ],
+    "blocks": [
+        {
+            "type": "video",
+            "name": "Video",
+            "settings": [
+                {
+                    "type": "video",
+                    "id": "video_file",
+                    "label": "Upload video"
+                },
+                {
+                    "type": "product",
+                    "id": "main_product",
+                    "label": "Product"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "main_img",
+                    "label": "Image"   
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Slider Products"
+        }
+    ]
+}
+{% endschema %}

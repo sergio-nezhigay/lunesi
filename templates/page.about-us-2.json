@@ -1,0 +1,726 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner_yzHcta": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_QVjjWT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Stay iconic",
+            "heading_size": "h1",
+            "heading_tag": "h1"
+          }
+        },
+        "text_FgNPwa": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Sleek, sophisticated, and unmistakably you. True style is timeless.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_rDQCTw": {
+          "type": "button",
+          "settings": {
+            "button_label": "Discover Lunesi",
+            "button_link": "shopify://collections/main-collection",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_QVjjWT",
+        "text_FgNPwa",
+        "button_rDQCTw"
+      ],
+      "custom_css": [
+        ".banner__box.center.mobile-center {padding-top: 0;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/20250404_LUNESI_SHOT_01_0738_V03_1a28b4ed-b29e-4633-8053-f137b31d7c45.jpg",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "center center",
+        "text_box_position": "middle-center",
+        "text_alignment": "center",
+        "image_ratio": "550px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "auto",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "mobile_text_background_enabled": true,
+        "mobile_text_background_color": "#f7f7f7",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 12,
+        "padding_top": 0,
+        "padding_bottom": 16
+      }
+    },
+    "rich_text_eNDqDB": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_fYxBti": {
+          "type": "heading",
+          "settings": {
+            "heading": "A note from our founder",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_ykce4J": {
+          "type": "text",
+          "settings": {
+            "text": "<p>At Lunesi, we believe that beauty isn’t just about what you see in the mirror – it’s about how you feel when you look at yourself. It’s the confidence that radiates from within and the strength you carry every day. Our mission is simple: to empower every woman to embrace her sensuality, to love herself unapologetically, and to live without regrets.</p><p>From the very beginning, I envisioned a brand that celebrates both beauty and authenticity. We wanted to create more than just products – we wanted to craft experiences that inspire confidence and joy in every aspect of life. Each formula is designed with love and care, made to nurture your hair and enhance your natural beauty, so you can feel your best, inside and out.</p><p>Thank you for being part of this journey. Together, let’s continue to redefine beauty on our own terms.<br/><br/>— Tetiana</p>",
+            "text_size": "typeset2",
+            "secondary_color": false,
+            "highlight_phrases": "",
+            "highlight_style": "marker"
+          }
+        }
+      },
+      "block_order": [
+        "heading_fYxBti",
+        "text_ykce4J"
+      ],
+      "custom_css": [
+        ".rich-text__text {max-width: 92.6rem;}"
+      ],
+      "settings": {
+        "text_alignment": "center",
+        "rounded_corner": false,
+        "mobile_text_alignment": "center",
+        "horizontal_content": false,
+        "narrow": false,
+        "show_divider": false,
+        "use_custom_colors": false,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#474345",
+        "colors_background": "#ffffff",
+        "colors_highlight": "#bbff00",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image-with-text-0": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Harness the power within",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Because when your hair looks amazing, you feel amazing too. Your secret weapon for unshakable confidence.</p>",
+            "text_size": "typeset2",
+            "secondary_color": true
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "custom_css": [
+        ".image-with-text__grid {border-radius: 20px;}",
+        ".media-wrapper {border-top-right-radius: 20px; border-bottom-right-radius: 20px;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/20250404_LUNESI_SHOT_08_0097_V03_CROP_98df62d0-4d0d-4366-9fbd-11d134f784c5.jpg",
+        "image_position": "center center",
+        "layout": "text_first",
+        "text_box_position": "middle",
+        "text_alignment": "left",
+        "image_ratio": "600px",
+        "enlarge_content": false,
+        "full_width": false,
+        "show_divider": false,
+        "image_behavior": "none",
+        "mobile_layout": "image_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "enable_video_looping": false,
+        "video_url": "",
+        "use_custom_colors": true,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#474345",
+        "colors_background": "#f7f7f7",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image-banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Sensuality and Power",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_DaJhVc": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Uncover the science behind irresistibly beautiful hair. Our active ingredients promote luscious length, vibrant health, and a shine that’s unforgettable.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_gxyEgz": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_link": "shopify://collections",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text_DaJhVc",
+        "button_gxyEgz"
+      ],
+      "custom_css": [],
+      "settings": {
+        "image": "shopify://shop_images/Screenshot-2025-06-13-at-09.07.20.jpg",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "center center",
+        "text_box_position": "middle-center",
+        "text_alignment": "center",
+        "image_ratio": "550px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "400px",
+        "stack_images_on_mobile": false,
+        "show_text_below": true,
+        "mobile_text_background_enabled": true,
+        "mobile_text_background_color": "#f7f7f7",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 16,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "tab_collage_7eRV6F": {
+      "type": "tab-collage",
+      "disabled": true,
+      "custom_css": [
+        ".image-with-text__grid {border-radius: 20px;}",
+        ".media-wrapper {border-top-left-radius: 20px; border-bottom-left-radius: 20px;}",
+        ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
+        "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}"
+      ],
+      "settings": {
+        "layout": "image_first",
+        "text_box_position": "top",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "make_collapsible_rows": false,
+        "horizontal_titles": false,
+        "full_width": false,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "heading_tag": "h2",
+        "section_button_label": "Complete Hair Quiz",
+        "section_button_link": "",
+        "section_button_size": "medium",
+        "section_button_style_secondary": false,
+        "mobile_layout": "text_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#67645e",
+        "colors_border": "#d2d5d9",
+        "colors_background": "#f1f0ed",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "tab_collage_ji77hF": {
+      "type": "tab-collage",
+      "blocks": {
+        "image_E3nA3h": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may7532_3831d9d7-b0ea-4347-97f8-8f9904cd0131.jpg",
+            "image_link": "",
+            "image_position": "center center",
+            "heading": "our mission",
+            "description": "<p>To banish bad hair days and empower you to shine from within. Lunesi exists to elevate your daily routine into a moment of beauty, pleasure, and self-assurance, helping you embrace your unique strength and confidence.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_Lha7ie": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may7097_d30de7c1-fef5-4641-b410-c44c2355b895.jpg",
+            "image_link": "",
+            "image_position": "center center",
+            "heading": "our values",
+            "description": "<p>We believe life’s biggest regrets come from missing out on moments of true pleasure. Lunesi is here to change that. We bring beauty, pleasure, and sensuality to the forefront, empowering women to embrace their sensuality, love themselves, and live fully without regrets.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_erL9rn": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may7494-7.jpg",
+            "image_link": "",
+            "image_position": "center center",
+            "heading": "our philosophy",
+            "description": "<p>Good hair shouldn’t be hard work. Our science-backed elixirs are crafted to save you precious time while delivering exceptional results. With Lunesi, you can look and feel your best, simplifying your routine without sacrificing quality.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_yrBywQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may7537_d4304792-6b01-4f09-aeb1-ae98badf0b0a.jpg",
+            "image_link": "",
+            "image_position": "center center",
+            "heading": "our approach",
+            "description": "<p>Inspired by the wisdom of timeless traditions and powered by cutting-edge innovation, Lunesi carefully curates high-quality ingredients that nourish, protect, and transform your hair from within. We believe that hair care is not just a routine but a celebration of your femininity.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_Ccbc79": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may7212_d59201af-0b9f-46cb-92e2-6bd897657a5c.jpg",
+            "image_link": "",
+            "image_position": "center center",
+            "heading": "our future",
+            "description": "<p>We embrace the limitless potential that science offers to preserve our natural beauty for as long as possible. Lunesi is committed to continuously uncovering the secrets to stunning hair, crafting products that empower you to express your true self with confidence and flair.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "image_E3nA3h",
+        "image_Lha7ie",
+        "image_erL9rn",
+        "image_yrBywQ",
+        "image_Ccbc79"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 1250px) {.tab-collage__content {padding-bottom: 70px !important; padding-top: 0 !important; } .grid__item {gap: 0 !important; flex-direction: column-reverse !important; }}",
+        ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
+        "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}"
+      ],
+      "settings": {
+        "layout": "text_first",
+        "text_box_position": "top",
+        "text_alignment": "left",
+        "image_ratio": "700px",
+        "make_collapsible_rows": false,
+        "horizontal_titles": true,
+        "full_width": false,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "heading_tag": "h2",
+        "section_button_label": "Complete Hair Quiz",
+        "section_button_link": "",
+        "section_button_size": "medium",
+        "section_button_style_secondary": false,
+        "mobile_layout": "text_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#474345",
+        "colors_border": "#d2d5d9",
+        "colors_background": "#f7f7f7",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image_banner_QhAeY8": {
+      "type": "image-banner",
+      "blocks": {
+        "button_fWHcqN": {
+          "type": "button",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_link": "shopify://collections/main-collection",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "button_fWHcqN"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/19may7212_d59201af-0b9f-46cb-92e2-6bd897657a5c.jpg",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "top center",
+        "text_box_position": "middle-center",
+        "text_alignment": "center",
+        "image_ratio": "500px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "auto",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "mobile_text_background_enabled": true,
+        "mobile_text_background_color": "#f7f7f7",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 12,
+        "padding_top": 16,
+        "padding_bottom": 32
+      }
+    },
+    "rich_text_MPH4VM": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_C838VL": {
+          "type": "heading",
+          "settings": {
+            "heading": "Our products combine the best of both worlds:",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_9YRdJh": {
+          "type": "text",
+          "settings": {
+            "text": "<p>the wisdom of traditional beauty rituals and the latest in scientific research. We’ve created a line that’s simple to use, but rich in results. From shampoo and conditioner to scalp treatments and hair oil, each product is designed to make your hair look and feel its best.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false,
+            "highlight_phrases": "",
+            "highlight_style": "marker"
+          }
+        }
+      },
+      "block_order": [
+        "heading_C838VL",
+        "text_9YRdJh"
+      ],
+      "disabled": true,
+      "settings": {
+        "text_alignment": "center",
+        "rounded_corner": true,
+        "mobile_text_alignment": "center",
+        "horizontal_content": false,
+        "narrow": false,
+        "show_divider": false,
+        "use_custom_colors": true,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#212326",
+        "colors_background": "#f1f0ed",
+        "colors_highlight": "#bbff00",
+        "gradient_background": "",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "narrow": true,
+        "padding_top": 60,
+        "padding_bottom": 72
+      }
+    },
+    "empty-space": {
+      "type": "empty-space",
+      "settings": {
+        "desktop_height": 0,
+        "mobile_height": 48
+      }
+    },
+    "multicolumn_K8qWxq": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_HfcBrc": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-7.webp",
+            "title": "PEPTIDES",
+            "title_size": "h3",
+            "text": "<p>Active amino acids that visibly plump skin and reduce the look of fine lines.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_FJh79P": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-8.webp",
+            "title": "SHEA BUTTER",
+            "title_size": "h3",
+            "text": "<p>Hydrates + moisturizes with 5 essential fatty acids (including vitamins E, D, A, and allantoin).</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_TkgnGr": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-9.webp",
+            "title": "NIACINAMIDE",
+            "title_size": "h3",
+            "text": "<p>Nourishes and minimizes the look of pores + improves skin’s overall texture.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_Gabfxn": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-10.webp",
+            "title": "CUPUAÇU",
+            "title_size": "h3",
+            "text": "<p>Helps maintain skin elasticity, improve suppleness for dry, dehydrated skin.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_Be43W8": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-11.webp",
+            "title": "BABASSU",
+            "title_size": "h3",
+            "text": "<p>Rich, natural source of lauric acid known to strengthen the microbiome + replenish overall skin moisture.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_MgY6ni": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-12.webp",
+            "title": "HYALURONIC ACID",
+            "title_size": "h3",
+            "text": "<p>Supports hydration, locks in water + replenishes cell moisture.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "column_HfcBrc",
+        "column_FJh79P",
+        "column_TkgnGr",
+        "column_Gabfxn",
+        "column_Be43W8",
+        "column_MgY6ni"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".multicolumn {max-width: none;}"
+      ],
+      "settings": {
+        "image_ratio": "landscape",
+        "rounded_corner": true,
+        "bg_col": "#f1f0ed",
+        "image_position": "center center",
+        "text_alignment": "left",
+        "show_divider": false,
+        "image_width": "full",
+        "columns_desktop": 3,
+        "heading": "research-backed ingredients",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "heading_tag": "h2",
+        "mobile_text_alignment": "left",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "multicolumn_Q7jQWp": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_ekKWdd": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-13.webp",
+            "title": "DR. RON ROBINSON",
+            "title_size": "h3",
+            "text": "<p>cosmetic chemist</p><p>An innovator in the field, Dr. Robinson is an award-winning chemist with over 20 years experience developing products for top beauty brands. He is the founder of  BeautyStat, a groundbreaking brand in the skincare industry.</p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "column_NT7Jfy": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/a-new-philosophy-on-skincare-14.webp",
+            "title": "DR. DHAVAL BHANUSALI",
+            "title_size": "h3",
+            "text": "<p>dermatologist</p><p>Dr. Bhanusali is a leading dermatologist in the skincare industry. He works with patients out of his practice in Hudson Yards, New York City, and regularly consults with health companies to create renowned products that are accessible and effective. </p>",
+            "button_label": "",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "column_ekKWdd",
+        "column_NT7Jfy"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".multicolumn {max-width: none;}"
+      ],
+      "settings": {
+        "image_ratio": "adapt",
+        "rounded_corner": true,
+        "bg_col": "#f1f0ed",
+        "image_position": "center center",
+        "text_alignment": "center",
+        "show_divider": false,
+        "image_width": "half",
+        "columns_desktop": 2,
+        "heading": "meet the advisory board",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "heading_tag": "h2",
+        "mobile_text_alignment": "left",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "featured_collection_EUQht4": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "collection": "main-collection",
+        "products_to_show": 5,
+        "enable_conditional_slider": true,
+        "show_view_all": true,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "heading_tag": "h2",
+        "products_to_show_mobile": 4,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "image_ratio": "adapt",
+        "image_position": "center center",
+        "enable_image_fill": true,
+        "show_secondary_image": true,
+        "secondary_image_max": 1,
+        "show_vendor": true,
+        "show_rating": false,
+        "show_quick_buy": true,
+        "enable_quick_view": true,
+        "enable_color_swatches": true,
+        "enable_countdown": true,
+        "button_style": "solid",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "image_banner_yzHcta",
+    "rich_text_eNDqDB",
+    "image-with-text-0",
+    "image-banner",
+    "tab_collage_7eRV6F",
+    "tab_collage_ji77hF",
+    "image_banner_QhAeY8",
+    "rich_text_MPH4VM",
+    "main",
+    "empty-space",
+    "multicolumn_K8qWxq",
+    "multicolumn_Q7jQWp",
+    "featured_collection_EUQht4"
+  ]
+}

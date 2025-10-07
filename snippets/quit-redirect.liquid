@@ -1,0 +1,305 @@
+<style>
+  .exit-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+  }
+
+  .exit-popup-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .exit-popup {
+    background: #f3f3f3;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: scale(0.8);
+    animation: popIn 0.3s ease-out forwards;
+    position: relative;
+  }
+
+  .exit-popup h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    font-family: inherit;
+  }
+
+ .exit-popup p:not(.h2) {
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+
+  .quiz-btn {
+    background: #e6cedf;
+    color: #2c3e50;
+    border: none;
+    padding: 16px 48px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    box-shadow: 0 4px 15px rgba(230, 206, 223, 0.4);
+    min-width: 200px;
+    font-family: inherit;
+  }
+
+  .quiz-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(230, 206, 223, 0.6);
+    background: #ddbdd4;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: 2px solid #e6cedf;
+    color: #777;
+    padding: 12px 36px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+    min-width: 200px;
+    font-family: inherit;
+  }
+
+  .close-btn:hover {
+    border-color: #ddbdd4;
+    background: #e6cedf;
+    color: #2c3e50;
+  }
+
+  .popup-close-x {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .popup-close-x:hover {
+    background: #e6cedf;
+    color: #2c3e50;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes popIn {
+    from { 
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .exit-popup {
+      padding: 30px 20px;
+      margin: 20px;
+    }
+    
+    .exit-popup h2 {
+      font-size: 24px;
+    }
+    
+    .exit-popup p:not(.h2) {
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+    
+    .quiz-btn {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+  }
+</style>
+
+<div id="exitPopup" class="exit-popup-overlay">
+  <div class="exit-popup">
+    <button class="popup-close-x" onclick="closeExitPopup()">&times;</button>
+    
+   <p class="h2">Wait! Before You Go...</p>
+    <p>Complete our personalized quiz and get a custom product selection tailored just for you!</p>
+    
+    <a href="https://lunesi.co.uk/pages/about-us?view=hair-quiz" class="quiz-btn">
+      Take Quiz Now
+    </a>
+    <br>
+    <button class="close-btn" onclick="closeExitPopup()">
+      Maybe Later
+    </button>
+  </div>
+</div>
+
+<script>
+  const ExitPopup = {
+    settings: {
+      exitPopupShown: false,
+      pageLoadTime: Date.now(),
+      userInteracted: false,
+      minTimeOnPage: 10000,
+      inactivityDelay: 60000,
+      mouseLeaveDelay: 500,
+      initDelay: 15000
+    },
+
+    init() {
+      this.checkIfPopupShown();
+      this.bindEvents();
+      this.startInactivityTimer();
+    },
+
+    checkIfPopupShown() {
+      const wasShown = sessionStorage.getItem('exitPopupShown');
+      if (wasShown === 'true') {
+        this.settings.exitPopupShown = true;
+      }
+    },
+
+    isTimeRequirementMet() {
+      return Date.now() - this.settings.pageLoadTime >= this.settings.minTimeOnPage;
+    },
+
+    isAnotherPopupVisible() {
+      const popupSelectors = [
+        '.popup-overlay', '.modal-overlay', '.currency-popup', '.currency-selector',
+        '[data-popup]', '[data-modal]', '.shopify-section--popup', '.popup', '.modal'
+      ];
+      
+      return popupSelectors.some(selector => {
+        const elements = document.querySelectorAll(selector);
+        return Array.from(elements).some(element => {
+          if (element && element !== document.getElementById('exitPopup')) {
+            const style = window.getComputedStyle(element);
+            return style.display !== 'none' && 
+                   style.visibility !== 'hidden' && 
+                   style.opacity !== '0';
+          }
+          return false;
+        });
+      });
+    },
+
+    canShowPopup() {
+      return !this.settings.exitPopupShown &&
+             this.isTimeRequirementMet() &&
+             this.settings.userInteracted &&
+             !this.isAnotherPopupVisible();
+    },
+
+    showPopup() {
+      if (this.canShowPopup()) {
+        document.getElementById('exitPopup').classList.add('show');
+        this.settings.exitPopupShown = true;
+        sessionStorage.setItem('exitPopupShown', 'true');
+      }
+    },
+
+    closePopup() {
+      document.getElementById('exitPopup').classList.remove('show');
+    },
+
+    trackUserInteraction() {
+      this.settings.userInteracted = true;
+    },
+
+    resetInactivityTimer() {
+      clearTimeout(this.inactivityTimer);
+      this.inactivityTimer = setTimeout(() => {
+        this.showPopup();
+      }, this.settings.inactivityDelay);
+    },
+
+    startInactivityTimer() {
+      setTimeout(() => {
+        this.resetInactivityTimer();
+      }, this.settings.initDelay);
+    },
+
+    bindEvents() {
+      document.addEventListener('mouseleave', (e) => {
+        if (e.clientY <= 0) {
+          setTimeout(() => {
+            this.showPopup();
+          }, this.settings.mouseLeaveDelay);
+        }
+      });
+
+      const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+      activityEvents.forEach(event => {
+        document.addEventListener(event, () => {
+          this.resetInactivityTimer();
+          this.trackUserInteraction();
+        }, false);
+      });
+
+      document.getElementById('exitPopup').addEventListener('click', (e) => {
+        if (e.target.classList.contains('exit-popup-overlay')) {
+          this.closePopup();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('exitPopup').classList.contains('show')) {
+          this.closePopup();
+        }
+      });
+
+      window.addEventListener('beforeunload', () => {
+        this.showPopup();
+      });
+    }
+  };
+
+  function closeExitPopup() {
+    ExitPopup.closePopup();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    ExitPopup.init();
+  });
+</script>

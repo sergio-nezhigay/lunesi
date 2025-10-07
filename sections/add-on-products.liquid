@@ -1,0 +1,661 @@
+{%- assign addons = product.metafields.custom.add_on_products.value -%}
+{%- if addons != blank -%}
+  {%- assign addons_count = addons.size -%}
+
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      --section-padding-top: {{ section.settings.padding_top }}px;
+      --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+      --image-position: {{ section.settings.image_position }};
+    }
+
+    .addons-wrap {
+      padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px;
+    }
+    
+    .addons-title {
+      margin-bottom: 25px;
+    }
+
+    /* Простий слайдер з виглядом оригінального */
+    .fc-slider-container {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .fc-slider-wrapper {
+      display: flex;
+      transition: margin-left 0.5s ease;
+      margin-left: 0;
+    }
+
+    .fc-slide-item {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 320px;
+      min-width: 240px;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    /* Десктоп: завжди 3 продукти в рядок - точно як в оригіналі */
+    @media screen and (min-width: 750px) {
+      .fc-slide-item {
+        width: calc(33.333% - 20px);
+        max-width: none;
+        min-width: none;
+        padding: 0 15px;
+      }
+    }
+
+    .fc-slider-wrapper-outer {
+      position: relative;
+    }
+
+    .fc-slider-controls {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 0;
+      pointer-events: none;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+
+    .fc-slider-controls .fc-slider-button {
+      pointer-events: all;
+    }
+
+    .fc-slider-button {
+      background: rgba(248, 248, 248, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(221, 221, 221, 0.5);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: absolute;
+    }
+
+    .fc-slider-button.prev {
+      left: -10px;
+      top: -22px;
+    }
+
+    .fc-slider-button.next {
+      right: -10px;
+      top: -22px;
+    }
+
+    @media screen and (max-width: 749px) {
+      .fc-slider-button.prev {
+        left: 1px;
+        top: -28px;
+      }
+
+      .fc-slider-button.next {
+        right: 1px;
+        top: -28px;
+      }
+    }
+
+    .fc-slider-button:hover {
+      background: rgba(234, 234, 234, 0.95);
+      transform: scale(1.05);
+    }
+
+    .fc-slider-button:active {
+      transform: scale(0.95);
+    }
+
+    .fc-slider-button.prev svg {
+      transform: rotate(180deg);
+    }
+
+    .fc-slider-button:disabled {
+      background: rgba(248, 248, 248, 0.5);
+      cursor: default;
+      opacity: 0.5;
+      transform: none !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .fc-slider-button:disabled:hover {
+      background: rgba(248, 248, 248, 0.5);
+      transform: none !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .desktop-hidden {
+      display: none;
+    }
+
+    /* Приховування swipe indicator після використання */
+    .slider.swipe-used .swipe-indicator,
+    .slider.swipe-used .slider-counter,
+    .slider.swipe-used li:first-child:after,
+    .product-grid.slider.swipe-used li:first-child:after,
+    .product-grid.grid.slider.swipe-used li:first-child:after,
+    ul.product-grid.slider.swipe-used li:first-child:after {
+      display: none !important;
+      opacity: 0 !important;
+      content: none !important;
+    }
+    
+    /* Додатковий глобальний селектор з максимальною специфічністю */
+    body .swipe-used.product-grid.slider li:first-child::after {
+      display: none !important;
+      opacity: 0 !important;
+      content: "" !important;
+    }
+
+    @media screen and (max-width: 749px) {
+      .fc-slider-wrapper-outer {
+        display: none;
+      }
+      .desktop-hidden {
+        display: block;
+      }
+      .fc-slide-item {
+        max-width: 250px;
+        min-width: 200px;
+      }
+      
+      /* Глобальне правило для приховування swipe indicator */
+      .swipe-used li:first-child::after,
+      .swipe-used li:first-child:after {
+        display: none !important;
+        opacity: 0 !important;
+        content: none !important;
+      }
+    }
+    
+  {%- endstyle -%}
+
+  <link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  {%- if settings.quick_view_enabled -%}
+    <link rel="stylesheet" href="{{ 'section-main-product.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-deferred-media.css' | asset_url }}" media="print" onload="this.media='all'">
+  {%- endif -%}
+
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-product-grid.css' | asset_url | stylesheet_tag }}
+  {{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+  <noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+  <noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
+
+  <div class="page-width addons-wrap">
+    <{{ section.settings.heading_tag }} class="title {{ section.settings.heading_size }} {{ section.settings.heading_alignment }} addons-title">
+      {{ section.settings.heading | escape }}
+    </{{ section.settings.heading_tag }}>
+
+    {%- liquid
+      assign enable_slider = true
+    %}
+
+    {% if enable_slider %}
+      <div class="fc-slider-wrapper-outer">
+        <div class="fc-slider-container">
+          <div class="fc-slider-wrapper" id="fc-slider-addons-{{ section.id }}">
+            {%- for addon in addons -%}
+              <div class="fc-slide-item">
+                {% render 'card-product',
+                  card_product: addon,
+                  media_size: section.settings.image_ratio,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  show_quick_buy: section.settings.show_quick_buy,
+                  show_vendor: section.settings.show_vendor,
+                  show_rating: false,
+                  enable_quick_view: true,
+                  enable_color_swatches: section.settings.enable_color_swatches,
+                  enable_countdown: section.settings.enable_countdown,
+                  enable_image_fill: section.settings.enable_image_fill,
+                  button_style: section.settings.button_style
+                %}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <div class="fc-slider-controls">
+          <button class="fc-slider-button prev" id="fc-prev-addons-{{ section.id }}" aria-label="Previous products">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <button class="fc-slider-button next" id="fc-next-addons-{{ section.id }}" aria-label="Next products">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="default-grid-desktop-hidden{% if enable_slider %} desktop-hidden{% endif %}">
+      <ul
+        class="product-grid grid grid--2-col grid--5-col-tablet grid--5-col-desktop{% if addons_count > 2 %} slider slider--tablet{% endif %}"
+        role="list"
+        id="mobile-grid-addons-{{ section.id }}"
+      >
+        {%- for addon in addons -%}
+          <li class="grid__item{% if addons_count > 2 %} slider__slide{% endif %}">
+            {% render 'card-product',
+              card_product: addon,
+              media_size: section.settings.image_ratio,
+              show_secondary_image: section.settings.show_secondary_image,
+              show_quick_buy: section.settings.show_quick_buy,
+              show_vendor: section.settings.show_vendor,
+              show_rating: false,
+              enable_quick_view: true,
+              enable_color_swatches: section.settings.enable_color_swatches,
+              enable_countdown: section.settings.enable_countdown,
+              enable_image_fill: section.settings.enable_image_fill,
+              button_style: section.settings.button_style
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+
+  {% if enable_slider %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var slider = document.getElementById('fc-slider-addons-{{ section.id }}');
+        var prevBtn = document.getElementById('fc-prev-addons-{{ section.id }}');
+        var nextBtn = document.getElementById('fc-next-addons-{{ section.id }}');
+        var controlsContainer = document.querySelector('#shopify-section-{{ section.id }} .fc-slider-wrapper-outer .fc-slider-controls');
+
+        if (!slider || !prevBtn || !nextBtn) return;
+
+        var slideItems = slider.querySelectorAll('.fc-slide-item');
+        var currentIndex = 0;
+
+        // Використовуємо простий margin-left замість transform
+        function updateSlideWidths() {
+          var sliderContainer = slider.parentElement;
+          var containerWidth = sliderContainer.offsetWidth;
+          var slideWidth;
+          
+          if (window.innerWidth >= 750) {
+            slideWidth = containerWidth / 3;
+          } else {
+            var slideCount = slideItems.length;
+            var padding = 20;
+            var maxSlideWidth = 320;
+            var minSlideWidth = 240;
+            var idealSlideWidth = containerWidth / Math.ceil(containerWidth / (maxSlideWidth + padding));
+            idealSlideWidth = Math.max(minSlideWidth + padding, Math.min(maxSlideWidth + padding, idealSlideWidth));
+            var visibleCount = Math.floor(containerWidth / idealSlideWidth);
+            slideWidth = containerWidth / visibleCount;
+          }
+
+          slideItems.forEach(function(item) {
+            item.style.flexBasis = slideWidth + 'px';
+            item.style.width = slideWidth + 'px';
+          });
+
+          return slideWidth;
+        }
+
+        function updateButtonStates() {
+          var sliderContainer = slider.parentElement;
+          var containerWidth = sliderContainer.offsetWidth;
+          var slideWidth = updateSlideWidths();
+          var visibleCount;
+          
+          if (window.innerWidth >= 750) {
+            visibleCount = 3;
+          } else {
+            visibleCount = Math.floor(containerWidth / slideWidth);
+          }
+          
+          var maxIndex = Math.max(0, slideItems.length - visibleCount);
+
+          prevBtn.disabled = currentIndex <= 0;
+          nextBtn.disabled = currentIndex >= maxIndex;
+          
+          prevBtn.setAttribute('aria-disabled', prevBtn.disabled);
+          nextBtn.setAttribute('aria-disabled', nextBtn.disabled);
+        }
+
+        function updateSlider() {
+          var slideWidth = updateSlideWidths();
+          var sliderContainer = slider.parentElement;
+          var totalContentWidth = slideItems.length * slideWidth;
+          var containerWidth = sliderContainer.offsetWidth;
+
+          if (controlsContainer) {
+            controlsContainer.style.display = totalContentWidth > containerWidth ? 'flex' : 'none';
+          }
+
+          var visibleCount;
+          if (window.innerWidth >= 750) {
+            visibleCount = 3;
+          } else {
+            visibleCount = Math.floor(containerWidth / slideWidth);
+          }
+          
+          var maxIndex = Math.max(0, slideItems.length - visibleCount);
+
+          if (currentIndex > maxIndex) {
+            currentIndex = maxIndex;
+          }
+
+          // Використовуємо margin-left замість transform для простоти
+          var moveDistance = currentIndex * slideWidth;
+          slider.style.marginLeft = '-' + moveDistance + 'px';
+
+          updateButtonStates();
+        }
+
+        nextBtn.addEventListener('click', function() {
+          if (nextBtn.disabled) return;
+          
+          var sliderContainer = slider.parentElement;
+          var containerWidth = sliderContainer.offsetWidth;
+          var slideWidth = updateSlideWidths();
+          var visibleCount;
+          
+          if (window.innerWidth >= 750) {
+            visibleCount = 3;
+          } else {
+            visibleCount = Math.floor(containerWidth / slideWidth);
+          }
+          
+          var maxIndex = Math.max(0, slideItems.length - visibleCount);
+          
+          if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateSlider();
+          }
+        });
+
+        prevBtn.addEventListener('click', function() {
+          if (prevBtn.disabled) return;
+          
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateSlider();
+          }
+        });
+
+        window.addEventListener('resize', function() {
+          setTimeout(updateSlider, 100);
+        });
+
+        // Ініціалізація
+        updateSlider();
+      });
+
+      // Swipe indicator logic
+      document.addEventListener('DOMContentLoaded', function() {
+        var sessionKey = 'swipe-used-global-addons-{{ section.id }}';
+        
+        function findProductGridSliders() {
+          var sliders = document.querySelectorAll('#shopify-section-{{ section.id }} .product-grid.slider');
+          return Array.from(sliders);
+        }
+        
+        function hideSwipeIndicator() {
+          var sliders = findProductGridSliders();
+          
+          sliders.forEach(function(slider) {
+            slider.classList.add('swipe-used');
+          });
+          
+          sessionStorage.setItem(sessionKey, 'true');
+        }
+        
+        function setupTouchTracking() {
+          var sliders = findProductGridSliders();
+          
+          if (sliders.length === 0) {
+            setTimeout(setupTouchTracking, 1000);
+            return;
+          }
+          
+          var startX, startY;
+          var hasTriggered = false;
+          
+          function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+          }
+          
+          function handleTouchMove(e) {
+            if (hasTriggered) return;
+            
+            var deltaX = Math.abs(e.touches[0].clientX - startX);
+            var deltaY = Math.abs(e.touches[0].clientY - startY);
+            
+            if (deltaX > 25 && deltaX > deltaY * 1.2) {
+              hasTriggered = true;
+              hideSwipeIndicator();
+            }
+          }
+          
+          sliders.forEach(function(slider) {
+            slider.addEventListener('touchstart', handleTouchStart, { passive: true });
+            slider.addEventListener('touchmove', handleTouchMove, { passive: true });
+          });
+        }
+        
+        function init() {
+          if (sessionStorage.getItem(sessionKey)) {
+            hideSwipeIndicator();
+          } else {
+            setupTouchTracking();
+          }
+        }
+        
+        init();
+      });
+    </script>
+  {% endif %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Add‑on Products",
+  "tag": "section",
+  "class": "section",
+
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "You may also like"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h1", "label": "H1" },
+        { "value": "h0", "label": "H0" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "HTML tag for heading",
+      "options": [
+        { "value": "h1",  "label": "h1" },
+        { "value": "h2",  "label": "h2" },
+        { "value": "h3",  "label": "h3" },
+        { "value": "h4",  "label": "h4" },
+        { "value": "h5",  "label": "h5" },
+        { "value": "h6",  "label": "h6" },
+        { "value": "div", "label": "div" },
+        { "value": "span", "label": "span" },
+        { "value": "p",   "label": "p" }
+      ],
+      "default": "h2"
+    },
+
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "adapt",     "label": "Adapt" },
+        { "value": "square",    "label": "Square" },
+        { "value": "portrait",  "label": "Portrait" },
+        { "value": "landscape", "label": "Landscape" },
+        { "value": "wide",      "label": "Wide" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "top center",    "label": "Top" },
+        { "value": "center center", "label": "Center" },
+        { "value": "bottom center", "label": "Bottom" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_fill",
+      "label": "Enable image fill",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show secondary image",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_buy",
+      "label": "Show quick buy",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_view",
+      "label": "Enable quick view",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_swatches",
+      "label": "Enable color swatches",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_countdown",
+      "label": "Enable countdown",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock",
+      "label": "Show stock status",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid background"
+        },
+        {
+          "value": "transparent",
+          "label": "Transparent (bg on hover)"
+        }
+      ],
+      "default": "transparent"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Add‑on Products"
+    }
+  ],
+
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlay"
+    ]
+  }
+}
+{% endschema %}

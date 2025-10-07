@@ -1,0 +1,865 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "video_hero_pGeFAF": {
+      "type": "video-hero",
+      "blocks": {
+        "heading_JkygPz": {
+          "type": "heading",
+          "settings": {
+            "heading": "Gorgeous hair starts here",
+            "heading_size": "h1",
+            "heading_tag": "h1"
+          }
+        },
+        "button_K4y6Hf": {
+          "type": "button",
+          "settings": {
+            "button_label": "DISCOVER LUNESI",
+            "button_link": "shopify://collections/main-collection",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_JkygPz",
+        "button_K4y6Hf"
+      ],
+      "custom_css": [
+        ".banner {border-radius: 20px;}",
+        ".banner__media {border-radius: 20px;}",
+        ".banner__box {padding-bottom: 0;}",
+        ".md-modal__formContent__select {display: none !important;}"
+      ],
+      "settings": {
+        "video": "shopify://files/videos/Candice-vmake.mp4",
+        "mob_img_banner": "shopify://shop_images/IMAGE_2025-05-08_17_11_00.jpg",
+        "mobile_video_position": "center center",
+        "video_url": "",
+        "text_box_position": "bottom-left",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "show_text_box": false,
+        "content_box_width": 100,
+        "content_box_width_mobile": 95,
+        "full_width": false,
+        "show_divider": false,
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "auto",
+        "show_text_below": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "show_gradient_overlay": false,
+        "gradient_overlay_color": "rgba(0,0,0,0)",
+        "gradient_style": "simple",
+        "gradient_direction": "to bottom",
+        "gradient_simple_start_opacity": 0,
+        "gradient_simple_end_opacity": 0,
+        "gradient_top_opacity": 40,
+        "gradient_top_position": 0,
+        "gradient_middle_start_opacity": 20,
+        "gradient_middle_start_position": 30,
+        "gradient_middle_end_opacity": 10,
+        "gradient_middle_end_position": 70,
+        "gradient_bottom_opacity": 35,
+        "gradient_bottom_position": 100,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "featured_collection_kKaQJG": {
+      "type": "featured-collection",
+      "custom_css": [
+        "@media screen and (max-width: 1100px) {.button--small {transform: scale(0.8); top: -3px; }}",
+        "@media only screen and (max-width: 767px) {.grid--2-col .grid__item {width: calc(70% - (var(--grid-horizontal-spacing) / 2)); }}"
+      ],
+      "settings": {
+        "collection": "main-collection",
+        "products_to_show": 3,
+        "enable_conditional_slider": true,
+        "show_view_all": false,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "heading_tag": "h2",
+        "products_to_show_mobile": 5,
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "image_ratio": "adapt",
+        "image_position": "center center",
+        "enable_image_fill": true,
+        "show_secondary_image": true,
+        "secondary_image_max": 1,
+        "show_vendor": false,
+        "show_rating": false,
+        "show_quick_buy": true,
+        "enable_quick_view": false,
+        "enable_color_swatches": true,
+        "enable_countdown": true,
+        "button_style": "transparent",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "rich_text_wNayRT": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_nPxCA6": {
+          "type": "heading",
+          "settings": {
+            "heading": "Lunesi Haircare - Essentials for Healthy, Glowing Hair",
+            "heading_size": "h2",
+            "heading_tag": "h2"
+          }
+        },
+        "text_7RL4Jk": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Discover Lunesi - a curated line of haircare that's simple to use, but rich in results. From shampoo and conditioner to scalp treatments and hair oil, each product is designed to make your hair look and feel its best.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false,
+            "highlight_phrases": "",
+            "highlight_style": "marker"
+          }
+        },
+        "button_A4UdAP": {
+          "type": "button",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_link": "shopify://collections/main-collection",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_nPxCA6",
+        "text_7RL4Jk",
+        "button_A4UdAP"
+      ],
+      "settings": {
+        "text_alignment": "center",
+        "rounded_corner": false,
+        "mobile_text_alignment": "center",
+        "horizontal_content": false,
+        "narrow": false,
+        "show_divider": false,
+        "use_custom_colors": false,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#474345",
+        "colors_background": "#ffffff",
+        "colors_highlight": "#bbff00",
+        "gradient_background": "",
+        "padding_top": 36,
+        "padding_bottom": 48
+      }
+    },
+    "image_banner_TqGcGn": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_7tLxTH": {
+          "type": "heading",
+          "settings": {
+            "heading": "Unlock heavenly strong, shiny hair ",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "button_BYywV8": {
+          "type": "button",
+          "settings": {
+            "button_label": "Replenish your tresses",
+            "button_link": "shopify://collections",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_7tLxTH",
+        "button_BYywV8"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "image": "shopify://shop_images/refresh-your-rhode-routine-3.webp",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "center center",
+        "text_box_position": "bottom-right",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "auto",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "mobile_text_background_enabled": false,
+        "mobile_text_background_color": "#1a1b18",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 28,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image_with_text_F6j8na": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_xU99cF": {
+          "type": "heading",
+          "settings": {
+            "heading": "Grow and glow",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_FinRPG": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Say goodbye to dull hair, split ends and fragile strands.</p><p>Our science-backed, cruelty-free ingredients boost length and strengthen hair from root to tip.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_nEbhgQ": {
+          "type": "button",
+          "settings": {
+            "button_label": "View All",
+            "button_link": "shopify://collections/main-collection",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_xU99cF",
+        "text_FinRPG",
+        "button_nEbhgQ"
+      ],
+      "custom_css": [
+        ".image-with-text__grid {border-radius: 20px;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/20250404_LUNESI_SHOT_07_0208-v3.jpg",
+        "image_position": "20% 0",
+        "layout": "text_first",
+        "text_box_position": "middle",
+        "text_alignment": "left",
+        "image_ratio": "750px",
+        "enlarge_content": false,
+        "full_width": false,
+        "show_divider": false,
+        "image_behavior": "none",
+        "mobile_layout": "image_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "enable_video_looping": false,
+        "video_url": "",
+        "use_custom_colors": true,
+        "colors_button_label": "#212326",
+        "colors_button_background": "#e6cedf",
+        "colors_text": "#474345",
+        "colors_background": "#f7f7f7",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "tab_collage_BPhYFC": {
+      "type": "tab-collage",
+      "blocks": {
+        "image_VrMYyQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/MO_LUNESI_REVEALING001_v0016v12_all_0039_03_0120.jpg",
+            "image_link": "shopify://products/alchemical-golden-hair-oil",
+            "image_position": "center center",
+            "heading": "The 5-Step Lunesi Ritual:",
+            "description": "<p>Your most radiant hair begins here.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_QKNe8M": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may6633_1_291051d1-3f12-4b20-81c6-e55abca74a54.jpg",
+            "image_link": "shopify://products/deep-love-hair-mask",
+            "image_position": "center center",
+            "heading": "cleanse",
+            "description": "<p>Start fresh. A gentle yet potent cleanse lifts away impurities, balancing your scalp while infusing it with hydration. Think of it as a reset — clean hair that’s primed to absorb what comes next.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_GMgHNg": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may6482_1.jpg",
+            "image_link": "shopify://products/illuminating-leave-in-conditioner",
+            "image_position": "top center",
+            "heading": "smooth and repair",
+            "description": "<p>Undo the damage. This reparative step restores structure, seals split ends, and smooths texture — reviving hair with a silk-like finish and inner strength you can feel.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_V69ggi": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may6299.jpg",
+            "image_link": "shopify://products/rising-moon-secret-scalp-toner",
+            "image_position": "center center",
+            "heading": "hydrate and protect",
+            "description": "<p>Defend your glow. A weightless veil of moisture wraps each strand, shielding hair from UV rays, heat, and environmental stressors. Hydrated, resilient, beautifully styled — all day long.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_pxCJ84": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may6044_1.jpg",
+            "image_link": "shopify://products/stardust-nourishing-shampoo",
+            "image_position": "20% 0",
+            "heading": "support growth",
+            "description": "<p>The root of everything. Powered by active botanicals, this step energizes the scalp, strengthens the follicle foundation, and supports fuller, denser growth over time.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        },
+        "image_RC4MnA": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/19may5769_2.jpg",
+            "image_link": "shopify://products/alchemical-golden-hair-oil",
+            "image_position": "center center",
+            "heading": "finish with shine",
+            "description": "<p>Lock in the ritual. Our golden finishing oil delivers shine without weight, sealing moisture while adding a luminous touch that catches the light — and attention — with every movement.</p>",
+            "button_label": "Complete Hair Quiz",
+            "button_link": "shopify://pages/quiz",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "image_VrMYyQ",
+        "image_QKNe8M",
+        "image_GMgHNg",
+        "image_V69ggi",
+        "image_pxCJ84",
+        "image_RC4MnA"
+      ],
+      "custom_css": [
+        ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
+        ".tab-collage__content {row-gap: 1.2rem;}",
+        ".tab-collage__desc {padding-top: 24px;}",
+        "@media (max-width: 767px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 1.8rem); }}",
+        "@media (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
+        "@media (min-width: 1024px) {.tab-collage__card-image {height: 100% !important; }}",
+        "@media (min-width: 1250px) {.tab-collage__heading {white-space: nowrap; }}"
+      ],
+      "settings": {
+        "layout": "image_first",
+        "text_box_position": "top",
+        "text_alignment": "left",
+        "image_ratio": "700px",
+        "make_collapsible_rows": false,
+        "horizontal_titles": true,
+        "full_width": false,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "heading_tag": "h2",
+        "section_button_label": "Complete Hair Quiz",
+        "section_button_link": "shopify://pages/quiz",
+        "section_button_size": "small",
+        "section_button_style_secondary": true,
+        "mobile_layout": "text_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "colors_button_label": "#212326",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#474345",
+        "colors_border": "#d2d5d9",
+        "colors_background": "#f7f7f7",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image_with_text_RqtEEp": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_fQaJJN": {
+          "type": "heading",
+          "settings": {
+            "heading": "Beauty as a sensorial experience",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_HhBbwX": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our signature 5-step routine makes you feel like a star</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_kantEJ": {
+          "type": "button",
+          "settings": {
+            "button_label": "????",
+            "button_link": "shopify://collections",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_fQaJJN",
+        "text_HhBbwX",
+        "button_kantEJ"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".image-with-text__grid {border-radius: 20px;}",
+        ".media-wrapper {border-top-left-radius: 20px; border-bottom-left-radius: 20px;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/refresh-your-rhode-routine-5.webp",
+        "image_position": "center center",
+        "layout": "image_first",
+        "text_box_position": "middle",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "enlarge_content": false,
+        "full_width": false,
+        "show_divider": false,
+        "image_behavior": "none",
+        "mobile_layout": "image_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "enable_video_looping": false,
+        "video_url": "",
+        "use_custom_colors": true,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#212326",
+        "colors_background": "#f1f0ed",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "instagram_slider_Byaihn": {
+      "type": "instagram-slider",
+      "blocks": {
+        "instagram_image_qJGxF6": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/19may7451-2_7b3a4e62-d7e1-4cb2-b98d-920d9cdd2ae7.jpg",
+            "alt_text": "",
+            "instagram_url": "https://www.instagram.com/lunesibeauty/reel/DPEg_jbinM8/"
+          }
+        },
+        "instagram_image_mWCrMK": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/19may6810_1_864d34b3-8fae-4990-884d-85b465c4dc11.jpg",
+            "alt_text": "",
+            "instagram_url": "#"
+          }
+        },
+        "instagram_image_LQ36zU": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/19may6482_1_af856716-4f61-4fc7-9e79-c305df124a39.jpg",
+            "alt_text": "",
+            "instagram_url": "#"
+          }
+        },
+        "instagram_image_ViNLxK": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/20250404_LUNESI_SHOT_01_0219_v3_e266a4e9-1a8c-426d-ba7c-44f46459082c.jpg",
+            "alt_text": "",
+            "instagram_url": "#"
+          }
+        },
+        "instagram_image_qPFVKP": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/19may5782_ac9ca9aa-ae31-4ed1-9b0b-d9948a165e14.jpg",
+            "alt_text": "",
+            "instagram_url": "#"
+          }
+        },
+        "instagram_image_NRTGWj": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/19may6262_bc9acf54-23d4-4274-b24f-a69551496af4.jpg",
+            "alt_text": "",
+            "instagram_url": "#"
+          }
+        }
+      },
+      "block_order": [
+        "instagram_image_qJGxF6",
+        "instagram_image_mWCrMK",
+        "instagram_image_LQ36zU",
+        "instagram_image_ViNLxK",
+        "instagram_image_qPFVKP",
+        "instagram_image_NRTGWj"
+      ],
+      "disabled": true,
+      "name": "Instagram Slider",
+      "settings": {
+        "title": "You + Lunesi",
+        "title_size": 42,
+        "title_weight": "400",
+        "title_color": "#1a1a1a",
+        "social_button_text": "Find us on social",
+        "social_url": "https://www.instagram.com/lunesibeauty/",
+        "button_text_color": "#1a1a1a",
+        "button_border_color": "#67645e",
+        "button_hover_bg": "#67645e",
+        "button_hover_text": "#ffffff",
+        "arrow_background": "#ffffff",
+        "arrow_border_color": "#d1d1d1",
+        "arrow_color": "#1a1a1a",
+        "arrow_hover_background": "#eaeaea",
+        "arrow_hover_border": "#eaeaea",
+        "arrow_hover_color": "#282828",
+        "view_instagram_text": "View on Instagram",
+        "overlay_opacity": 0.4,
+        "hover_scale": 1.1,
+        "section_padding_top": 16,
+        "section_padding_bottom": 16,
+        "background_color": "#ffffff"
+      }
+    },
+    "section_tiktok_iixJNM": {
+      "type": "section-tiktok",
+      "blocks": {
+        "video_xAXaEt": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0977_toner.mp4",
+            "main_product": "alchemical-golden-hair-oil",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        },
+        "video_jThX8L": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0986_conditioner.mp4",
+            "main_product": "illuminating-leave-in-conditioner",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        },
+        "video_zynWNE": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0923_oil.mp4",
+            "main_product": "alchemical-golden-hair-oil",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        },
+        "video_6bjLMx": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0967_masque.mp4",
+            "main_product": "deep-love-hair-mask",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        },
+        "video_DT7EY9": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0993_shampoo.mp4",
+            "main_product": "stardust-nourishing-shampoo",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        },
+        "video_4MabQR": {
+          "type": "video",
+          "settings": {
+            "video_file": "shopify://files/videos/0977_toner_f7915fb7-90e2-4c66-a23d-e7f290b93629.mp4",
+            "main_product": "alchemical-golden-hair-oil",
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
+          }
+        }
+      },
+      "block_order": [
+        "video_xAXaEt",
+        "video_jThX8L",
+        "video_zynWNE",
+        "video_6bjLMx",
+        "video_DT7EY9",
+        "video_4MabQR"
+      ],
+      "name": "Slider Products",
+      "settings": {
+        "main_title": ""
+      }
+    },
+    "image_banner_r8Hxe9": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_UFcJDA": {
+          "type": "heading",
+          "settings": {
+            "heading": "Chemistry lessons",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_qLgrpM": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Science meets sensuality for hair that’s as fierce and fabulous as you are. Whether used individually or together, our elixirs conjure the ordinary into the extraordinary.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_6cMrdd": {
+          "type": "button",
+          "settings": {
+            "button_label": "Learn More",
+            "button_link": "shopify://pages/benefits",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_UFcJDA",
+        "text_qLgrpM",
+        "button_6cMrdd"
+      ],
+      "custom_css": [
+        ".banner__text {max-width: 800px; margin: auto;}",
+        "@media screen and (max-width: 749px) {.banner__media::before {display: none !important; } .banner__heading {padding-bottom: 12px; } .banner__content {padding-top: 12px !important; }}",
+        ".banner__box.center.mobile-center {padding-top: 0;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/20250404_LUNESI_SHOT_05_0243_web.jpg",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "80% 50%",
+        "text_box_position": "middle-center",
+        "text_alignment": "center",
+        "image_ratio": "550px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "adapt",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "mobile_text_background_enabled": true,
+        "mobile_text_background_color": "#f7f7f7",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 0,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image_with_text_k9Afni": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_4qKXyw": {
+          "type": "heading",
+          "settings": {
+            "heading": "Great hair anywhere!",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_8QMFRa": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Whole amazing routine when you hit the road.</p><p>Mini bottles are your best beauty companions at the gym and on every journey, ensuring you never miss a dose of your favourite products, no matter where life takes you.</p>",
+            "text_size": "typeset2",
+            "secondary_color": false
+          }
+        },
+        "button_br8rBL": {
+          "type": "button",
+          "settings": {
+            "button_label": "TAKE THEM WITH YOU",
+            "button_link": "shopify://collections",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_4qKXyw",
+        "text_8QMFRa",
+        "button_br8rBL"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".image-with-text__grid {border-radius: 20px;}",
+        ".media-wrapper {border-top-right-radius: 20px; border-bottom-right-radius: 20px;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/refresh-your-rhode-routine-7.webp",
+        "image_position": "center center",
+        "layout": "text_first",
+        "text_box_position": "middle",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "enlarge_content": false,
+        "full_width": false,
+        "show_divider": false,
+        "image_behavior": "none",
+        "mobile_layout": "image_first",
+        "mobile_text_alignment": "left",
+        "mobile_image_ratio": "auto",
+        "enable_video_looping": false,
+        "video_url": "",
+        "use_custom_colors": true,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#212326",
+        "colors_background": "#f1f0ed",
+        "gradient_background": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "image_banner_xQxUTq": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_JY3jqd": {
+          "type": "heading",
+          "settings": {
+            "heading": "Trends are fleeting, damage should be too",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "button_mXijQQ": {
+          "type": "button",
+          "settings": {
+            "button_label": "TRY DEEP LOVE MASQUE",
+            "button_link": "shopify://collections",
+            "button_size": "small",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_JY3jqd",
+        "button_mXijQQ"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "image": "shopify://shop_images/refresh-your-rhode-routine-8.webp",
+        "video_controls": false,
+        "rounded_corner": true,
+        "image_position": "center center",
+        "text_box_position": "bottom-left",
+        "text_alignment": "left",
+        "image_ratio": "650px",
+        "show_text_box": false,
+        "full_width": false,
+        "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
+        "image_behavior": "none",
+        "mobile_text_alignment": "center",
+        "mobile_image_ratio": "auto",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "mobile_text_background_enabled": false,
+        "mobile_text_background_color": "#1a1b18",
+        "mobile_text_gradient": "",
+        "mobile_text_background_rounded": true,
+        "colors_button_label": "#1a1b18",
+        "colors_button_background": "#ffffff",
+        "colors_text": "#ffffff",
+        "colors_overlay": "#000000",
+        "colors_overlay_opacity": 28,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "custom_liquid_zgw4Vf": {
+      "type": "custom-liquid",
+      "disabled": true,
+      "settings": {
+        "custom_liquid": "",
+        "full_width": false,
+        "show_divider": false,
+        "padding_top": 16,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "video_hero_pGeFAF",
+    "featured_collection_kKaQJG",
+    "rich_text_wNayRT",
+    "image_banner_TqGcGn",
+    "image_with_text_F6j8na",
+    "tab_collage_BPhYFC",
+    "image_with_text_RqtEEp",
+    "instagram_slider_Byaihn",
+    "section_tiktok_iixJNM",
+    "image_banner_r8Hxe9",
+    "image_with_text_k9Afni",
+    "image_banner_xQxUTq",
+    "custom_liquid_zgw4Vf"
+  ]
+}
