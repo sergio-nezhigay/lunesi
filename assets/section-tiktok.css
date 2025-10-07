@@ -161,6 +161,27 @@ button {
 .main-link-video:hover {
   background: #373a36cc;
 }
+.link-video-tooltip {
+  position: absolute;
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%) translateX(10px) scale(0.8);
+  background: #373a36;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Kumbh Sans', sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  transform-origin: right center;
+}
+.main-link-video:hover .link-video-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0) scale(1);
+}
 @media (max-width: 768px) {
   .mobile-swiper-card-main {
     margin-bottom: 20px;
