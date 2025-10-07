@@ -1,0 +1,96 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer-group.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "footer-0": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Navigate",
+            "menu": "footer",
+            "show_icons": false,
+            "nofollow_custom": false,
+            "show_policy_first": false,
+            "without_shop_url": false
+          }
+        },
+        "link_list_wHCHze": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Social",
+            "menu": "social-menu",
+            "show_icons": true,
+            "nofollow_custom": true,
+            "show_policy_first": false,
+            "without_shop_url": true
+          }
+        },
+        "footer-1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Official",
+            "menu": "official-menu",
+            "show_icons": false,
+            "nofollow_custom": false,
+            "show_policy_first": true,
+            "without_shop_url": false
+          }
+        },
+        "text_3AxPU4": {
+          "type": "text",
+          "settings": {
+            "heading": "Support",
+            "subtext": "<p>We’re here M-F 9am - 5pm GMT/BST.</p><p>Drop us a note anytime.</p><p>Do Not Sell or Share My Personal Information</p><p>Cookie Preferences</p><p>© Lunesi 2025</p>"
+          }
+        }
+      },
+      "block_order": [
+        "footer-0",
+        "link_list_wHCHze",
+        "footer-1",
+        "text_3AxPU4"
+      ],
+      "settings": {
+        "logo_image": "shopify://shop_images/lunesi_sky_grey_logo.svg",
+        "logo_width": 100,
+        "show_divider": false,
+        "rounded_corner": false,
+        "icon_color": "#212326",
+        "newhovertext": "#ffffff",
+        "gradient_background": "",
+        "colors_background": "#f7f7f7",
+        "colors_heading": "#353133",
+        "colors_text": "#474345",
+        "colors_link": "#474345",
+        "colors_border": "#d2d5d9",
+        "newsletter_enable": true,
+        "newsletter_heading": "Join us on the journey to radiant, healthy hair. Care notes, exclusive Lunesi rituals, and upcoming product reveals — gently delivered to your inbox.",
+        "newsletter_text": "",
+        "privacy_policy_url": "shopify://pages/privacy-policy",
+        "privacy_checkbox_text": "I have read and agree to the terms and conditions.",
+        "show_social": false,
+        "social_heading": "",
+        "enable_follow_on_shop": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": false,
+        "show_policy": false,
+        "copyright_text": "All rights reserved."
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

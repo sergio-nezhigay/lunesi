@@ -1,0 +1,97 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header-group.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE US SHIPPING ON ORDERS OVER £46",
+            "text_on_mobile": "FREE US SHIPPING ON ORDERS OVER £46",
+            "text_size": 15,
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0"
+      ],
+      "settings": {
+        "only_homepage": false,
+        "layout": "default",
+        "mobile_layout": "carousel",
+        "autorotate": true,
+        "autorotate_speed": 5,
+        "show_navigation": true,
+        "direction": "left",
+        "speed": 1.6,
+        "colors_text": "#1a1b18",
+        "colors_background": "#f1f0ed",
+        "gradient_background": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        "@media (min-width: 1024px) {header {padding-left: 70px; padding-right: 70px; }}",
+        ".header-wrapper {padding-top: 16px;}"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/lunesi_sky_grey_logo_1166fa03-be37-4dc3-bf3f-c0bce3e2dfee.svg",
+        "logo_height": 200,
+        "mobile_logo_height": 120,
+        "logo_position": "middle-left",
+        "menu": "main-menu",
+        "menu_mobile": "main-menu",
+        "enable_dropdown_menu": true,
+        "show_line_separator": true,
+        "uppercase_menu_items": true,
+        "cart_icon": "cart",
+        "icon_weight": "1.1",
+        "enable_cart_upsell": true,
+        "upsell_heading": "Complete your routine",
+        "upsell_products": [
+          "deep-love-hair-mask",
+          "illuminating-leave-in-conditioner"
+        ],
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_sticky_header": true,
+        "show_sticky_header_scroll_up": true,
+        "enable_transparent_header": true,
+        "enable_transparent_header_collection": true,
+        "enable_transparent_header_custom": "",
+        "show_transparent_header_border": false,
+        "transparent_text_color": "#ffffff",
+        "enable_highlight": false,
+        "highlight_labels": "",
+        "highlight_style": "marker",
+        "mobile_logo_position": "center",
+        "colors_text": "#282828",
+        "colors_border": "#d2d5d9",
+        "colors_background": "#ffffff",
+        "gradient_background": "",
+        "colors_highlight": "#bbff00",
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}
