@@ -3,7 +3,6 @@
   max-width: 1300px;
   margin: auto;
   padding: 0 20px;
-  position: relative;
 }
 .embla__viewport {
   overflow: hidden;
@@ -13,13 +12,27 @@
   display: flex;
   align-items: center;
   height: 495px;
+  position: relative;
 }
 .embla__buttons {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+  z-index: 10;
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  transform: translateY(-50%);
 }
+
+.embla__buttons button {
+  pointer-events: all;
+}
+
 button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -48,35 +61,51 @@ button {
   transform: scale(1.1);
   margin: 0 20px;
 }
+
 .main-slider-prev-button{
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  right: -10px;
   transition: all .3s ease;
   z-index: 2;
   width: 40px;
-  background: white;
+  background: rgba(248, 248, 248, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 50%;
   height: 40px;
+  display: flex;
   align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 12px #0000001a;
-  border: 1px solid var(--arrow-border-color, #d1d1d1);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  cursor: pointer;
 }
 .main-slider-next-button{
+  display: flex;
   align-items: center;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  justify-content: center;
+  position: relative;
+  left: -10px;
   transition: all .3s ease;
   z-index: 2;
   width: 40px;
-  background: white;
+  background: rgba(248, 248, 248, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 50%;
   height: 40px;
   box-shadow: 0 2px 12px #0000001a;
-  border: 1px solid var(--arrow-border-color, #d1d1d1);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  cursor: pointer;
+}
+
+.main-slider-prev-button:hover,
+.main-slider-next-button:hover {
+  background: rgba(234, 234, 234, 0.95);
+  transform: scale(1.05);
+}
+
+.main-slider-prev-button:active,
+.main-slider-next-button:active {
+  transform: scale(0.95);
 }
 .playBtn{
   cursor: pointer;
@@ -202,7 +231,7 @@ button {
     grid-template-columns: repeat(auto-fill, minmax(312px, 1fr));
     gap: 10px;
     padding-bottom: 14px
-  } 
+  }
   .video-item video {
     width: 312px;
     height: 620px;
@@ -421,6 +450,14 @@ button {
     max-width: 750px;
     padding: 0 45px;
   }
+
+  .main-slider-prev-button {
+    right: -5px;
+  }
+
+  .main-slider-next-button {
+    left: -5px;
+  }
 }
 @media(max-width: 767px){
   .container-main-swiper-tiktok,
@@ -443,6 +480,20 @@ button {
   }
   .embla__buttons{
     display: none;
+  }
+
+  .main-slider-prev-button,
+  .main-slider-next-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .main-slider-prev-button {
+    right: 1px;
+  }
+
+  .main-slider-next-button {
+    left: 1px;
   }
 }
 @media(max-width: 650px){
