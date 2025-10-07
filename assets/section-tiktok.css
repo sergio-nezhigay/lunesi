@@ -25,14 +25,14 @@ button {
   font-size: 1rem;
   cursor: pointer;
 }
-.embla__slide .swiper-slide{
+.embla__slide .swiper-slide {
   transform: scale(0.9);
-  transition: transform .6s ease, box-shadow .6s ease;
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
 }
-.embla__slide{
+.embla__slide {
   flex: 0 0 20%;
 }
-.embla__slide.inactive-slide{
+.embla__slide.inactive-slide {
   flex: 0 0 20%;
 }
 .embla__slide {
@@ -44,16 +44,16 @@ button {
 .embla__slide.active-slide {
   flex: 0 0 22%;
 }
-.embla__slide.active-slide .swiper-slide{
+.embla__slide.active-slide .swiper-slide {
   transform: scale(1.1);
   margin: 0 20px;
 }
-.main-slider-prev-button{
+.main-slider-prev-button {
   position: absolute;
   right: 0;
-  top: 50%;
+  top: 193px;
   transform: translateY(-50%);
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
   background: white;
@@ -63,13 +63,13 @@ button {
   box-shadow: 0 2px 12px #0000001a;
   border: 1px solid var(--arrow-border-color, #d1d1d1);
 }
-.main-slider-next-button{
+.main-slider-next-button {
   align-items: center;
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
   background: white;
@@ -78,18 +78,18 @@ button {
   box-shadow: 0 2px 12px #0000001a;
   border: 1px solid var(--arrow-border-color, #d1d1d1);
 }
-.playBtn{
+.playBtn {
   cursor: pointer;
 }
-.main-title{
-  font-family: "Kumbh Sans", sans-serif;
+.main-title {
+  font-family: 'Kumbh Sans', sans-serif;
   font-weight: 300;
   font-size: 34px;
   letter-spacing: 0;
   text-align: center;
 }
-.main-title em{
-  font-family: "Playfair Display", serif;
+.main-title em {
+  font-family: 'Playfair Display', serif;
   font-weight: 400;
   font-size: 40px;
   letter-spacing: -1px;
@@ -101,57 +101,57 @@ button {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
 }
-.desktop-swiper-card-main{
+.desktop-swiper-card-main {
   display: none;
 }
-.mobile-swiper-card-main{
+.mobile-swiper-card-main {
   margin-left: 20px;
 }
-.mobile-swiper-card-main .video-item video{
+.mobile-swiper-card-main .video-item video {
   height: 280px;
   width: 203px;
   object-fit: cover;
   border-radius: 10px;
 }
-.mobile-swiper-card-main .swiper-slide{
+.mobile-swiper-card-main .swiper-slide {
   max-width: 203px;
 }
-.mobile-swiper-card-main .swiper-pagination-bullet{
-  background: #373A3699 !important;
+.mobile-swiper-card-main .swiper-pagination-bullet {
+  background: #373a3699 !important;
 }
-.mobile-swiper-card-main .swiper-pagination-bullet-active{
+.mobile-swiper-card-main .swiper-pagination-bullet-active {
   width: 62px;
   height: 2px;
   border-radius: 6px;
 }
-.mobile-swiper-card-main .swiper-pagination{
+.mobile-swiper-card-main .swiper-pagination {
   position: relative;
   top: 5px;
 }
-.mobile-swiper-card-main  .swiper-pagination-bullet{
+.mobile-swiper-card-main .swiper-pagination-bullet {
   width: 62px;
   height: 2px;
   border-radius: 6px;
-  background: #373A3633
+  background: #373a3633;
 }
-.video-item .start_video{
+.video-item .start_video {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 54px;
   height: 54px;
-  background: #373A3699;
+  background: #373a3699;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.main-link-video{
+.main-link-video {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #373A3699;
+  background: #373a3699;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -159,41 +159,41 @@ button {
   align-items: center;
   justify-content: center;
 }
-@media (max-width: 768px){
-  .mobile-swiper-card-main{
+@media (max-width: 768px) {
+  .mobile-swiper-card-main {
     margin-bottom: 20px;
   }
 }
-@media (min-width: 768px){
-  .main-link-video{
+@media (min-width: 768px) {
+  .main-link-video {
     top: 20px;
     right: 19px;
   }
-  .main-title{
+  .main-title {
     font-size: 40px;
   }
-  .main-title em{
+  .main-title em {
     font-size: 47px;
   }
-  .desktop-swiper-card-main{
+  .desktop-swiper-card-main {
     display: grid;
   }
-  .mobile-swiper-card-main{
+  .mobile-swiper-card-main {
     display: none;
   }
   .video-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(32%, 1fr));
     padding: 0 89px;
-  } 
+  }
 }
-@media (min-width: 1024px){
+@media (min-width: 1024px) {
   .video-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(23%, 1fr));
     padding: 0 89px;
-    padding-bottom: 14px
-  } 
+    padding-bottom: 14px;
+  }
 }
-@media (min-width: 1440px){
+@media (min-width: 1440px) {
   .video-wrapper {
     max-width: 1280px;
     padding: 0;
@@ -201,65 +201,65 @@ button {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(312px, 1fr));
     gap: 10px;
-    padding-bottom: 14px
-  } 
+    padding-bottom: 14px;
+  }
   .video-item video {
     width: 312px;
     height: 620px;
     border-radius: 8px;
     object-fit: cover;
   }
-  .video-item.video-item-tiktok video{
+  .video-item.video-item-tiktok video {
     height: 490px;
   }
 }
-.video-item.video-item-tiktok video{
+.video-item.video-item-tiktok video {
   object-fit: cover;
   height: 320px;
   width: 100%;
 }
-.video-item video { 
+.video-item video {
   border-radius: 8px;
   object-fit: cover;
 }
-.video-item{
+.video-item {
   position: relative;
 }
-.video-item .start_video{
+.video-item .start_video {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 54px;
   height: 54px;
-  background: #373A3699;
+  background: #373a3699;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.main-title-tiktok{
-  font-family: "Kumbh Sans", sans-serif;
+.main-title-tiktok {
+  font-family: 'Kumbh Sans', sans-serif;
   font-weight: 300;
   font-size: 34px;
   letter-spacing: 0;
   text-align: center;
 }
-.main-title-tiktok em{
-  font-family: "Playfair Display", serif;
+.main-title-tiktok em {
+  font-family: 'Playfair Display', serif;
   font-weight: 400;
   font-size: 40px;
   letter-spacing: -1px;
 }
 @media (min-width: 768px) {
-  .main-title-tiktok{
+  .main-title-tiktok {
     font-size: 40px;
   }
-  .main-title-tiktok em{
+  .main-title-tiktok em {
     font-size: 47px;
   }
 }
-.swiper.main-swiper-tiktok{
+.swiper.main-swiper-tiktok {
   min-height: 500px;
   height: auto;
   max-width: 1300px;
@@ -267,7 +267,7 @@ button {
   display: flex;
   padding-right: 40px;
 }
-.swiper-slide.swiper-slide-titktok{
+.swiper-slide.swiper-slide-titktok {
   width: 250px;
   height: fit-content;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -277,30 +277,30 @@ button {
   justify-content: center;
 }
 
-.swiper-wrapper.swiper-wrapper-titktok{
+.swiper-wrapper.swiper-wrapper-titktok {
   align-items: center;
 }
-.swiper-slide.swiper-slide-titktok.swiper-slide-active{
+.swiper-slide.swiper-slide-titktok.swiper-slide-active {
   transform: scale(1.1) !important;
   z-index: 2;
   margin: 0 20px !important;
 }
-.continer-bottom-tiktok img{
+.continer-bottom-tiktok img {
   height: 64px;
   width: auto;
 }
-.continer-bottom-tiktok{
-  border: 1px solid;
+.continer-bottom-tiktok {
+  background: #F7F7F7;
   border-radius: 10px;
   margin-top: 8px;
   display: flex;
   gap: 10px;
   padding: 12px;
 }
-.main-slide-tiktok{
+.main-slide-tiktok {
   color: black;
   text-align: left;
-  font-family: "Kumbh Sans", sans-serif;
+  font-family: 'Kumbh Sans', sans-serif;
   font-size: 13px;
   font-weight: bold;
   max-height: 42px;
@@ -308,36 +308,36 @@ button {
   height: auto;
   margin-bottom: 8px;
 }
-.price-slide-tiktok-product{
-  font-family: "Kumbh Sans", sans-serif;
+.price-slide-tiktok-product {
+  font-family: 'Kumbh Sans', sans-serif;
   font-size: 13px;
   max-height: 47px;
 }
-.old-price.price-slide-tiktok-product{
-  color: #B3B6BC;
+.old-price.price-slide-tiktok-product {
+  color: #b3b6bc;
   text-decoration: line-through;
 }
-.main-url-tiktok-product{
+.main-url-tiktok-product {
   display: contents;
 }
 .playBtn {
   cursor: pointer;
 }
-.container-main-swiper-tiktok{
+.container-main-swiper-tiktok {
   position: relative;
   max-width: 1389px;
   margin: 0 auto;
 }
-.swiper-button-prev-tiktok img{
+.swiper-button-prev-tiktok img {
   transform: rotate(180deg);
   position: relative;
 }
 
-.swiper-button-prev-tiktok svg{
+.swiper-button-prev-tiktok svg {
   width: 20px;
-  height: 20px; 
+  height: 20px;
 }
-.swiper-button-prev-tiktok{
+.swiper-button-prev-tiktok {
   position: absolute;
   left: 0;
   background: var(--arrow-background, #ffffff);
@@ -351,22 +351,22 @@ button {
   z-index: 99;
   background: white;
   justify-content: center;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   top: 50%;
   transform: translateY(-50%);
   box-shadow: 0 2px 12px #0000001a;
 }
 .swiper-button-next-tiktok:hover,
-.swiper-button-prev-tiktok:hover{
+.swiper-button-prev-tiktok:hover {
   background: #eaeaea;
   border-color: #eaeaea;
   transform: translateY(-50%) scale(1.1);
 }
-.swiper-button-next-tiktok svg{
+.swiper-button-next-tiktok svg {
   width: 20px;
-  height: 20px; 
+  height: 20px;
 }
-.swiper-button-next-tiktok{
+.swiper-button-next-tiktok {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -374,7 +374,7 @@ button {
   transform: translateY(-50%);
   background: var(--arrow-background, #ffffff);
   border: 1px solid var(--arrow-border-color, #d1d1d1);
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   width: 44px;
   height: 44px;
   display: flex;
@@ -389,75 +389,75 @@ button {
 .container-main-swiper-tiktok.swiper-disabled .swiper-button-prev-tiktok {
   display: none;
 }
-@media(max-width: 1439px){
-  .container-main-swiper-tiktok{
+@media (max-width: 1439px) {
+  .container-main-swiper-tiktok {
     max-width: 860px;
   }
-  .swiper.main-swiper-tiktok{
+  .swiper.main-swiper-tiktok {
     max-width: 780px;
   }
-  .embla{
+  .embla {
     max-width: 860px;
-    padding: 0 62px;
+    padding: 0 0;
   }
-  .embla__slide.inactive-slide{
+  .embla__slide.inactive-slide {
     flex: 0 0 32%;
   }
-  .embla__slide.active-slide{
+  .embla__slide.active-slide {
     flex: 0 0 38%;
   }
 }
-.swiper-disabled .swiper.main-swiper-tiktok{
+.swiper-disabled .swiper.main-swiper-tiktok {
   padding-right: 0px;
 }
-@media(max-width: 1023px){
-  .container-main-swiper-tiktok{
+@media (max-width: 1023px) {
+  .container-main-swiper-tiktok {
     max-width: 755px;
   }
-  .swiper.main-swiper-tiktok{
+  .swiper.main-swiper-tiktok {
     max-width: 768px;
   }
-  .embla{
+  .embla {
     max-width: 750px;
     padding: 0 45px;
   }
 }
-@media(max-width: 767px){
+@media (max-width: 767px) {
   .container-main-swiper-tiktok,
-  .swiper.main-swiper-tiktok{
+  .swiper.main-swiper-tiktok {
     max-width: 100%;
   }
   .swiper-button-next-tiktok,
-  .swiper-button-prev-tiktok{
+  .swiper-button-prev-tiktok {
     display: none;
   }
-  .embla__slide.active-slide{
+  .embla__slide.active-slide {
     flex: 0 0 45%;
   }
-  .embla__slide.inactive-slide{
+  .embla__slide.inactive-slide {
     flex: 0 0 30%;
   }
-  .embla{
+  .embla {
     max-width: 100%;
     padding: 0;
   }
-  .embla__buttons{
+  .embla__buttons {
     display: none;
   }
 }
-@media(max-width: 650px){
-  .embla__slide.inactive-slide{
+@media (max-width: 650px) {
+  .embla__slide.inactive-slide {
     flex: 0 0 50%;
   }
-  .embla__slide.active-slide{
+  .embla__slide.active-slide {
     flex: 0 0 52%;
   }
 }
-@media(max-width: 500px){
-  .embla__slide.inactive-slide{
+@media (max-width: 500px) {
+  .embla__slide.inactive-slide {
     flex: 0 0 59%;
   }
-  .embla__slide.active-slide{
+  .embla__slide.active-slide {
     flex: 0 0 70%;
   }
 }
