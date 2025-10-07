@@ -51,8 +51,7 @@ button {
 .main-slider-prev-button {
   position: absolute;
   right: 0;
-  top: 193px;
-  transform: translateY(-50%);
+  top: 179px;
   transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
@@ -67,8 +66,7 @@ button {
   align-items: center;
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 179px;
   transition: all 0.3s ease;
   z-index: 2;
   width: 40px;
@@ -158,6 +156,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s ease;
+}
+.main-link-video:hover {
+  background: #373a36cc;
 }
 @media (max-width: 768px) {
   .mobile-swiper-card-main {
@@ -288,14 +290,22 @@ button {
 .continer-bottom-tiktok img {
   height: 64px;
   width: auto;
+  object-fit: contain;
+  display: block;
 }
 .continer-bottom-tiktok {
-  background: #F7F7F7;
+  background: #f7f7f7;
   border-radius: 10px;
   margin-top: 8px;
   display: flex;
   gap: 10px;
   padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s ease;
+}
+.continer-bottom-tiktok:hover {
+  background: #eeeeee;
 }
 .main-slide-tiktok {
   color: black;
@@ -460,4 +470,7 @@ button {
   .embla__slide.active-slide {
     flex: 0 0 70%;
   }
+}
+
+.continer-bottom-tiktok img {
 }
