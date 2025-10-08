@@ -1,8 +1,8 @@
 .embla {
   overflow: hidden;
-  max-width: 1300px;
+  /*max-width: 1300px;*/
   margin: auto;
-  padding: 0 20px;
+  /*padding: 0 20px;*/
   position: relative;
 }
 .embla__viewport {
@@ -53,34 +53,45 @@ button {
   right: 20px;
   top: 179px;
   transform: translateX(50%);
-  transition: all 0.3s ease;
   z-index: 2;
-  width: 40px;
-  background: white;
+  background: rgba(248, 248, 248, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  height: 40px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 12px #0000001a;
-  border: 1px solid var(--arrow-border-color, #d1d1d1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.main-slider-prev-button:hover {
+  background: rgba(234, 234, 234, 0.95);
 }
 .main-slider-next-button {
   position: absolute;
   left: 20px;
   top: 179px;
   transform: translateX(-50%);
-  transition: all 0.3s ease;
   z-index: 2;
-  width: 40px;
-  background: white;
+  background: rgba(248, 248, 248, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  height: 40px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 12px #0000001a;
-  border: 1px solid var(--arrow-border-color, #d1d1d1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.main-slider-next-button:hover {
+  background: rgba(234, 234, 234, 0.95);
+  transform: translateX(-50%) scale(1.05);
 }
 .playBtn {
   cursor: pointer;
@@ -434,8 +445,7 @@ button {
     max-width: 780px;
   }
   .embla {
-    max-width: 860px;
-    padding: 0 40px;
+    padding: 0 43px;
   }
   .embla__slide.inactive-slide {
     flex: 0 0 32%;
@@ -444,10 +454,11 @@ button {
     flex: 0 0 38%;
   }
   .main-slider-prev-button {
-    right: 40px;
+    right: 49px;
   }
+
   .main-slider-next-button {
-    left: 40px;
+    left: 49px;
   }
 }
 .swiper-disabled .swiper.main-swiper-tiktok {
@@ -461,14 +472,14 @@ button {
     max-width: 768px;
   }
   .embla {
-    max-width: 750px;
     padding: 0 45px;
   }
   .main-slider-prev-button {
-    right: 45px;
+    right: 48px;
   }
+
   .main-slider-next-button {
-    left: 45px;
+    left: 48px;
   }
 }
 @media (max-width: 767px) {
@@ -509,7 +520,4 @@ button {
   .embla__slide.active-slide {
     flex: 0 0 70%;
   }
-}
-
-.continer-bottom-tiktok img {
 }
