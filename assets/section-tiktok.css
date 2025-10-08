@@ -1,8 +1,7 @@
 .embla {
   overflow: hidden;
-  /*max-width: 1300px;*/
   margin: auto;
-  /*padding: 0 20px;*/
+  padding: 0 50px;
   position: relative;
 }
 .embla__viewport {
@@ -50,7 +49,7 @@ button {
 }
 .main-slider-prev-button {
   position: absolute;
-  right: 20px;
+  right: 51px;
   top: 179px;
   transform: translateX(50%);
   z-index: 2;
@@ -72,7 +71,7 @@ button {
 }
 .main-slider-next-button {
   position: absolute;
-  left: 20px;
+  left: 51px;
   top: 179px;
   transform: translateX(-50%);
   z-index: 2;
