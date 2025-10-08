@@ -583,7 +583,7 @@
           "settings": {
             "video_file": "shopify://files/videos/0977_toner.mp4",
             "main_product": "rising-moon-secret-scalp-toner",
-            "main_img": "shopify://shop_images/lunesi_toner_81430a42-1e65-488f-9c2d-f7143cf40f4b.jpg"
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
           }
         },
         "video_jThX8L": {
@@ -591,7 +591,7 @@
           "settings": {
             "video_file": "shopify://files/videos/0986_conditioner.mp4",
             "main_product": "illuminating-leave-in-conditioner",
-            "main_img": "shopify://shop_images/lunesi_conditioner_45df233d-10d4-44e0-ac8b-7fb3590972d3.jpg"
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
           }
         },
         "video_zynWNE": {
@@ -599,7 +599,7 @@
           "settings": {
             "video_file": "shopify://files/videos/0923_oil.mp4",
             "main_product": "alchemical-golden-hair-oil",
-            "main_img": "shopify://shop_images/lunesi_oil_004d9812-b491-494e-be10-9368f4628ef9.jpg"
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
           }
         },
         "video_6bjLMx": {
@@ -607,7 +607,7 @@
           "settings": {
             "video_file": "shopify://files/videos/0967_masque.mp4",
             "main_product": "deep-love-hair-mask",
-            "main_img": "shopify://shop_images/lunesi_masque.jpg"
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
           }
         },
         "video_DT7EY9": {
@@ -615,7 +615,7 @@
           "settings": {
             "video_file": "shopify://files/videos/0993_shampoo.mp4",
             "main_product": "stardust-nourishing-shampoo",
-            "main_img": "shopify://shop_images/lunesi_shampoo_b2ef5aa7-fc05-4591-a0aa-b133f96dcc6c.jpg"
+            "main_img": "{{ block.settings.main_product.metafields.custom.product_card_small_hover_image_.value }}"
           }
         }
       },
