@@ -3,6 +3,8 @@
   margin: auto;
   padding: 0 50px;
   position: relative;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
 }
 .embla__viewport {
   overflow: hidden;
@@ -96,14 +98,12 @@ button {
   cursor: pointer;
 }
 .main-title {
-  font-family: 'Kumbh Sans', sans-serif;
   font-weight: 300;
   font-size: 34px;
   letter-spacing: 0;
   text-align: center;
 }
 .main-title em {
-  font-family: 'Playfair Display', serif;
   font-weight: 400;
   font-size: 40px;
   letter-spacing: -1px;
@@ -187,7 +187,6 @@ button {
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-family: 'Kumbh Sans', sans-serif;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
@@ -278,14 +277,12 @@ button {
   justify-content: center;
 }
 .main-title-tiktok {
-  font-family: 'Kumbh Sans', sans-serif;
   font-weight: 300;
   font-size: 34px;
   letter-spacing: 0;
   text-align: center;
 }
 .main-title-tiktok em {
-  font-family: 'Playfair Display', serif;
   font-weight: 400;
   font-size: 40px;
   letter-spacing: -1px;
@@ -347,17 +344,19 @@ button {
 .main-slide-tiktok {
   color: black;
   text-align: left;
-  font-family: 'Kumbh Sans', sans-serif;
   font-size: 13px;
   font-weight: bold;
   max-height: 42px;
   overflow: hidden;
   height: auto;
   margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .price-slide-tiktok-product {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   max-height: 47px;
 }
 .old-price.price-slide-tiktok-product {
