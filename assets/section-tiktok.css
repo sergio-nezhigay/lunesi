@@ -168,34 +168,45 @@ button {
   background: #373a3699;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
+  border-radius: 17px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
+  padding-right: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .main-link-video:hover {
   background: #373a36cc;
+  width: 130px;
+  padding-left: 14px;
+}
+.main-link-video img {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
 }
 .link-video-tooltip {
-  position: absolute;
-  right: 45px;
-  top: 50%;
-  transform: translateY(-50%) translateX(10px) scale(0.8);
-  background: #373a36;
+  position: static;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 500;
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
   white-space: nowrap;
+  max-width: 0;
   opacity: 0;
-  pointer-events: none;
-  transition: all 0.2s ease;
-  transform-origin: right center;
+  pointer-events: auto;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 .main-link-video:hover .link-video-tooltip {
   opacity: 1;
-  transform: translateY(-50%) translateX(0) scale(1);
+  max-width: 90px;
 }
 @media (max-width: 768px) {
   .mobile-swiper-card-main {
