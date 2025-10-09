@@ -28,7 +28,7 @@
                     </div>
                     <a class="main-link-video" href="{{ block.settings.main_product.url }}">
                       <img src="{{ 'Vector112.svg' | asset_url }}" alt="Icon">
-                      <span class="link-video-tooltip">More details</span>
+                      <span class="link-video-tooltip">{{ section.settings.link_text }}</span>
                     </a>
                     <div class="start_video">
                       {{ 'Vector1234.svg' | asset_url | img_tag: 'Play Icon', 'playBtn' }}
@@ -402,6 +402,12 @@
       "type": "richtext",
       "id": "main_title",
       "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "View product"
     },
     {
       "type": "checkbox",
