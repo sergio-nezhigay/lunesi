@@ -1,88 +1,101 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
 {{ 'section-tiktok.css' | asset_url | stylesheet_tag }}
 
-<div class="embla">
-  <div class="embla__viewport">
-    <div class="embla__container">
-      {% comment %} Render slides 3 times for endless loop {% endcomment %}
-      {% for i in (1..3) %}
-        {% for block in section.blocks %}
-          <div class="embla__slide ">
-            <div class="swiper-slide">
-              <div>
-                <div class="video-item video-item-tiktok">
-                  <div>
-                    <video class="myVideo" src="{{block.settings.video_file.sources[1].url}}" loop playsinline></video>
-                  </div>
-                  <a class="main-link-video" href="{{ block.settings.main_product.url }}">
-                    <img src="{{ 'Vector112.svg' | asset_url }}" alt="Icon">
-                    <span class="link-video-tooltip">More details</span>
-                  </a>
-                  <div class="start_video">
-                    {{ 'Vector1234.svg' | asset_url | img_tag: 'Play Icon', 'playBtn' }}
-                    <svg
-                      class="pauseBtn"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="27"
-                      height="27"
-                      fill="currentColor"
-                      style="color: white; cursor:pointer; display:none;"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
-                    </svg>
-                  </div>
-                </div>
-                <a class="continer-bottom-tiktok" href="{{ block.settings.main_product.url }}">
-                  {% if block.settings.main_product.featured_image != blank %}
-                    {% if block.settings.main_img != blank %}
-                      {{ block.settings.main_img | image_url: width: block.settings.main_img.width | image_tag }}
-                    {% else %}
-                      {{
-                        block.settings.main_product.featured_image
-                        | image_url: width: block.settings.main_product.featured_image.width
-                        | image_tag
-                      }}
-                    {% endif %}
-                  {% endif %}
-                  <div>
-                    <div class="main-slide-tiktok">
-                      {{ block.settings.main_product.title }}
+<div class="section--padding{% if section.settings.show_divider %} section--divider{% endif %}">
+  <div class="embla">
+    <div class="embla__viewport">
+      <div class="embla__container">
+        {% comment %} Render slides 3 times for endless loop {% endcomment %}
+        {% for i in (1..3) %}
+          {% for block in section.blocks %}
+            <div class="embla__slide ">
+              <div class="swiper-slide">
+                <div>
+                  <div class="video-item video-item-tiktok">
+                    <div>
+                      <video
+                        class="myVideo"
+                        src="{{block.settings.video_file.sources[1].url}}"
+                        loop
+                        playsinline
+                      ></video>
                     </div>
-                    {% if product.compare_at_price > product.price %}
-                      <span class="old-price price-slide-tiktok-product">
-                        {{ block.settings.main_product.compare_at_price | money }}
-                      </span>
-                      <span class="sale-price price-slide-tiktok-product">
-                        {{ block.settings.main_product.price | money }}
-                      </span>
-                    {% else %}
-                      <span class="price price-slide-tiktok-product">
-                        {{ block.settings.main_product.price | money }}
-                      </span>
-                    {% endif %}
+                    <a class="main-link-video" href="{{ block.settings.main_product.url }}">
+                      <img src="{{ 'Vector112.svg' | asset_url }}" alt="Icon">
+                      <span class="link-video-tooltip">More details</span>
+                    </a>
+                    <div class="start_video">
+                      {{ 'Vector1234.svg' | asset_url | img_tag: 'Play Icon', 'playBtn' }}
+                      <svg
+                        class="pauseBtn"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="27"
+                        height="27"
+                        fill="currentColor"
+                        style="color: white; cursor:pointer; display:none;"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+                      </svg>
+                    </div>
                   </div>
-                </a>
+                  <a class="continer-bottom-tiktok" href="{{ block.settings.main_product.url }}">
+                    {% if block.settings.main_product.featured_image != blank %}
+                      {% if block.settings.main_img != blank %}
+                        {{ block.settings.main_img | image_url: width: block.settings.main_img.width | image_tag }}
+                      {% else %}
+                        {{
+                          block.settings.main_product.featured_image
+                          | image_url: width: block.settings.main_product.featured_image.width
+                          | image_tag
+                        }}
+                      {% endif %}
+                    {% endif %}
+                    <div>
+                      <div class="main-slide-tiktok">
+                        {{ block.settings.main_product.title }}
+                      </div>
+                      {% if product.compare_at_price > product.price %}
+                        <span class="old-price price-slide-tiktok-product">
+                          {{ block.settings.main_product.compare_at_price | money }}
+                        </span>
+                        <span class="sale-price price-slide-tiktok-product">
+                          {{ block.settings.main_product.price | money }}
+                        </span>
+                      {% else %}
+                        <span class="price price-slide-tiktok-product">
+                          {{ block.settings.main_product.price | money }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
+      </div>
+    </div>
+    <div class="embla__buttons">
+      <button class="main-slider-prev-button" id="prev">
+        <svg viewBox="0 0 24 24">
+          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+        </svg>
+      </button>
+      <button class="main-slider-next-button" id="next">
+        <svg viewBox="0 0 24 24">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+        </svg>
+      </button>
     </div>
   </div>
-  <div class="embla__buttons">
-    <button class="main-slider-prev-button" id="prev">
-      <svg viewBox="0 0 24 24">
-        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
-      </svg>
-    </button>
-    <button class="main-slider-next-button" id="next">
-      <svg viewBox="0 0 24 24">
-        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-      </svg>
-    </button>
-  </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/embla-carousel/embla-carousel.umd.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -389,6 +402,32 @@
       "type": "richtext",
       "id": "main_title",
       "label": "Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show section divider",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "t:sections.all.padding.padding_top.unit",
+      "label": "t:sections.all.padding.padding_top.label",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "t:sections.all.padding.padding_bottom.unit",
+      "label": "t:sections.all.padding.padding_bottom.label",
+      "default": 36
     }
   ],
   "blocks": [
