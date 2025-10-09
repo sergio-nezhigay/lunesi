@@ -51,28 +51,6 @@ button {
 }
 .main-slider-prev-button {
   position: absolute;
-  right: 51px;
-  top: 179px;
-  transform: translateX(50%);
-  z-index: 2;
-  background: rgba(248, 248, 248, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(221, 221, 221, 0.5);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.main-slider-prev-button:hover {
-  background: rgba(234, 234, 234, 0.95);
-}
-.main-slider-next-button {
-  position: absolute;
   left: 51px;
   top: 179px;
   transform: translateX(-50%);
@@ -90,9 +68,32 @@ button {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.main-slider-next-button:hover {
+.main-slider-prev-button:hover {
   background: rgba(234, 234, 234, 0.95);
   transform: translateX(-50%) scale(1.05);
+}
+.main-slider-next-button {
+  position: absolute;
+  right: 51px;
+  top: 179px;
+  transform: translateX(50%);
+  z-index: 2;
+  background: rgba(248, 248, 248, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(221, 221, 221, 0.5);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.main-slider-next-button:hover {
+  background: rgba(234, 234, 234, 0.95);
+  transform: translateX(50%) scale(1.05);
 }
 .playBtn {
   cursor: pointer;
@@ -479,11 +480,11 @@ button {
     flex: 0 0 38%;
   }
   .main-slider-prev-button {
-    right: 49px;
+    left: 49px;
   }
 
   .main-slider-next-button {
-    left: 49px;
+    right: 49px;
   }
 }
 .swiper-disabled .swiper.main-swiper-tiktok {
@@ -500,11 +501,11 @@ button {
     padding: 0 45px;
   }
   .main-slider-prev-button {
-    right: 48px;
+    left: 48px;
   }
 
   .main-slider-next-button {
-    left: 48px;
+    right: 48px;
   }
 }
 @media (max-width: 767px) {
