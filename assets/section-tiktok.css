@@ -334,10 +334,14 @@ button {
   margin: 0 20px !important;
 }
 .continer-bottom-tiktok img {
-  height: 64px;
+  height: 60px;
   width: auto;
   object-fit: contain;
   display: block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.continer-bottom-tiktok:hover img {
+  transform: scale(1.1);
 }
 .continer-bottom-tiktok {
   background: #f7f7f7;
