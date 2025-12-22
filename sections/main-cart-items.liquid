@@ -285,6 +285,11 @@
                       </div>
                     </div>
 
+                    {%- comment -%} Debug info inline - only shows when max reached {%- endcomment -%}
+                    <div class="cart-item-debug" style="font-size: 11px; color: #ff0000; font-family: monospace; margin-bottom: 5px; transition: all 0.3s ease; display: none; font-weight: bold;" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
+                      ⚠ Maximum stock reached: {{ item.variant.inventory_quantity }} items
+                    </div>
+
                     <div class="cart-item__price-wrapper medium-up">
                       {%- if item.original_line_price != item.final_line_price -%}
                         <dl class="cart-item__discounted-prices">

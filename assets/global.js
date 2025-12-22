@@ -622,9 +622,43 @@ class QuantityInput extends HTMLElement {
   onButtonClick(event) {
     event.preventDefault();
     const previousValue = this.input.value;
+    const max = parseInt(this.input.getAttribute('max')) || Infinity;
+    const isPlus = event.target.name === 'plus';
+
+    // Check if trying to go over max
+    if (isPlus && parseInt(previousValue) >= max) {
+      this.showMaxReachedFeedback();
+      return;
+    }
 
     event.target.name === 'plus' ? this.input.stepUp() : this.input.stepDown();
     if (previousValue !== this.input.value) this.input.dispatchEvent(this.changeEvent);
+  }
+
+  showMaxReachedFeedback() {
+    const cartItem = this.closest('.cart-item');
+    const debugInfo = cartItem?.querySelector('.cart-item-debug');
+
+    // Show debug info
+    if (debugInfo) {
+      debugInfo.style.display = 'block';
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        debugInfo.style.display = 'none';
+      }, 3000);
+    }
+
+    // Flash the quantity input
+    this.input.style.borderColor = '#ff0000';
+    this.input.style.backgroundColor = '#fff0f0';
+
+    setTimeout(() => {
+      this.input.style.borderColor = '';
+      this.input.style.backgroundColor = '';
+    }, 1500);
+
+    console.log('🛑 Max inventory reached');
   }
 
   onInputFocus() {
@@ -695,7 +729,7 @@ class MenuDrawer extends HTMLElement {
     }
 
     if (detailsElement === this.mainDetailsToggle) {
-      if (isOpen) event.preventDefault();
+      event.preventDefault();
       isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
     } else {
       setTimeout(() => {
