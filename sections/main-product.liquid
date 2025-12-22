@@ -71,7 +71,7 @@
   .product product-gallery {
     border-radius: 20px;
   }
-  
+
   @media (min-width: 1024px) {
   .grid__item.product__media-wrapper {
     margin-top: -37px;
@@ -79,6 +79,14 @@
     .grid__item.product__media-wrapper{
     scale: .8 !important;
 }
+  }
+
+  /* Sold out button styling */
+  .product-form__submit[disabled],
+  .product-form__submit:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
   }
 </style>
 
