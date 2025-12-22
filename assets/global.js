@@ -617,6 +617,21 @@ class QuantityInput extends HTMLElement {
     );
 
     this.input.addEventListener('focus', this.onInputFocus.bind(this));
+    this.input.addEventListener('input', this.onInputChange.bind(this));
+  }
+
+  onInputChange(event) {
+    const max = parseInt(this.input.getAttribute('max'));
+    const value = parseInt(this.input.value);
+
+    // Check if manually entered value exceeds max
+    if (max && value > max) {
+      // Cap at max
+      this.input.value = max;
+
+      // Show feedback
+      this.showMaxReachedFeedback();
+    }
   }
 
   onButtonClick(event) {
