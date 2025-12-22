@@ -297,6 +297,42 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const loginForm = document.querySelector('#login-form form');
+  
+  if (loginForm) {
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // блокуємо стандартний сабміт
+
+      const formData = new FormData(loginForm);
+
+      fetch(loginForm.action, {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json()) // якщо сервер повертає JSON
+      .then(data => {
+        if (data.errors) {
+          // якщо є помилки, нічого не робимо
+          console.log('Помилка логіну:', data.errors);
+        } else {
+          // якщо успішно, можна, наприклад, перенаправити
+          window.location.href = data.redirect || '/';
+        }
+      })
+      .catch(err => {
+        console.log('Помилка мережі або серверу', err);
+        // нічого не робимо на сторінці
+      });
+    });
+  }
+});
+</script>
+
+
+
+
+<script>
   function showRecoverForm() {
     document.getElementById('recover-form').classList.add('active');
     document.getElementById('login-form').classList.add('hidden');

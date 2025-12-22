@@ -6,7 +6,62 @@
     --section-padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 {%- endstyle -%}
+{% comment %} <form id="create_customer" accept-charset="UTF-8" method="post" action="/account">
+  <input type="hidden" name="form_type" value="create_customer">
+  <input type="hidden" name="utf8" value="✓">
 
+  <label for="FirstName">Ім'я</label>
+  <input type="text" name="customer[first_name]" id="FirstName">
+
+  <label for="LastName">Прізвище</label>
+  <input type="text" name="customer[last_name]" id="LastName">
+
+  <label for="Email">Електронна пошта</label>
+  <input type="email" name="customer[email]" id="Email" required>
+  <div id="email-error" style="color:red; display:none;">Email is invalid.</div>
+
+  <label for="Password">Пароль (мінімум 5 символів)</label>
+  <input type="password" name="customer[password]" id="Password" required>
+  <div id="password-error" style="color:red; display:none;">Password is too short (minimum is 5 characters).</div>
+
+  <button type="submit" id="submitBtn">Зареєструватися</button>
+</form>
+
+<script>
+const form = document.getElementById('create_customer');
+const email = document.getElementById('Email');
+const password = document.getElementById('Password');
+const emailError = document.getElementById('email-error');
+const passwordError = document.getElementById('password-error');
+
+form.addEventListener('submit', function(e) {
+  let valid = true;
+
+  // Перевірка пароля
+  if (password.value.length < 5) {
+    passwordError.style.display = 'block';
+    valid = false;
+  } else {
+    passwordError.style.display = 'none';
+  }
+
+  // Перевірка email
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email.value)) {
+    emailError.style.display = 'block';
+    valid = false;
+  } else {
+    emailError.style.display = 'none';
+  }
+
+  // Якщо є помилки, зупиняємо відправку
+  if (!valid) {
+    e.preventDefault(); // не оновлюємо сторінку
+  }
+  // Якщо valid = true, браузер відправляє форму як зазвичай
+});
+</script>
+ {% endcomment %}
 <div class="customer register page-width section--padding">
   <h1 class="h2">{{ 'customer.register.title' | t }}</h1>
   <form-state>
@@ -98,6 +153,66 @@
     {%- endform -%}
   </form-state>
 </div>
+<div id="error-icon" style="display:none;">
+  {% render 'icon', icon: 'error' %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector('form[action="/account"]');
+  if (!form) return;
+
+  const errorIcon = document.querySelector("#error-icon").innerHTML;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    form.querySelectorAll(".js-error").forEach(el => el.remove());
+    form.querySelectorAll(".invalid").forEach(el => {
+      el.classList.remove("invalid");
+      el.removeAttribute("aria-invalid");
+    });
+
+    let hasError = false;
+
+    const email = form.querySelector('input[name="customer[email]"]');
+    const password = form.querySelector('input[name="customer[password]"]');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    // EMAIL ERROR
+    if (!email.value || !emailRegex.test(email.value)) {
+      showError(email, `${errorIcon} Email is invalid.`);
+      hasError = true;
+    }
+
+    // PASSWORD ERROR
+    if (!password.value || password.value.length < 6) {
+      showError(password, `${errorIcon} Password is too short (minimum is 6 characters).`);
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    form.submit();
+  }, true);
+
+  function showError(input, message) {
+    const span = document.createElement("span");
+    span.className = "form__message errors js-error";
+    span.innerHTML = message;
+
+    input.classList.add("invalid");
+    input.setAttribute("aria-invalid", "true");
+
+    input.parentNode.insertAdjacentElement("afterend", span);
+  }
+});
+</script>
+
+
+
 
 {% schema %}
 {

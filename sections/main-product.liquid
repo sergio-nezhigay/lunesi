@@ -759,8 +759,12 @@
           {%- when 'sibling_products' -%}
             {%- render 'sibling-products', block: block, product: product, section_id: section.id -%}
           {%- when 'buy_buttons' -%}
-            {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, show_pickup_availability: true %}
-            {% render 'preorder' %}
+            {% if product.handle != 'box-1' %}
+              {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, show_pickup_availability: true %}
+              {% render 'preorder' %}
+            {% endif %}
+            {% comment %} {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, show_pickup_availability: true %}
+            {% render 'preorder' %} {% endcomment %}
           {%- when 'rating' -%}
             
             {%- if product.metafields.reviews.rating.value != blank -%}
@@ -1154,7 +1158,46 @@
   </animate-sticky>
 {%- endif -%}
 </section>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const buttons = document.querySelectorAll('.product-form__submit');
 
+  buttons.forEach(button => {
+    // 🔁 1. Видаляємо disabled при старті
+    if (button.disabled) {
+      button.disabled = false;
+      console.log('🟢 Кнопка розблокована');
+    }
+
+    // 🛡 2. Спостерігаємо за спробами змінити атрибути
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'disabled'
+        ) {
+          button.removeAttribute('disabled');
+          console.log('🚫 Заборонено додавати disabled');
+        }
+      });
+    });
+
+    observer.observe(button, { attributes: true });
+
+    // 🔒 3. Перевизначаємо властивість disabled
+    Object.defineProperty(button, 'disabled', {
+      configurable: false,
+      enumerable: true,
+      get: function () {
+        return false;
+      },
+      set: function (value) {
+        console.warn('❌ Спроба встановити disabled заблокована');
+      }
+    });
+  });
+});
+</script>
 {%- if product.media.size > 0 -%}
   <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
@@ -1199,41 +1242,7 @@
   endif
 -%}
 
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org/",
-    "@type": "Product",
-    "name": {{ product.title | json }},
-    "url": {{ request.origin | append: product.url | json }},
-    {%- if seo_media -%}
-      "image": [
-        {{ seo_media | image_url | prepend: "https:" | json }}
-      ],
-    {%- endif -%}
-    "description": {{ product.description | strip_html | json }},
-    {%- if product.selected_or_first_available_variant.sku != blank -%}
-      "sku": {{ product.selected_or_first_available_variant.sku | json }},
-    {%- endif -%}
-    "brand": {
-      "@type": "Thing",
-      "name": {{ product.vendor | json }}
-    },
-    "offers": [
-      {%- for variant in product.variants -%}
-        {
-          "@type" : "Offer",
-          {%- if variant.sku != blank -%}
-            "sku": {{ variant.sku | json }},
-          {%- endif -%}
-          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
-          "price" : {{ variant.price | divided_by: 100.00 | json }},
-          "priceCurrency" : {{ cart.currency.iso_code | json }},
-          "url" : {{ request.origin | append: variant.url | json }}
-        }{% unless forloop.last %},{% endunless %}
-      {%- endfor -%}
-    ]
-  }
-</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1321,148 +1330,290 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const CONFIG = {
     subscriberId: '9042b354-cad0-4f17-98fb-bb5a495d6e8a',
-    maxReviews: 10,
-    initDelay: 500
+    apiBaseUrl: 'https://api.okendo.io/v1',
+    initDelay: 500,
+    storageKey: 'okendo_review_timestamps',
+    storageDuration: 90 * 24 * 60 * 60 * 1000
+  };
+
+  const TimestampStorage = {
+    get() {
+      try {
+        const data = localStorage.getItem(CONFIG.storageKey);
+        if (!data) return {};
+        const parsed = JSON.parse(data);
+        const now = Date.now();
+        Object.keys(parsed).forEach(key => {
+          if (now - parsed[key].saved > CONFIG.storageDuration) {
+            delete parsed[key];
+          }
+        });
+        return parsed;
+      } catch (e) {
+        return {};
+      }
+    },
+
+    set(reviewId, timestamp) {
+      try {
+        const storage = this.get();
+        storage[reviewId] = {
+          timestamp: timestamp,
+          saved: Date.now()
+        };
+        localStorage.setItem(CONFIG.storageKey, JSON.stringify(storage));
+      } catch (e) {}
+    },
+
+    getTimestamp(reviewId, fallbackDate) {
+      const storage = this.get();
+      if (storage[reviewId]) {
+        return storage[reviewId].timestamp;
+      }
+      const date = new Date(fallbackDate);
+      const hour = Math.floor(Math.random() * 14) + 8;
+      const minute = Math.floor(Math.random() * 60);
+      const second = Math.floor(Math.random() * 60);
+      date.setHours(hour, minute, second, 0);
+      const timestamp = date.toISOString();
+      this.set(reviewId, timestamp);
+      return timestamp;
+    }
   };
 
   function getProductData() {
-    const productJson = document.querySelector('[type="application/ld+json"]');
-    let existingSchema = null;
+    {%- liquid
+      assign product_image = product.featured_media | image_url | prepend: "https:"
+      assign product_sku = product.selected_or_first_available_variant.sku
+      assign product_desc = product.description | strip_html
+    -%}
     
-    if (productJson) {
-      try {
-        existingSchema = JSON.parse(productJson.textContent);
-      } catch (e) {}
-    }
-
     return {
-      id: window.ShopifyAnalytics?.meta?.product?.id || 
-          document.querySelector('[data-product-id]')?.dataset.productId,
-      title: existingSchema?.name || document.querySelector('.product__title')?.textContent?.trim(),
-      handle: window.location.pathname.split('/products/')[1]?.split('?')[0],
-      image: existingSchema?.image?.[0] || 
-             document.querySelector('.product__media img')?.src,
-      description: existingSchema?.description,
-      sku: existingSchema?.sku,
-      brand: existingSchema?.brand?.name || window.Shopify?.shop,
-      price: existingSchema?.offers?.price,
-      currency: window.Shopify?.currency?.active || 'UAH',
-      url: existingSchema?.offers?.url || window.location.href,
-      availability: existingSchema?.offers?.availability
+      id: {{ product.id | json }},
+      title: {{ product.title | json }},
+      handle: {{ product.handle | json }},
+      image: {{ product_image | json }},
+      description: {{ product_desc | json }},
+      sku: {{ product_sku | default: "" | json }},
+      brand: "Lunesi",
+      price: {{ product.selected_or_first_available_variant.price | divided_by: 100.00 }},
+      currency: {{ cart.currency.iso_code | json }},
+      url: {{ request.origin | append: product.url | json }},
+      availability: {% if product.selected_or_first_available_variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
     };
   }
 
-  async function fetchOkendoReviews(productId) {
+  async function fetchOkendoReviewsWithPagination(productId) {
     if (!productId) return null;
 
-    try {
-      const response = await fetch(
-        `https://api.okendo.io/v1/stores/${CONFIG.subscriberId}/products/shopify-${productId}/reviews?limit=${CONFIG.maxReviews}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+    const allReviews = [];
+    let nextUrl = `${CONFIG.apiBaseUrl}/stores/${CONFIG.subscriberId}/products/shopify-${productId}/reviews?limit=25`;
+    let pageCount = 0;
+    const maxPages = 50;
 
-      if (!response.ok) throw new Error(`API error: ${response.status}`);
-      return await response.json();
-      
+    try {
+      while (nextUrl && pageCount < maxPages) {
+        const response = await fetch(nextUrl, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+          if (pageCount === 0) throw new Error(`API error: ${response.status}`);
+          break;
+        }
+
+        const data = await response.json();
+        const reviews = data.reviews || [];
+        
+        if (reviews.length > 0) {
+          allReviews.push(...reviews);
+        }
+
+        if (data.nextUrl) {
+          nextUrl = data.nextUrl.startsWith('http') 
+            ? data.nextUrl 
+            : `${CONFIG.apiBaseUrl}${data.nextUrl}`;
+        } else {
+          nextUrl = null;
+        }
+        
+        pageCount++;
+
+        if (reviews.length < 25) break;
+      }
+
+      let reviewAggregate = null;
+      if (allReviews.length > 0) {
+        let totalRating = 0;
+        allReviews.forEach(review => {
+          totalRating += (review.rating || 5);
+        });
+        reviewAggregate = {
+          averageRating: totalRating / allReviews.length,
+          reviewCount: allReviews.length
+        };
+      }
+
+      return {
+        reviews: allReviews,
+        reviewAggregate: reviewAggregate
+      };
+
     } catch (error) {
       return null;
     }
   }
 
-  function waitForOkendoWidget(timeout = 5000) {
-    return new Promise((resolve) => {
-      if (window.okeReviewsWidgetData) {
-        resolve(window.okeReviewsWidgetData);
-        return;
-      }
-
-      const startTime = Date.now();
-      const checkInterval = setInterval(() => {
-        if (window.okeReviewsWidgetData) {
-          clearInterval(checkInterval);
-          resolve(window.okeReviewsWidgetData);
-        } else if (Date.now() - startTime > timeout) {
-          clearInterval(checkInterval);
-          resolve(null);
-        }
-      }, 100);
-
-      window.addEventListener('okendoInitialized', () => {
-        clearInterval(checkInterval);
-        resolve(window.okeReviewsWidgetData);
-      }, { once: true });
-    });
-  }
-
-  function generateProductSchema(productData, reviewsData) {
+  function generateCompleteProductSchema(productData, reviewsData) {
     const schema = {
       "@context": "https://schema.org/",
       "@type": "Product",
       "name": productData.title,
       "url": productData.url,
-      "description": productData.description
+      "description": productData.description,
+      "image": [productData.image],
+      "brand": {
+        "@type": "Brand",
+        "name": "Lunesi"
+      },
+      "offers": [{
+        "@type": "Offer",
+        "availability": productData.availability,
+        "price": productData.price,
+        "priceCurrency": productData.currency,
+        "url": productData.url,
+        "shippingDetails": [
+          {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 2,
+                "maxValue": 4,
+                "unitCode": "DAY"
+              }
+            },
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0.00",
+              "currency": "GBP"
+            },
+            "name": "UK Standard Delivery via Royal Mail"
+          },
+          {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 1,
+                "maxValue": 2,
+                "unitCode": "DAY"
+              }
+            },
+            "name": "UK Express Delivery via Royal Mail or DHL Express"
+          },
+          {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "EU"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 7,
+                "maxValue": 13,
+                "unitCode": "DAY"
+              }
+            },
+            "name": "Europe Standard Delivery via Royal Mail or DHL"
+          },
+          {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "EU"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 3,
+                "maxValue": 6,
+                "unitCode": "DAY"
+              }
+            },
+            "name": "Europe Express Delivery via DHL Express"
+          }
+        ],
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "GB",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 14,
+          "returnMethod": "Mail",
+          "returnFees": "https://schema.org/FreeReturn",
+          "returnPolicySeasonalOverride": false,
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Return conditions",
+              "value": "Items must be unused, unopened, and in original packaging. Return requests must be submitted via email before sending items back."
+            }
+          ]
+        }
+      }]
     };
-
-    if (productData.image) {
-      schema.image = [productData.image];
-    }
 
     if (productData.sku) {
       schema.sku = productData.sku;
+      schema.offers[0].sku = productData.sku;
     }
-
-    if (productData.brand) {
-      schema.brand = {
-        "@type": "Brand",
-        "name": productData.brand
-      };
-    }
-
-    schema.offers = {
-      "@type": "Offer",
-      "url": productData.url,
-      "priceCurrency": productData.currency,
-      "price": productData.price,
-      "availability": productData.availability || "https://schema.org/InStock"
-    };
 
     if (reviewsData) {
       const reviews = reviewsData.reviews || [];
-      const aggregate = reviewsData.reviewAggregate || reviewsData.reviewAggregates;
+      const aggregate = reviewsData.reviewAggregate;
       
+      console.log('🔍 DEBUG - Reviews data:', {
+        totalReviews: reviews.length,
+        aggregateReviewCount: aggregate?.reviewCount,
+        aggregateRating: aggregate?.averageRating
+      });
+      
+      if (aggregate && aggregate.reviewCount > 0 && aggregate.averageRating && aggregate.averageRating > 0) {
+        schema.aggregateRating = {
+          "@type": "AggregateRating",
+          "ratingValue": Number(aggregate.averageRating).toFixed(1),
+          "reviewCount": aggregate.reviewCount.toString(),
+          "bestRating": "5",
+          "worstRating": "1"
+        };
+      }
+
       if (reviews.length > 0) {
-        let totalRating = 0;
-        let reviewCount = reviews.length;
+        schema.review = reviews.map(review => {
+          const reviewId = review.id || review.reviewId || `${productData.id}_${review.dateCreated}`;
+          const fallbackDate = review.dateCreated || review.createdAt || new Date().toISOString();
+          const datePublished = TimestampStorage.getTimestamp(reviewId, fallbackDate);
 
-        if (aggregate && (aggregate.reviewCount > 0 || aggregate.count > 0)) {
-          schema.aggregateRating = {
-            "@type": "AggregateRating",
-            "ratingValue": (aggregate.averageRating || aggregate.average || 0).toFixed(1),
-            "reviewCount": (aggregate.reviewCount || aggregate.count || 0).toString(),
-            "bestRating": "5",
-            "worstRating": "1"
-          };
-        } else {
-          reviews.forEach(review => {
-            totalRating += (review.rating || 5);
-          });
-          const avgRating = (totalRating / reviewCount).toFixed(1);
-          
-          schema.aggregateRating = {
-            "@type": "AggregateRating",
-            "ratingValue": avgRating,
-            "reviewCount": reviewCount.toString(),
-            "bestRating": "5",
-            "worstRating": "1"
-          };
-        }
-
-        schema.review = reviews.slice(0, CONFIG.maxReviews).map(review => {
           const reviewSchema = {
             "@type": "Review",
             "author": {
@@ -1472,7 +1623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       review.author?.name || 
                       "Customer"
             },
-            "datePublished": review.dateCreated || review.createdAt || new Date().toISOString().split('T')[0],
+            "datePublished": datePublished,
             "reviewRating": {
               "@type": "Rating",
               "ratingValue": (review.rating || 5).toString(),
@@ -1494,53 +1645,56 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function injectSchema(schema) {
-    const existingOkendoSchema = document.querySelector('script[type="application/ld+json"][data-okendo-schema]');
-    if (existingOkendoSchema) {
-      existingOkendoSchema.remove();
-    }
+    const existingSchemas = document.querySelectorAll('script[type="application/ld+json"]');
+    existingSchemas.forEach(script => {
+      try {
+        const data = JSON.parse(script.textContent);
+        if (data['@type'] === 'Product') {
+          script.remove();
+        }
+      } catch (e) {}
+    });
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.setAttribute('data-okendo-schema', 'true');
+    script.setAttribute('data-product-schema', 'true');
     script.textContent = JSON.stringify(schema, null, 2);
     document.head.appendChild(script);
   }
 
-  async function initOkendoSchema() {
+  async function initCompleteProductSchema() {
     try {
       const productData = getProductData();
       
       if (!productData.id) return;
 
-      let reviewsData = await fetchOkendoReviews(productData.id);
-
-      if (!reviewsData) {
-        reviewsData = await waitForOkendoWidget();
-      }
-
-      const schema = generateProductSchema(productData, reviewsData);
+      const reviewsData = await fetchOkendoReviewsWithPagination(productData.id);
+      const schema = generateCompleteProductSchema(productData, reviewsData);
       injectSchema(schema);
 
-    } catch (error) {}
+    } catch (error) {
+      console.error('Product schema error:', error);
+    }
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(initOkendoSchema, CONFIG.initDelay);
+      setTimeout(initCompleteProductSchema, CONFIG.initDelay);
     });
   } else {
-    setTimeout(initOkendoSchema, CONFIG.initDelay);
+    setTimeout(initCompleteProductSchema, CONFIG.initDelay);
   }
 
   if (window.Shopify && window.Shopify.theme) {
     document.addEventListener('variant:change', () => {
-      setTimeout(initOkendoSchema, 200);
+      setTimeout(initCompleteProductSchema, 200);
     });
   }
 
 })();
 </script>
-ʼʼ<script>
+
+<script>
 (function() {
   'use strict';
 

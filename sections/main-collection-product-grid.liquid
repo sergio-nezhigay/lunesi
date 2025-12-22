@@ -155,7 +155,9 @@
                   assign lazy_load = false
                 endif
               -%}
-              <li class="grid__item">
+              {% unless product.tags contains 'hidden' %}
+                {% unless product.title == "Box"  %}
+                <li class="grid__item">
                 {% render 'card-product',
                   card_product: product,
                   card_collection: collection,
@@ -172,7 +174,9 @@
                   button_style: section.settings.button_style
                 %}
               </li>
+              {% endunless %}
               
+              {% endunless %}
               {%- comment -%} Додаємо custom item після 3-го товару {%- endcomment -%}
               {%- if forloop.index == 3 and grid_last_element_type != 'none' and collection.products.size > 3 -%}
                 {%- if grid_last_element_type == 'image' and section.settings.grid_last_element_image != blank -%}

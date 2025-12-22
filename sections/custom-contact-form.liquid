@@ -191,6 +191,50 @@ Place this in your contact page template or as a section
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector('#contact-form');
+  if (!form) return;
+
+  const email = form.querySelector('input[name="contact[email]"]');
+  const errorIcon = '<span style="color:red;">⚠</span>';
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    form.querySelectorAll(".js-error").forEach(el => el.remove());
+    email.classList.remove("invalid");
+    email.removeAttribute("aria-invalid");
+
+    let hasError = false;
+
+    if (!email.value.trim() || !emailRegex.test(email.value)) {
+      showError(email, `${errorIcon} Email is invalid.`);
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    form.submit();
+  }, true);
+
+  function showError(input, message) {
+    const span = document.createElement("span");
+    span.className = "form__message errors js-error";
+    span.innerHTML = message;
+
+    input.classList.add("invalid");
+    input.setAttribute("aria-invalid", "true");
+
+    input.closest('.form-group')
+      .insertAdjacentElement("beforeend", span);
+  }
+});
+</script>
+
+
+<script>
 {% comment %} 
 Rewritten to:
 - Convert files to base64 and store only base64 strings (no JSON, no file info) in the hidden field.
@@ -217,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let selectedBase64s = [];
   const maxFiles = 10; // Reduced for base64
   const maxTotalSize = 50 * 1024 * 1024; // 2MB max for base64 encoding
-  const maxFileSize = 500 * 1024; // 500KB per file max
+const maxFileSize = 50 * 1024 * 1024; // 500KB per file max
   let dragCounter = 0;
 
   // Order-related reasons that should show the order number field

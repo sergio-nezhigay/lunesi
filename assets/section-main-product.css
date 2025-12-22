@@ -762,6 +762,7 @@ fieldset.product-form__input .form__label {
 }
 
 .product__text {
+  font-weight: bold;
   display: flex;
   align-items: center;
   margin-bottom: 1rem;

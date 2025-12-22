@@ -260,7 +260,15 @@
     display: none !important;
   }
 }
-
+@media(max-width: 750px){
+  .main-featured-grid-top.product-grid li{
+    width: 100%
+  }
+  .main-featured-grid-top.product-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
 {%- endstyle -%}
 
 <link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -300,6 +308,23 @@
       if section.settings.enable_conditional_slider and section.settings.collection.all_products_count > section.settings.products_to_show
         assign enable_slider = true
       endif
+
+      comment
+        Build custom labels map
+      endcomment
+      assign custom_labels = ''
+      for block in section.blocks
+        if block.type == 'product_label'
+          assign position = block.settings.product_position
+          assign label_data = block.settings.label_text | append: '|' | append: block.settings.label_bg_color | append: '|' | append: block.settings.label_text_color
+          assign position_key = position | prepend: 'pos_'
+          if custom_labels == ''
+            assign custom_labels = position_key | append: ':' | append: label_data
+          else
+            assign custom_labels = custom_labels | append: ',' | append: position_key | append: ':' | append: label_data
+          endif
+        endif
+      endfor
     %}
 
     {% if enable_slider %}
@@ -307,8 +332,25 @@
         <div class="fc-slider-container">
           <div class="fc-slider-wrapper" id="fc-slider-{{ section.id }}">
             {%- for product in section.settings.collection.products -%}
+              {%- liquid
+                assign current_position = forloop.index
+                assign custom_label_text = ''
+                assign custom_label_bg = ''
+                assign custom_label_color = ''
+
+                for block in section.blocks
+                  if block.type == 'product_label' and block.settings.product_position == current_position
+                    assign custom_label_text = block.settings.label_text
+                    assign custom_label_bg = block.settings.label_bg_color
+                    assign custom_label_color = block.settings.label_text_color
+                    break
+                  endif
+                endfor
+              -%}
               <div class="fc-slide-item">
                 {% render 'card-product',
+                  limited_product: section.settings.limited_product,
+                  sold_out_main: section.settings.sold_out_product,
                   card_product: product,
                   card_collection: section.settings.collection,
                   media_size: section.settings.image_ratio,
@@ -320,7 +362,10 @@
                   enable_color_swatches: section.settings.enable_color_swatches,
                   enable_countdown: section.settings.enable_countdown,
                   enable_image_fill: section.settings.enable_image_fill,
-                  button_style: section.settings.button_style
+                  button_style: section.settings.button_style,
+                  custom_label_text: custom_label_text,
+                  custom_label_bg: custom_label_bg,
+                  custom_label_color: custom_label_color
                 %}
               </div>
             {%- endfor -%}
@@ -344,13 +389,31 @@
 
     <div class="default-grid-desktop-hidden{% if enable_slider %} desktop-hidden{% endif %}">
       <ul
-        class="product-grid grid{% if section.settings.columns_mobile == '1' %} grid--1-col-mobile{% endif %} grid--2-col grid--5-col-tablet grid--5-col-desktop{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show_mobile > 2 %} slider slider--tablet{% endif %}{% if section.settings.collection == blank and section.settings.swipe_on_mobile %} slider slider--tablet{% endif %}"
+        class="main-featured-grid-top product-grid grid{% if section.settings.columns_mobile == '1' %} grid--1-col-mobile{% endif %} grid--2-col grid--5-col-tablet grid--5-col-desktop{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show_mobile > 2 %} slider slider--tablet{% endif %}{% if section.settings.collection == blank and section.settings.swipe_on_mobile %} slider slider--tablet{% endif %}"
         role="list"
         id="mobile-grid-{{ section.id }}"
       >
         {%- for product in section.settings.collection.products limit: section.settings.products_to_show_mobile -%}
+          {%- liquid
+            assign current_position = forloop.index
+            assign custom_label_text = ''
+            assign custom_label_bg = ''
+            assign custom_label_color = ''
+
+            for block in section.blocks
+              if block.type == 'product_label' and block.settings.product_position == current_position
+                assign custom_label_text = block.settings.label_text
+                assign custom_label_bg = block.settings.label_bg_color
+                assign custom_label_color = block.settings.label_text_color
+                break
+              endif
+            endfor
+          -%}
+          {% unless product.title == "Box"  %}
           <li class="grid__item{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 %} slider__slide{% endif %}">
             {% render 'card-product',
+              limited_product: section.settings.limited_product,
+              sold_out_main: section.settings.sold_out_product,
               card_product: product,
               card_collection: section.settings.collection,
               media_size: section.settings.image_ratio,
@@ -362,9 +425,13 @@
               enable_color_swatches: section.settings.enable_color_swatches,
               enable_countdown: section.settings.enable_countdown,
               enable_image_fill: section.settings.enable_image_fill,
-              button_style: section.settings.button_style
+              button_style: section.settings.button_style,
+              custom_label_text: custom_label_text,
+              custom_label_bg: custom_label_bg,
+              custom_label_color: custom_label_color
             %}
           </li>
+          {%endunless %}
         {%- endfor -%}
       </ul>
     </div>
@@ -678,7 +745,56 @@ document.addEventListener('DOMContentLoaded', function() {
   "name": "t:sections.featured-collection.name",
   "tag": "section",
   "class": "section",
+  "blocks": [
+    {
+      "type": "product_label",
+      "name": "Product Label",
+      "settings": [
+        {
+          "type": "range",
+          "id": "product_position",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 1,
+          "label": "Product position",
+          "info": "Which product in the list to add the label to (1 = first product)"
+        },
+        {
+          "type": "text",
+          "id": "label_text",
+          "label": "Label text",
+          "default": "Limited",
+          "info": "Text to display on the label"
+        },
+        {
+          "type": "color",
+          "id": "label_bg_color",
+          "label": "Background color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "label_text_color",
+          "label": "Text color",
+          "default": "#FFFFFF"
+        }
+      ]
+    }
+  ],
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "sold_out_product",
+      "default": false,
+      "label": "Show sold out",
+    },
+    {
+      "type": "checkbox",
+      "id": "limited_product",
+      "default": false,
+      "label": "Show Limited",
+    },
     {
       "type": "collection",
       "id": "collection",

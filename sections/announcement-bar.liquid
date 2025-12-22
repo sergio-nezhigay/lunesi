@@ -9,6 +9,16 @@
     assign show_announcement_bar = false
   endif
 
+
+  if section.settings.show_only_us and localization.country.iso_code != 'US'
+    assign show_announcement_bar = false
+  endif
+
+
+  if section.settings.show_only_uk and localization.country.iso_code != 'GB'
+    assign show_announcement_bar = false
+  endif
+
   assign announcement_height = 36
 -%}
 
@@ -45,6 +55,12 @@
     }
     .shopify-section-announcement-bar span{
       color: #67645e;
+      font-weight: 300;
+    }
+    @media only screen and (max-width: 749px) {
+      .shopify-section-announcement-bar span {
+        font-size: 10px;
+      }
     }
     @media only screen and (max-width: 450px) {
       .shopify-section-announcement-bar span {
@@ -136,6 +152,24 @@
       "id": "only_homepage",
       "label": "t:sections.announcement-bar.settings.only_homepage.label",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Geo-targeting"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_only_us",
+      "label": "Show only in US",
+      "default": false,
+      "info": "Display this announcement bar only to visitors from the United States"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_only_uk",
+      "label": "Show only in UK",
+      "default": false,
+      "info": "Display this announcement bar only to visitors from the United Kingdom"
     },
     {
       "type": "select",

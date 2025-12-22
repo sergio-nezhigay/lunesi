@@ -221,7 +221,8 @@
                         assign lazy_load = false
                       endif
                     -%}
-                    <li class="grid__item">
+                    {% unless item.tags contains 'hidden' or item.title == "Box"  %}
+                      <li class="grid__item">
                       {%- case item.object_type -%}
                         {%- when 'product' -%}
                           {% render 'card-product',
@@ -319,6 +320,7 @@
                           </a>
                       {%- endcase -%}
                     </li>
+                    {% endunless %}
                   {%- endfor -%}
                 </ul>
 

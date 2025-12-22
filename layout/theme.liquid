@@ -4,6 +4,10 @@
   {%- if text_direction == 'rtl' %} dir="rtl"{% endif -%}
 >
   <head>
+    <link rel="alternate" hreflang="en" href="https://lunesi.co.uk/" />
+    <link rel="alternate" hreflang="sq" href="https://lunesi.co.uk/sq" />
+
+
     <meta name="robots" content="index, follow">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,6 +53,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <script src="{{ 'vendor-v4.js' | asset_url | split: '?' | first }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'gift-simple.js' | asset_url }}" defer="defer"></script>
 
     {{ content_for_header }}
 
@@ -1055,9 +1060,438 @@ document.addEventListener('DOMContentLoaded', function() {
 
 })();
 </script>
+<script>
+  // Універсальна функція для застосування видимості gift-section
+  function applyGiftVisibility() {
+    const giftSection = document.querySelector('.mini-cart__gift-section');
+    if (!giftSection) return;
 
+    const giftHidden = localStorage.getItem('giftHidden');
+    if (giftHidden === 'true') {
+      giftSection.style.display = "none";
+      console.log("Gift section hidden");
+    } else {
+      giftSection.style.display = "";
+      console.log("Gift section visible");
+    }
+  }
 
+  // Спостерігач за змінами у mini-cart
+  function observeMiniCart() {
+    const miniCart = document.querySelector('mini-cart');
+    if (!miniCart) return;
+
+    const observer = new MutationObserver(() => {
+      // Кожного разу, коли mini-cart перемальовується, перевіряємо gift-section
+      applyGiftVisibility();
+    });
+
+    observer.observe(miniCart, { childList: true, subtree: true });
+  }
+
+  // Виклик при завантаженні сторінки
+  document.addEventListener('DOMContentLoaded', () => {
+    observeMiniCart();
+    applyGiftVisibility(); // одразу перевірка при старті
+  });
+
+  // Виклик при кастомній події cart:updated
+  document.body.addEventListener('cart:updated', () => {
+    applyGiftVisibility();
+  });
+
+  // Допоміжна функція для перемикання стану вручну
+  function toggleGiftSection(hide) {
+    localStorage.setItem('giftHidden', hide ? 'true' : 'false');
+    applyGiftVisibility();
+  }
+</script>
 {{ "upsell-swiper.js" | asset_url| script_tag }}
-    {% render 'quit-redirect' %}
+   <!-- {% render 'quit-redirect' %}-->
+    {% render 'gift-bundle-trigger' %}
+    
+    {%- section 'gift-bundle-settings' -%}
+    
+    <!-- Simple Gift Popup -->
+    <div id="gift-popup" class="gift-popup is-hidden">
+      <div class="popup-overlay" data-popup-close></div>
+      <div class="popup-content">
+        <button class="popup-close" data-popup-close>×</button>
+        <div class="popup-inner popup-split">
+          <!-- Left side: Text + Form -->
+          <div class="popup-left">
+            <h2 id="popup-heading">{{ settings.gift_popup_heading | default: 'Get Your Free Gift!' }}</h2>
+            <p id="popup-subheading">{{ settings.gift_popup_subheading | default: 'Subscribe to our newsletter and get a free gift bundle worth $100!' }}</p>
+            
+            <form id="gift-email-form">
+              <div class="form-group">
+                <input 
+                  type="email" 
+                  placeholder="Enter your email" 
+                  required 
+                  class="email-input"
+                />
+                <button type="submit" class="submit-btn" id="popup-button">
+                  {{ settings.gift_popup_button_text | default: 'Get Free Gift' }}
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Right side: Image -->
+          <div class="popup-right">
+            {%- if settings.gift_popup_image != blank -%}
+              <img 
+                src="{{ settings.gift_popup_image | image_url: width: 400 }}"
+                alt="{{ settings.gift_popup_image.alt | escape }}"
+                class="popup-image"
+              />
+            {%- endif -%}
+          </div>
+        </div>
+        
+        <script>
+
+          
+          document.addEventListener('DOMContentLoaded', function () {
+  const popup = document.getElementById('gift-popup');
+  const closeButton = popup?.querySelector('[data-popup-close]');
+
+  // Спостерігаємо за змінами класів попапу
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        mutation.attributeName === 'class' &&
+        popup.classList.contains('is-hidden') === false
+      ) {
+        // Попап став видимим — імітуємо клік на кнопку закриття
+        if (closeButton) {
+          closeButton.click();
+          console.log('🎁 Попап автоматично закрито');
+        }
+      }
+    });
+  });
+
+  if (popup) {
+    observer.observe(popup, { attributes: true });
+  }
+});
+          // Update popup text from settings when available
+          function updatePopupText() {
+            if (window.giftBundleSettings) {
+              const heading = document.getElementById('popup-heading');
+              const subheading = document.getElementById('popup-subheading');
+              const button = document.getElementById('popup-button');
+              
+              if (heading) heading.innerHTML = window.giftBundleSettings.popupHeading;
+              if (subheading) subheading.textContent = window.giftBundleSettings.popupSubheading;
+              if (button) button.textContent = window.giftBundleSettings.popupButtonText;
+            }
+          }
+          
+          // Update text when settings load
+          if (window.giftBundleSettings) {
+            updatePopupText();
+          } else {
+            document.addEventListener('DOMContentLoaded', function() {
+              setTimeout(updatePopupText, 100);
+            });
+          }
+        </script>
+      </div>
+    </div>
+    
+    <style>
+      /* Simple Gift Popup Styles */
+      .gift-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .gift-claim-container {
+      max-width: 450px;
+      }
+
+      .gift-icon img {
+        width: 50px;
+        height: auto;
+      }
+
+          @media only screen and (max-width: 768px) {
+      .gift-title {
+      font-size: 14px;
+    }
+
+    
+    }
+
+      
+      
+      .gift-popup.is-hidden {
+        display: none;
+      }
+      
+      .gift-popup.is-visible {
+        display: flex;
+      }
+      
+      .popup-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+      
+      .popup-content {
+        position: relative;
+        background: white;
+        border-radius: 12px;
+        max-width: 900px;
+        width: 100%;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        animation: popup-scale-in 0.3s ease;
+      }
+      
+      .popup-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #999;
+        z-index: 10;
+      }
+      
+      .popup-close:hover {
+        background: #e5e5e5;
+        color: #333;
+      }
+      
+      .popup-inner {
+        padding: 0px;
+        text-align: center;
+      }
+      
+      .popup-split {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+        text-align: left;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      
+      .popup-left {
+        flex: 1;
+        max-width: 450px;
+        min-width: 350px;
+        padding-left: 30px;
+      }
+      
+      .popup-right {
+        flex: 1;
+        max-width: 450px;
+        min-width: 350px;
+      }
+      
+      .popup-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        object-fit: cover;
+        scale: 1.02;
+        position: relative;
+        top: 5px;
+      }
+      
+      .popup-inner h2 {
+        margin: 0 0 15px 0;
+        font-size: 28px;
+        color: #1a1b18;
+        text-align: center;
+      }
+      
+      .popup-inner p {
+        margin: 0;
+        color: #666;
+        line-height: 1.6;
+        text-align: center;
+      }
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin: 20px 0;
+      }
+      
+      .email-input {
+        flex: 1;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        min-width: 200px;
+      }
+      
+      .email-input:focus {
+        border-color: #e6cedf;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(230, 206, 223, 0.2);
+      }
+      
+      .submit-btn {
+        padding: 15px 25px;
+        background: #e6cedf;
+        color: #212326;
+        border: none;
+        border-radius: 60px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+      }
+      
+      .submit-btn:hover {
+        background: #d4b5c7;
+        transform: translateY(-1px);
+      }
+      
+      .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      .disclaimer {
+        margin-top: 15px !important;
+        font-size: 12px !important;
+        color: #999 !important;
+      }
+      
+      @keyframes popup-scale-in {
+        0% {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      [data-address] button.button {
+      margin: 10px;
+      }
+      
+      @media screen and (max-width: 768px) {
+        .popup-split {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+        
+        .popup-right {
+          display: none; /* Hide image on mobile */
+        }
+        
+        .popup-left {
+          max-width: 100%;
+          min-width:0;
+          padding-left: 0;
+
+        }
+        .popup-inner h2 {
+        font-size: 18px;
+      }
+      .popup-inner p {
+      font-size: 12px;}
+      .popup-close{
+        width: 30px;
+        height: 30px;
+      }
+      }
+      
+      @media screen and (max-width: 600px) {
+        .popup-content {
+          width: 95%;
+          margin: 20px;
+        }
+        
+        .popup-inner {
+          padding: 30px 20px;
+        }
+        
+        .form-group {
+          flex-direction: column;
+        }
+        
+        .submit-btn {
+          width: 100%;
+        }
+      }
+    </style>
+    
   </body>
+  
+  <script>
+    (function () {
+      function updateCartCount() {
+        fetch('/cart.js')
+        .then(res => res.json())
+        .then(cart => {
+          const cartTrigger = document.getElementById('desktop-cart-trigger');
+          if (cartTrigger) {
+            cartTrigger.innerHTML = `CART (${cart.item_count})`;
+          }
+        })
+        .catch(() => {});
+      }
+      
+      document.addEventListener('DOMContentLoaded', updateCartCount);
+      
+      const originalFetch = window.fetch;
+      
+      window.fetch = function () {
+        return originalFetch.apply(this, arguments).then(response => {
+          try {
+            const url = response.url;
+            
+            if (
+              url.includes('/cart/add') ||
+              url.includes('/cart/change') ||
+              url.includes('/cart/update') ||
+              url.includes('/cart/clear')
+            ) {
+              updateCartCount();
+            }
+          } catch (e) {}
+          
+          return response;
+        });
+      };
+    })();
+  </script>
 </html>

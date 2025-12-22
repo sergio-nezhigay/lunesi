@@ -79,20 +79,72 @@
     },
     "featured_collection_kKaQJG": {
       "type": "featured-collection",
+      "blocks": {
+        "product_label_kDFPDf": {
+          "type": "product_label",
+          "settings": {
+            "product_position": 1,
+            "label_text": "Limited",
+            "label_bg_color": "#000000",
+            "label_text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "product_label_kDFPDf"
+      ],
       "custom_css": [
         "@media screen and (max-width: 1100px) {.button--small {transform: scale(0.8); top: -3px; }}",
-        "@media only screen and (max-width: 767px) {.grid--2-col .grid__item {width: calc(70% - (var(--grid-horizontal-spacing) / 2)); }}"
+        ".card-information__button .button:not(.loading) {width: 3.4rem; min-height: 3.4rem;}"
       ],
       "settings": {
-        "collection": "main-collection",
+        "sold_out_product": true,
+        "limited_product": false,
+        "collection": "bundles",
+        "products_to_show": 4,
+        "enable_conditional_slider": true,
+        "show_view_all": false,
+        "show_divider": false,
+        "heading": "Bundles",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "heading_tag": "p",
+        "products_to_show_mobile": 5,
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "image_ratio": "adapt",
+        "image_position": "center center",
+        "enable_image_fill": true,
+        "show_secondary_image": true,
+        "secondary_image_max": 1,
+        "show_vendor": false,
+        "show_rating": false,
+        "show_quick_buy": true,
+        "enable_quick_view": false,
+        "enable_color_swatches": true,
+        "enable_countdown": true,
+        "button_style": "transparent",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "featured_collection_WAtHqF": {
+      "type": "featured-collection",
+      "custom_css": [
+        ".card-information__button .button:not(.loading) {width: 3.4rem; min-height: 3.4rem;}"
+      ],
+      "settings": {
+        "sold_out_product": false,
+        "limited_product": false,
+        "collection": "main-collection-1",
         "products_to_show": 3,
         "enable_conditional_slider": true,
         "show_view_all": false,
         "show_divider": false,
-        "heading": "",
+        "heading": "Products",
         "heading_size": "h1",
         "heading_alignment": "left",
-        "heading_tag": "h2",
+        "heading_tag": "p",
         "products_to_show_mobile": 5,
         "columns_mobile": "2",
         "swipe_on_mobile": true,
@@ -405,7 +457,7 @@
         "heading": "",
         "heading_size": "h1",
         "heading_alignment": "center",
-        "heading_tag": "h2",
+        "heading_tag": "p",
         "section_button_label": "Complete Hair Quiz",
         "section_button_link": "shopify://pages/quiz",
         "section_button_size": "small",
@@ -626,9 +678,16 @@
         "video_6bjLMx",
         "video_DT7EY9"
       ],
+      "custom_css": [
+        ".video-item .start_video {display: none;}"
+      ],
       "name": "Slider Products",
       "settings": {
-        "main_title": ""
+        "main_title": "",
+        "link_text": "View product",
+        "show_divider": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "image_banner_r8Hxe9": {
@@ -841,6 +900,7 @@
   "order": [
     "video_hero_pGeFAF",
     "featured_collection_kKaQJG",
+    "featured_collection_WAtHqF",
     "rich_text_wNayRT",
     "image_banner_TqGcGn",
     "image_with_text_F6j8na",

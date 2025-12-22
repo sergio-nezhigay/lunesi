@@ -207,6 +207,7 @@
   position: absolute;
   bottom: 100%;
   z-index: 2;
+  height: auto !important;
   white-space: nowrap;
   height: 3.6rem;
   margin-top: 0;

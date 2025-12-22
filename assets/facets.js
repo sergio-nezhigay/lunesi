@@ -113,9 +113,24 @@ class FacetFiltersForm extends HTMLElement {
     const facetsToRender = Array.from(facetDetailsElements).filter(element => !matchesIndex(element));
     const countsToRender = Array.from(facetDetailsElements).find(matchesIndex);
 
-    facetsToRender.forEach((element) => {
-      document.querySelector(`.js-filter[data-index="${element.dataset.index}"]`).innerHTML = element.innerHTML;
-    });
+facetsToRender.forEach((element) => {
+  const target = document.querySelector(`.js-filter[data-index="${element.dataset.index}"]`);
+
+  // Зберігаємо поточні значення input-ів (щоб Shopify не ламав формат)
+  const oldMin = target.querySelector('input[name="filter.v.price.gte"]')?.value;
+  const oldMax = target.querySelector('input[name="filter.v.price.lte"]')?.value;
+
+  target.innerHTML = element.innerHTML;
+
+  // Повертаємо значення назад
+  if (oldMin !== undefined) {
+    target.querySelector('input[name="filter.v.price.gte"]').value = oldMin.replace(/\D/g, '');
+  }
+  if (oldMax !== undefined) {
+    target.querySelector('input[name="filter.v.price.lte"]').value = oldMax.replace(/\D/g, '');
+  }
+});
+
 
     FacetFiltersForm.renderActiveFacets(parsedHTML);
     FacetFiltersForm.renderAdditionalElements(parsedHTML);
@@ -305,12 +320,11 @@ class PriceRange extends HTMLElement {
 
     const output = this.activeHandle.nextElementSibling;
     const text = output.querySelector('.price-range__output-text');
-    text.innerHTML = valuenow;
+text.innerHTML = Number(valuenow).toString();
 
     const inputs = this.querySelectorAll('input');
     const input = isLower ? inputs[0] : inputs[1];
-    input.value = valuenow;
-    
+input.value = Number(valuenow).toString();
     this.adjustToValidValues(input);
     this.setMinAndMaxValues();
 	}

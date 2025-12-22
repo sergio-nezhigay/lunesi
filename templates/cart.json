@@ -46,7 +46,7 @@
         "eu_threshold": 150,
         "non_eu_threshold": 50,
         "default_tax_message": "",
-        "custom_tax_message": "Tax included. Shipping calculated at checkout.",
+        "custom_tax_message": "Tax included. International duties may apply. \nShipping calculated at checkout.",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -66,6 +66,10 @@
     },
     "cart-recommendations": {
       "type": "cart-recommendations",
+      "custom_css": [
+        ".height-control {height: auto !important;}",
+        "add-to-cart {min-height: 36px;}"
+      ],
       "settings": {
         "show_divider": false,
         "heading": "You May Also Like",

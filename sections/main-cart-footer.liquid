@@ -12,6 +12,29 @@
     endfor
     assign items_in_cart = cart.item_count | minus: gift_wraps_in_cart
   endif
+
+  # Перевірити чи є гіфт-бандл в кошику
+  assign gift_variant_id = 43694372257923
+  assign gift_variant_id_string = '43694372257923'
+  assign gift_in_cart = false
+  assign non_gift_items_count = 0
+  assign customer_qualifies_for_gift = false
+  
+  for item in cart.items
+    if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
+      assign gift_in_cart = true
+    else
+      assign non_gift_items_count = non_gift_items_count | plus: item.quantity
+    endif
+  endfor
+  
+  # Перевірити чи кастомер має право на подарунок
+  assign gift_cookie_check = request.headers.cookie | split: 'beyours:gift-popup=true'
+  assign gift_claimed_cookie = request.headers.cookie | split: 'beyours:gift-bundle-claimed=true'
+  
+  if gift_cookie_check.size > 1 or gift_claimed_cookie.size > 1 or customer or gift_in_cart
+    assign customer_qualifies_for_gift = true
+  endif
 -%}
 
 {%- style -%}
@@ -25,6 +48,13 @@
 {{ 'component-totals.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+{{ 'gift-bundle.js' | asset_url | script_tag }}
+
+<script>
+  // Передати інформацію про кошик в JavaScript
+  window.cartHasGift = {{ gift_in_cart | json }};
+  window.cartNonGiftItemsCount = {{ non_gift_items_count | json }};
+</script>
 
 <div class="page-width{% if cart == empty %} is-empty{% endif %} section--padding" id="main-cart-footer" data-id="{{ section.id }}">
   <div class="cart__footer">
@@ -169,7 +199,14 @@
                 </button>
               </noscript>
 
-              <button type="submit" class="cart__checkout-button button" name="checkout"{% if cart == empty %} disabled{% endif %} form="cart">
+              <button
+                type="submit"
+                class="cart__checkout-button button"
+                name="checkout"
+                {% if cart == empty %}disabled{% endif %}
+                form="cart"
+                data-checkout-button
+              >
                 {{ 'sections.cart.checkout' | t }}
               </button>
             </div>
@@ -179,6 +216,27 @@
                 {{ content_for_additional_checkout_buttons }}
               </div>
             {%- endif -%}
+
+            {%- comment -%} Gift section visibility now managed via JS (gift-simple.js) {%- endcomment -%}
+            {% comment %} <div class="cart__gift-section-main" data-gift-main-offer hidden style="margin-top: 16px;">
+              <div class="gift-claim-container">
+                <div class="gift-claim-content">
+                  <div class="gift-icon">{{ settings.main_products.featured_image | image_url: width: settings.main_products.featured_image.widthsettings.main_products.featured_image | image_tag: class: "main_image_header" }}</div>
+                  <div class="gift-text">
+                    <h4 class="gift-title">{{settings.main_products.title}}</h4>
+                    {% comment %} <p class="gift-description">Add your gift bundle to cart</p> {% endcomment %}
+                  </div>
+                </div>
+                <button class="button button--gift" data-id={{ settings.main_products.variants.first.id }} data-gift-add>
+                  ADD GIFT
+                </button>
+              </div>
+            </div> {% endcomment %}
+            <script>
+              const productId = {{ product.variants.first.id }};
+              const productHandle = "{{ product.handle }}";
+            </script>
+            
           {%- when 'free_shipping' -%}
             {%- liquid
               if block.settings.minimum_amount != blank
@@ -211,10 +269,333 @@
         {%- endcase -%}
       {% endfor %}
 
+      {%- comment -%} Секція гіфт-бандлу для звичайного кошика - ONLY показувати якщо менше 2 товарів (не показувати якщо 2+ товарів бо вже є кнопка ADD GIFT внизу) {%- endcomment -%}
+      {%- if customer_qualifies_for_gift and non_gift_items_count < 2 -%}
+        {%- unless gift_in_cart -%}
+        <div class="cart__gift-section" id="gift-section">
+          <div class="gift-bundle-offer">
+            <div class="gift-bundle-content">
+              <div class="gift-bundle-text">
+                <h4 class="gift-bundle-title">Free Gift Available</h4>
+                <p class="gift-bundle-description">Add gift bundle to cart</p>
+              </div>
+            </div>
+            <button class="button button--small button--cta gift-bundle-add" data-gift-bundle-add>
+              <span class="label">Add Gift</span>
+              {% render 'icon', icon: 'plus' %}
+            </button>
+          </div>
+        </div>
+        {%- endunless -%}
+      {%- endif -%}
+
+      <!-- Gift section placeholder -->
+      <div id="gift-section" class="cart__gift-section" style="display: none;"></div>
+      
       <div id="cart-errors" class="form__message errors"></div>
     </div>
   </div>
 </div>
+
+<style>
+  .cart__gift-section,
+  .cart__validation-section {
+    margin:0;
+  }
+
+  .cart__validation-section {
+    display: none !important; 
+  }
+  
+  .cart__validation-section {
+    margin:0 !important;
+  }
+  .gift-bundle-offer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .gift-bundle-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .gift-bundle-icon {
+    display: none;
+  }
+  
+  .gift-bundle-text {
+    flex: 1;
+  }
+  
+  .gift-bundle-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 5px 0;
+    color: #212529;
+  }
+  
+  .gift-bundle-description {
+    font-size: 14px;
+    margin: 0;
+    color: #6c757d;
+    line-height: 1.4;
+  }
+  
+  .gift-bundle-add,
+  .gift-bundle-remove {
+    flex-shrink: 0;
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 14px;
+    margin-left: 15px;
+  }
+  
+  .gift-bundle-add {
+    background: #e6cedf;
+    border-color: #e6cedf;
+    color: #212326;
+  }
+  
+  .gift-bundle-add:hover {
+    background: #d4b5c7;
+    border-color: #d4b5c7;
+  }
+  
+  .gift-bundle-remove {
+    background: transparent;
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  .gift-bundle-remove:hover {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .gift-validation-message {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-top: 12px;
+  }
+  
+  .validation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .validation-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.4;
+    text-align: center;
+  }
+  
+  .button--disabled {
+    cursor: not-allowed !important;
+    opacity: 1 !important;
+  }
+  
+  .button--disabled:hover {
+    opacity: 1 !important;
+  }
+  
+  /* Колонковий layout для повідомлення і кнопки */
+  .cart__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* Validation message має бути першим */
+  .cart__validation-section {
+    order: -1;
+  }
+  
+  @media screen and (max-width: 749px) {
+    .gift-bundle-offer {
+      padding: 15px;
+    }
+    
+    .gift-bundle-icon {
+      font-size: 28px;
+      margin-right: 12px;
+    }
+    
+    .gift-bundle-title {
+      font-size: 15px;
+    }
+    
+    .gift-bundle-description {
+      font-size: 13px;
+    }
+    
+    .gift-bundle-add,
+    .gift-bundle-remove {
+      padding: 10px 15px;
+      font-size: 13px;
+    }
+  }
+  
+  /* Gift bundle styles - MAIN CART */
+  .gift-claim-container {
+    background: linear-gradient(135deg, #f8f4ff 0%, #fff5f7 100%);
+    border: 2px solid #e6cedf;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(230, 206, 223, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .gift-claim-container:hover {
+    box-shadow: 0 4px 12px rgba(230, 206, 223, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .gift-claim-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+  }
+
+  .gift-icon {
+    font-size: 32px;
+    line-height: 1;
+    animation: giftBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes giftBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .gift-text {
+    flex: 1;
+  }
+
+  .gift-title {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d2d2d;
+    letter-spacing: 0.3px;
+  }
+
+  .gift-description {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  .button--gift {
+    background: #e6cedf;
+    border: 2px solid #e6cedf;
+    color: #2d2d2d;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 12px 24px;
+    border-radius: 25px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(230, 206, 223, 0.3);
+  }
+
+  .button--gift:hover {
+    background: #d4b5c7;
+    border-color: #d4b5c7;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(230, 206, 223, 0.4);
+  }
+
+  .button--gift:active {
+    transform: scale(0.98);
+  }
+
+  .gift-claim-icon {
+    font-size: 28px;
+    margin-right: 16px;
+  }
+
+  .gift-claim-text {
+    flex: 1;
+  }
+
+  .gift-claim-title {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    color: rgb(var(--color-foreground));
+    line-height: 1.3;
+  }
+  
+  .gift-claim-description {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(var(--color-foreground), 0.7);
+    line-height: 1.4;
+  }
+  
+  .gift-added-container {
+    background: rgba(var(--color-foreground), 0.05);
+    border: 1px solid rgba(var(--color-foreground), 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: rgba(var(--color-foreground), 0.7);
+  }
+  
+  .gift-added-icon {
+    font-size: 20px;
+    margin-right: 12px;
+  }
+  
+  .gift-validation-message {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .gift-validation-icon {
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  
+  .gift-validation-text {
+    color: #856404;
+    font-size: 15px;
+    font-family: var(--font-body-family);
+    margin: 0;
+  }
+</style>
 
 {% schema %}
 {

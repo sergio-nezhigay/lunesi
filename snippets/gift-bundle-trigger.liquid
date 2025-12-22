@@ -1,0 +1,218 @@
+<!-- Gift trigger button - always render, control visibility with JS -->
+  <div class="gift-bundle-trigger-container" id="gift-trigger-container" style="display: none;">
+    <div class="gift-trigger-wrapper">
+      <button 
+        class="gift-bundle-trigger" 
+        data-gift-popup-trigger
+        type="button"
+        aria-label="Get free gift"
+      >
+        <div class="gift-trigger-icon">🎁</div>
+        <div class="gift-trigger-text">
+          <span class="gift-trigger-label" id="trigger-label">Claim your free gift</span>
+          <span class="gift-trigger-sublabel" id="trigger-sublabel">Get $100 bundle</span>
+        </div>
+      </button>
+      <button 
+        class="gift-trigger-close" 
+        data-gift-trigger-close
+        type="button"
+        aria-label="Close gift offer"
+      >
+        ×
+      </button>
+    </div>
+  </div>
+
+  <style>
+    .gift-bundle-trigger-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      animation: bounceIn 1s ease-out;
+    }
+    
+    .gift-trigger-wrapper {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+    }
+    
+    .gift-trigger-close {
+      position: absolute;
+      top: -5px;
+      right: -4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #666;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    
+    .gift-trigger-close:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .gift-bundle-trigger {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #e6cedf 0%, #d4b5c7 100%);
+      color: #212326;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      box-shadow: 0 4px 20px rgba(230, 206, 223, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      text-align: left;
+      max-width: 250px;
+    }
+    
+    .gift-bundle-trigger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(230, 206, 223, 0.6);
+      background: linear-gradient(135deg, #d4b5c7 0%, #c29db4 100%);
+    }
+    
+    .gift-trigger-icon {
+      font-size: 24px;
+      margin-right: 12px;
+      animation: pulse 2s infinite;
+    }
+    
+    .gift-trigger-text {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .gift-trigger-label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+    
+    .gift-trigger-sublabel {
+      display: block;
+      font-size: 11px;
+      opacity: 0.9;
+      line-height: 1.2;
+    }
+    
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.3) translateY(50px);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+    
+    @media screen and (max-width: 749px) {
+      .gift-bundle-trigger-container {
+        bottom: 80px; /* Врахувати mobile dock */
+        right: 16px;
+        left: auto;
+      }
+      
+      .gift-bundle-trigger {
+        width: auto;
+        max-width: 250px;
+        justify-content: flex-start;
+        padding: 16px 20px;
+      }
+      
+      .gift-trigger-icon {
+        font-size: 28px;
+        margin-right: 16px;
+      }
+      
+      .gift-trigger-label {
+        font-size: 16px;
+      }
+      
+      .gift-trigger-sublabel {
+        font-size: 12px;
+      }
+    }
+    
+    /* Приховати на мобільних пристроях якщо є mobile dock */
+    body:not(.shopify-body-section-header-sticky) .gift-bundle-trigger-container,
+    .shopify-body-section-header-hidden .gift-bundle-trigger-container {
+      bottom: var(--mobile-dock-height, 20px);
+    }
+    
+    /* Інтеграція з темою */
+    @media screen and (min-width: 750px) {
+      .gift-bundle-trigger-container {
+        bottom: 40px;
+        left: 40px;
+      }
+    }
+    
+    /* Приховати коли відкритий кошик або інші попапи */
+    .mini-cart--open .gift-bundle-trigger-container,
+    .menu-drawer--open .gift-bundle-trigger-container,
+    .search-modal--open .gift-bundle-trigger-container,
+    .quick-view--open .gift-bundle-trigger-container,
+    .promo-popup--open .gift-bundle-trigger-container {
+      display: none;
+    }
+  </style>
+
+  <script>
+    // Show trigger when popup closed without email submission
+    setInterval(() => {
+      const trigger = document.getElementById('gift-trigger-container');
+      if (!trigger) return;
+      
+      const emailSubmitted = sessionStorage.getItem('gift-email-submitted') === 'true';
+      const popupClosed = sessionStorage.getItem('gift-popup-closed') === 'true';
+      const triggerDismissed = sessionStorage.getItem('gift-trigger-dismissed') === 'true';
+      
+      // Show trigger if popup was closed but no email submitted and not dismissed
+      if (popupClosed && !emailSubmitted && !triggerDismissed) {
+        trigger.style.display = 'block';
+        
+        // Update text from settings if available
+        if (window.giftBundleSettings) {
+          const label = document.getElementById('trigger-label');
+          const sublabel = document.getElementById('trigger-sublabel');
+          if (label) label.textContent = window.giftBundleSettings.triggerText;
+          if (sublabel) sublabel.textContent = window.giftBundleSettings.triggerSubtext;
+        }
+      } else {
+        trigger.style.display = 'none';
+      }
+    }, 2000);
+  </script>

@@ -17,8 +17,8 @@
         "announcement-bar-0": {
           "type": "announcement",
           "settings": {
-            "text": "FREE US SHIPPING ON ORDERS OVER £46",
-            "text_on_mobile": "FREE US SHIPPING ON ORDERS OVER £46",
+            "text": "Enjoy FREE delivery on UK orders over £90",
+            "text_on_mobile": "Enjoy FREE delivery on UK orders over £90",
             "text_size": 15,
             "link": ""
           }
@@ -29,6 +29,8 @@
       ],
       "settings": {
         "only_homepage": false,
+        "show_only_us": false,
+        "show_only_uk": false,
         "layout": "default",
         "mobile_layout": "carousel",
         "autorotate": true,

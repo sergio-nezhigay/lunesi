@@ -1,0 +1,676 @@
+class GiftBundleManager {
+  constructor() {
+    this.variantId = '43668412792963';
+    this.cookieName = 'beyours:gift-bundle-claimed';
+    this.isInitialized = false;
+    this.init();
+  }
+
+  init() {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
+
+    this.bindEvents();
+    this.checkForEmailCoupon();
+    this.updateGiftButtonStates();
+    this.validateCart();
+    this.updateGiftSection();
+    
+    // Слухати зміни в кошику
+    document.addEventListener('cart:updated', () => {
+      this.updateGiftButtonStates();
+      this.validateCart();
+      this.updateGiftSection();
+    });
+    
+    // Додати слухач для кліків
+    document.addEventListener('click', () => {
+      setTimeout(() => {
+        this.validateCart();
+        this.updateGiftButtonStates();
+      }, 100);
+    });
+
+    // Перевіряти валідацію кожні 2 секунди
+    setInterval(() => {
+      this.validateCart();
+      this.updateGiftSection();
+    }, 2000);
+
+    // Тестування логіки - додати команди для консолі
+    window.testGiftLogic = () => {
+      console.log('🎁 === GIFT LOGIC TEST ===');
+      console.log('🎁 Email submitted:', sessionStorage.getItem('gift-email-submitted'));
+      console.log('🎁 Gift claimed:', this.isGiftClaimed());
+      console.log('🎁 Gift in cart:', this.isGiftInCart());
+      console.log('🎁 Non-gift items count:', this.getNonGiftItemsCount());
+      console.log('🎁 Gift section element:', document.getElementById('gift-section'));
+      console.log('🎁 Checkout buttons:', document.querySelectorAll('button[name="checkout"], button[data-checkout-button]'));
+      console.log('🎁 === END TEST ===');
+    };
+  }
+
+  bindEvents() {
+    // Додати обробники для кнопок додавання гіфта
+    document.addEventListener('click', (e) => {
+      // Знайти найближчий елемент з потрібним атрибутом
+      const addButton = e.target.closest('[data-gift-bundle-add]');
+      const removeButton = e.target.closest('[data-gift-bundle-remove]');
+      const triggerButton = e.target.closest('[data-gift-popup-trigger]');
+      
+      if (addButton) {
+        e.preventDefault();
+        this.addGiftBundle();
+      }
+      if (removeButton) {
+        e.preventDefault();
+        this.removeGiftBundle();
+      }
+      if (triggerButton) {
+        e.preventDefault();
+        this.openGiftPopup();
+      }
+    });
+  }
+
+  // Перевірити чи прийшли з email з купоном
+  checkForEmailCoupon() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const discount = urlParams.get('discount') || urlParams.get('coupon') || urlParams.get('code');
+    
+    // Перевірити URL на наявність discount коду
+    const currentPath = window.location.pathname;
+    const pathMatch = currentPath.match(/\/discount\/([^\/\?]+)/);
+    const pathDiscount = pathMatch ? pathMatch[1] : null;
+    
+    const foundCode = discount || pathDiscount;
+    
+    // Перевірити чи вже встановлені прапорці з gift-simple.js
+    const couponUsed = sessionStorage.getItem('gift-coupon-used') === 'true' ||
+                      localStorage.getItem('gift-coupon-used') === 'true';
+    
+    if ((foundCode && foundCode.toLowerCase() === 'freebundle') || couponUsed) {
+      
+      // Встановити всі необхідні прапорці (синхронізація з gift-simple.js)
+      sessionStorage.setItem('gift-email-submitted', 'true');
+      sessionStorage.setItem('gift-coupon-used', 'true');
+      sessionStorage.setItem('gift-popup-closed', 'true');
+      
+      this.addGiftBundle();
+      this.markGiftAsClaimed();
+      
+      // Очистити URL від параметрів тільки якщо це був URL параметр
+      if (discount && !pathDiscount) {
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+  }
+
+  async addGiftBundle() {
+    if (this.isGiftInCart()) return;
+    if (this.isGiftClaimed()) return;
+
+    try {
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: this.variantId,
+          quantity: 1,
+          properties: {
+            '_gift_bundle': 'true',
+            '_gift_source': 'email_or_popup'
+          }
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        this.markGiftAsClaimed();
+        
+        // Додати додатковий cookie для відстеження права на подарунок
+        document.cookie = 'beyours:gift-bundle-claimed=true; max-age=' + (30 * 24 * 60 * 60) + '; path=/';
+        
+        // Оновити всі секції кошика
+        this.updateCartSections();
+        
+        // Показати повідомлення
+        this.showGiftAddedMessage();
+        
+        // Відкрити кошик
+        this.openMiniCart();
+      }
+    } catch (error) {
+      console.error('Помилка додавання гіфт-бандлу:', error);
+    }
+  }
+
+  async removeGiftBundle() {
+    const giftLineItem = this.getGiftLineItem();
+    if (!giftLineItem) return;
+
+    try {
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: this.variantId,
+          quantity: 0
+        }),
+      });
+
+      if (response.ok) {
+        this.updateCartSections();
+        this.updateGiftButtonStates();
+        this.validateCart();
+      }
+    } catch (error) {
+      console.error('Помилка видалення гіфт-бандлу:', error);
+    }
+  }
+
+  isGiftInCart() {
+    // Перевірити через DOM елементи (для обох типів кошика)
+    const cartItems = document.querySelectorAll('[data-variant-id]');
+    const domCheck = Array.from(cartItems).some(item => 
+      item.dataset.variantId === this.variantId
+    );
+    
+    // Додаткова перевірка через Liquid змінні (якщо є)
+    const liquidCheck = window.cartHasGift || false;
+    
+    return domCheck || liquidCheck;
+  }
+
+  getGiftLineItem() {
+    return document.querySelector(`[data-variant-id="${this.variantId}"]`);
+  }
+
+  isGiftClaimed() {
+    // Перевірити cookie
+    const match = document.cookie.match(`(^|;)\\s*${this.cookieName}\\s*=\\s*([^;]+)`);
+    const cookieCheck = match ? match[2] === 'true' : false;
+    
+    // Перевірити sessionStorage та localStorage (з gift-simple.js)
+    const sessionCheck = sessionStorage.getItem('gift-email-submitted') === 'true' ||
+                         sessionStorage.getItem('gift-coupon-used') === 'true';
+    const localCheck = localStorage.getItem('gift-email-submitted') === 'true' ||
+                      localStorage.getItem('gift-coupon-used') === 'true';
+    
+    return cookieCheck || sessionCheck || localCheck;
+  }
+
+  markGiftAsClaimed() {
+    // Встановити cookie на 30 днів
+    document.cookie = `${this.cookieName}=true; max-age=${30 * 24 * 60 * 60}; path=/`;
+  }
+
+  updateGiftButtonStates() {
+    const isInCart = this.isGiftInCart();
+    const addButtons = document.querySelectorAll('[data-gift-bundle-add]');
+    const removeButtons = document.querySelectorAll('[data-gift-bundle-remove]');
+
+    addButtons.forEach(button => {
+      button.disabled = isInCart;
+      const label = button.querySelector('.label');
+      if (label) {
+        label.textContent = isInCart ? 'Gift in Cart' : 'Add Gift';
+      }
+      button.classList.toggle('gift-added', isInCart);
+    });
+
+    removeButtons.forEach(button => {
+      button.style.display = isInCart ? 'block' : 'none';
+    });
+  }
+
+  validateCart() {
+    const isGiftInCart = this.isGiftInCart();
+    const otherItemsCount = this.getNonGiftItemsCount();
+    
+    console.log('🔍 DEBUG validateCart:', {
+      isGiftInCart,
+      otherItemsCount,
+      shouldBlock: isGiftInCart && otherItemsCount === 0
+    });
+    
+    // Знайти всі кнопки чекауту (в drawer і на звичайній сторінці кошика)
+    const checkoutButtons = document.querySelectorAll('button[name="checkout"], button[data-checkout-button], .btn[name="checkout"], input[name="checkout"]');
+    const validationMessages = document.querySelectorAll('.gift-validation-message');
+    
+    // Додаткові селектори для кнопок
+    const additionalButtons = document.querySelectorAll('.cart__checkout-button, .button[type="submit"]');
+    const allButtonsNodeList = [...checkoutButtons, ...additionalButtons];
+    
+    // Фільтрувати кнопки - виключити newsletter та інші не-checkout кнопки
+    const allButtons = allButtonsNodeList.filter(button => {
+      const buttonText = button.textContent.toLowerCase().trim();
+      const buttonClass = button.className.toLowerCase();
+      const buttonParent = button.closest('.newsletter, .footer, [class*="newsletter"], [class*="subscribe"]');
+      
+      // Виключити newsletter кнопки
+      if (buttonParent || 
+          buttonText.includes('newsletter') || 
+          buttonText.includes('subscribe') || 
+          buttonClass.includes('newsletter') ||
+          buttonClass.includes('subscribe')) {
+        return false;
+      }
+      
+      return true;
+    });
+    
+    console.log('🔍 All checkout buttons found:', allButtons.length, allButtons);
+    
+    console.log('🔍 DEBUG elements found:', {
+      checkoutButtons: checkoutButtons.length,
+      validationMessages: validationMessages.length
+    });
+
+
+    if (isGiftInCart && otherItemsCount === 0) {
+      console.log('🚫 BLOCKING checkout - gift only in cart');
+      
+      // Гіфт є, але немає інших товарів - блокувати чекаут
+      allButtons.forEach((checkoutButton, index) => {
+        if (checkoutButton) {
+          console.log(`🚫 Disabling button ${index}:`, checkoutButton);
+          checkoutButton.disabled = true;
+          checkoutButton.classList.add('button--disabled');
+          checkoutButton.setAttribute('disabled', 'disabled');
+          
+          // Оновити текст кнопки
+          const originalText = checkoutButton.textContent.trim();
+          if (originalText.includes('Checkout') || originalText === 'Checkout') {
+            checkoutButton.textContent = 'Add Item to Checkout';
+          }
+        }
+      });
+      
+      // Показати або створити повідомлення валідації
+      console.log('📝 Handling validation messages, found:', validationMessages.length);
+      if (validationMessages.length === 0) {
+        console.log('📝 Creating new validation messages');
+        this.createValidationMessages();
+      } else {
+        console.log('📝 Showing existing validation messages');
+        validationMessages.forEach((validationMessage, index) => {
+          if (validationMessage) {
+            console.log(`📝 Showing message ${index}:`, validationMessage);
+            validationMessage.style.display = 'block';
+          }
+        });
+      }
+    } else {
+      console.log('✅ ALLOWING checkout - valid cart');
+      
+      // Валідний кошик - дозволити чекаут
+      allButtons.forEach((checkoutButton, index) => {
+        if (checkoutButton) {
+          console.log(`✅ Enabling button ${index}:`, checkoutButton);
+          checkoutButton.disabled = false;
+          checkoutButton.classList.remove('button--disabled');
+          checkoutButton.removeAttribute('disabled');
+          
+          // Відновити текст кнопки
+          if (checkoutButton.textContent.includes('Add Item')) {
+            checkoutButton.textContent = 'Checkout';
+          }
+        }
+      });
+      
+      // Приховати повідомлення валідації
+      console.log('🙈 Hiding validation messages');
+      validationMessages.forEach((validationMessage, index) => {
+        if (validationMessage) {
+          console.log(`🙈 Hiding message ${index}:`, validationMessage);
+          validationMessage.style.display = 'none';
+        }
+      });
+    }
+  }
+
+  getNonGiftItemsCount() {
+    // Спочатку перевірити чи є дані з Liquid
+    if (typeof window.cartNonGiftItemsCount !== 'undefined') {
+      return window.cartNonGiftItemsCount;
+    }
+    
+    const cartItems = document.querySelectorAll('[data-variant-id]');
+    let count = 0;
+    
+    // Спробувати рахувати через DOM елементи
+    if (cartItems.length > 0) {
+      cartItems.forEach(item => {
+        if (item.dataset.variantId !== this.variantId) {
+          // Для звичайного кошика рахувати кількість з input
+          const quantityInput = item.querySelector('input[name="updates[]"]');
+          if (quantityInput) {
+            count += parseInt(quantityInput.value) || 0;
+          } else {
+            count += 1; // Для mini-cart де немає input
+          }
+        }
+      });
+    }
+    
+    return count;
+  }
+
+  async getCartItemsFromAPI() {
+    try {
+      const response = await fetch('/cart.js');
+      const cart = await response.json();
+      return cart.items || [];
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      return [];
+    }
+  }
+
+  createValidationMessages() {
+    console.log('🔨 createValidationMessages called');
+    
+    // Спробувати різні селектори для mini-cart
+    const miniCartSelectors = [
+      '.mini-cart__footer',
+      '.drawer__footer', 
+      '.cart-drawer__footer',
+      '.mini-cart .footer',
+      '[class*="mini-cart"] [class*="footer"]'
+    ];
+    
+    let miniCartFooter = null;
+    for (const selector of miniCartSelectors) {
+      miniCartFooter = document.querySelector(selector);
+      if (miniCartFooter) {
+        console.log('🔨 Mini cart footer found with selector:', selector);
+        break;
+      }
+    }
+    
+    if (miniCartFooter) {
+      const existingMsg = miniCartFooter.querySelector('.gift-validation-message');
+      console.log('🔨 Existing mini cart message:', !!existingMsg);
+      
+      if (!existingMsg) {
+        console.log('🔨 Creating mini cart validation message');
+        const validationSection = document.createElement('div');
+        validationSection.className = 'mini-cart__validation-section';
+        validationSection.style.cssText = 'margin: 16px 0; padding: 0 20px;';
+        validationSection.innerHTML = `
+          <div class="gift-validation-message" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 12px 16px;">
+            <div class="validation-content" style="display: flex; align-items: center; justify-content: center;">
+              <div class="validation-text">
+                <p style="margin: 0; font-size: 12px; color: #6c757d; text-align: center;">Add one more item to cart to proceed with checkout</p>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Спробувати додати в різні місця
+        const firstCheckoutButton = miniCartFooter.querySelector('button[name="checkout"], button[data-checkout-button], .button[type="submit"]');
+        if (firstCheckoutButton) {
+          firstCheckoutButton.parentNode.insertBefore(validationSection, firstCheckoutButton);
+          console.log('🔨 Mini cart validation message inserted before checkout button');
+        } else {
+          miniCartFooter.appendChild(validationSection);
+          console.log('🔨 Mini cart validation message appended to footer');
+        }
+      }
+    } else {
+      console.log('🔨 Mini cart footer not found, trying alternative approach');
+      // Альтернативний підхід - знайти checkout кнопку і додати повідомлення перед нею
+      const miniCartButtons = document.querySelectorAll('button[name="checkout"], button[data-checkout-button]');
+      miniCartButtons.forEach((button, index) => {
+        const buttonParent = button.closest('.mini-cart, .drawer, .cart-drawer, [class*="mini-cart"]');
+        if (buttonParent && !buttonParent.querySelector('.gift-validation-message')) {
+          console.log(`🔨 Creating validation message for mini-cart button ${index}`);
+          const validationDiv = document.createElement('div');
+          validationDiv.className = 'gift-validation-message';
+          validationDiv.style.cssText = 'background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 12px 16px; margin: 16px 0;';
+          validationDiv.innerHTML = `
+            <div class="validation-content" style="display: flex; align-items: center; justify-content: center;">
+              <div class="validation-text">
+                <p style="margin: 0; font-size: 12px; color: #6c757d; text-align: center;">Add one more item to cart to proceed with checkout</p>
+              </div>
+            </div>
+          `;
+          button.parentNode.insertBefore(validationDiv, button);
+        }
+      });
+    }
+    
+    // Створити повідомлення для звичайного cart
+    const cartFooter = document.querySelector('.cart__footer');
+    if (cartFooter) {
+      const existingMsg = cartFooter.querySelector('.gift-validation-message');
+      if (!existingMsg) {
+        const validationSection = document.createElement('div');
+        validationSection.className = 'cart__validation-section';
+        validationSection.style.cssText = 'margin: 20px 0;';
+        validationSection.innerHTML = `
+          <div class="gift-validation-message" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 12px 16px;">
+            <div class="validation-content" style="display: flex; align-items: center; justify-content: center;">
+              <div class="validation-text">
+                <p style="margin: 0; font-size: 14px; color: #6c757d; text-align: center;">Add one more item to cart to proceed with checkout</p>
+              </div>
+            </div>
+          </div>
+        `;
+        cartFooter.appendChild(validationSection);
+      }
+    }
+  }
+
+  async updateCartSections() {
+    try {
+      const response = await fetch(`/cart?section_id=mini-cart`);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const newContent = doc.querySelector('.shopify-section');
+      
+      if (newContent) {
+        const miniCart = document.getElementById('mini-cart');
+        if (miniCart) {
+          miniCart.innerHTML = newContent.innerHTML;
+        }
+      }
+
+      // Оновити іконку кошика
+      this.updateCartIcon();
+      
+      // Оновити gift section після змін в кошику
+      this.updateGiftSection();
+    } catch (error) {
+      console.error('Помилка оновлення кошика:', error);
+    }
+  }
+
+  updateGiftSection() {
+    const giftSection = document.getElementById('gift-section');
+    if (!giftSection) {
+      this.createGiftSection();
+      return;
+    }
+
+    const isGiftInCart = this.isGiftInCart();
+    const emailSubmitted = sessionStorage.getItem('gift-email-submitted') === 'true';
+    const giftClaimed = this.isGiftClaimed();
+    
+    // Показати секцію тільки якщо кастомер має право на подарунок і немає gift в кошику
+    if ((emailSubmitted || giftClaimed) && !isGiftInCart) {
+      giftSection.style.display = 'block';
+      
+      // Показати кнопку для додавання подарунка
+      giftSection.innerHTML = `
+        <div class="gift-bundle-offer">
+          <div class="gift-bundle-content">
+            <div class="gift-bundle-text">
+              <h4 class="gift-bundle-title">Free Gift Available</h4>
+              <p class="gift-bundle-description">Add gift bundle to cart</p>
+            </div>
+          </div>
+          <button class="button button--small button--cta gift-bundle-add" data-gift-bundle-add>
+            <span class="label">Add Gift</span>
+          </button>
+        </div>
+      `;
+    } else {
+      giftSection.style.display = 'none';
+    }
+  }
+
+  createGiftSection() {
+    // Створити gift section якщо його немає
+    const miniCartFooter = document.querySelector('.mini-cart__footer');
+    if (miniCartFooter) {
+      const giftSection = document.createElement('div');
+      giftSection.className = 'mini-cart__gift-section';
+      giftSection.id = 'gift-section';
+      giftSection.innerHTML = `
+        <style>
+          .mini-cart__gift-section {
+            margin: 16px 0;
+            padding: 0 20px;
+          }
+          
+          .gift-bundle-offer,
+          .gift-bundle-added {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #e6cedf;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+          }
+          
+          .gift-bundle-added {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+          }
+          
+          .gift-bundle-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+          }
+          
+          .gift-bundle-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            animation: bounce 2s infinite;
+          }
+          
+          .gift-bundle-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            color: #155724;
+          }
+          
+          .gift-bundle-text p {
+            font-size: 12px;
+            margin: 0;
+            color: #6c757d;
+            line-height: 1.2;
+          }
+        </style>
+      `;
+      
+      miniCartFooter.insertBefore(giftSection, miniCartFooter.firstChild);
+    }
+  }
+
+  async updateCartIcon() {
+    try {
+      const response = await fetch('/cart.js');
+      const cart = await response.json();
+      
+      const bubbles = document.querySelectorAll('.cart-count-bubble');
+      bubbles.forEach(bubble => {
+        bubble.textContent = cart.item_count;
+        bubble.style.display = cart.item_count > 0 ? 'flex' : 'none';
+      });
+    } catch (error) {
+      console.error('Помилка оновлення іконки кошика:', error);
+    }
+  }
+
+  showGiftAddedMessage() {
+    // Показати тимчасове повідомлення
+    const message = document.createElement('div');
+    message.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      z-index: 9999;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    message.textContent = '🎁 Gift added to cart!';
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+      message.remove();
+    }, 3000);
+  }
+
+  openMiniCart() {
+    const miniCart = document.querySelector('mini-cart');
+    if (miniCart && typeof miniCart.open === 'function') {
+      miniCart.open();
+    } else {
+      // Fallback для відкриття drawer
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        cartDrawer.openMenuDrawer();
+      }
+    }
+  }
+
+  openGiftPopup() {
+    console.log('🎁 GiftBundleManager: openGiftPopup() called');
+    const popup = document.querySelector('gift-popup');
+    console.log('🎁 GiftBundleManager: Gift popup element found:', !!popup);
+    
+    if (popup && typeof popup.open === 'function') {
+      console.log('🎁 GiftBundleManager: Opening popup via .open() method');
+      popup.open();
+    } else {
+      console.log('🎁 GiftBundleManager: Using alternative popup opening method');
+      // Альтернативний спосіб відкриття попапа
+      const popupElement = document.querySelector('.promo-popup');
+      console.log('🎁 GiftBundleManager: Promo popup element found:', !!popupElement);
+      
+      if (popupElement) {
+        popupElement.classList.add('is-active');
+        document.body.classList.add('promo-popup--open');
+        console.log('🎁 GiftBundleManager: Added active classes manually');
+      }
+    }
+  }
+}
+
+// Ініціалізувати менеджер гіфт-бандлу
+document.addEventListener('DOMContentLoaded', () => {
+  const manager = new GiftBundleManager();
+  window.giftBundleManager = manager;
+});
+
+// Експорт для використання в інших місцях
+window.GiftBundleManager = GiftBundleManager;

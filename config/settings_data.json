@@ -9,6 +9,9 @@
  */
 {
   "current": {
+    "free_shipping_bar_threshold": 2,
+    "free_shipping_need_more_text": "Add one more product to unlock your gift",
+    "free_shipping_success_text": "Gift has been added to the cart",
     "free_shipping_progress_success_color": "#4A5568",
     "waitlist_mode": false,
     "colors_solid_button_labels": "#212326",
@@ -47,6 +50,7 @@
     "button_corner_radius": 24,
     "button_shadow_horizontal_offset": 0,
     "button_shadow_vertical_offset": 0,
+    "main_products": "illuminating-leave-in-conditioner",
     "enable-view": true,
     "card_image_padding": 0,
     "card_text_alignment": "left",
@@ -59,13 +63,13 @@
     "color_swatches_position": "top",
     "color_swatches_max_items": 4,
     "disable_collection_portion": true,
-    "tax_note": "Tax included. Shipping calculated at checkout.",
+    "tax_note": "Tax included. International duties may apply. \nShipping calculated at checkout.",
     "cart_drawer_enabled": true,
     "show_cart_note": true,
     "show_shipping_calculator": true,
     "disable_view_cart": false,
     "show_free_shipping_message": false,
-    "free_shipping_minimum_amount": "",
+    "free_shipping_minimum_amount": "EUR:95, GBP:79, CHF:89, DKK:710, SEK:1095, NOK:1115, ISK:13850, PLN:406, CZK:2390, HUF:39500, RON:470, BGN:185, HRK:715, RSD:11100, UAH:4130, MDL:1820, GEL:285, TRY:3480",
     "cart_recommendations_enabled": false,
     "cart_recommendations_heading": "You may also like",
     "cart_recommendations_show_vendor": true,
@@ -73,6 +77,7 @@
     "social_instagram_link": "https://www.instagram.com/lunesibeauty",
     "social_tiktok_link": "",
     "social_youtube_link": "",
+    "favicon": "shopify://shop_images/lunsi_favicon_48x48_f6833f47-475f-4be9-a840-9e6aab08845e.svg",
     "gift_card_logo_height": 70,
     "upsell_products_setting": [
       "upsell-products-logic-jjob9goq",
@@ -103,6 +108,14 @@
       "upsell-products-logic-dzrnbr9a",
       "upsell-products-logic-6jopzaiv"
     ],
+    "gift_bundle_enabled": true,
+    "gift_variant_id": "43694372257923",
+    "gift_popup_image": "shopify://shop_images/Lunesi_assesories0053_3.jpg",
+    "gift_popup_heading": "Black Friday is coming soon 🖤",
+    "gift_popup_subheading": "Don’t miss exclusive insider offers — only for our subscribers",
+    "gift_popup_button_text": "Join insiders",
+    "gift_value_text": "",
+    "gift_trigger_subtext": "",
     "upsell_products": [
       "deep-love-hair-mask",
       "illuminating-leave-in-conditioner",
@@ -121,6 +134,10 @@
         "settings": {
           "show_line_separator": false
         }
+      },
+      "gift-bundle-settings": {
+        "type": "gift-bundle-settings",
+        "settings": {}
       }
     },
     "content_for_index": [],

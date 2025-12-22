@@ -1,0 +1,382 @@
+{%- liquid
+  assign show_popup = true
+  
+  if section.settings.only_homepage and request.page_type != 'index'
+    assign show_popup = false
+  endif
+
+  if section.settings.only_visitor and customer
+    assign show_popup = false
+  endif
+-%}
+
+{%- if show_popup -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} .gift-popup {
+      --popup-width: {{ section.settings.width }}px;
+      --popup-padding: {{ section.settings.padding }}px;
+      --gradient-background: {% if section.settings.gradient_background != blank %}{{ section.settings.gradient_background }}{% else %}{{ section.settings.colors_background }}{% endif %};
+      --color-background: {{ section.settings.colors_background.red }}, {{ section.settings.colors_background.green }}, {{ section.settings.colors_background.blue }};
+      --color-foreground: {{ section.settings.colors_text.red }}, {{ section.settings.colors_text.green }}, {{ section.settings.colors_text.blue }};
+      --color-border: {{ section.settings.colors_border.red }}, {{ section.settings.colors_border.green }}, {{ section.settings.colors_border.blue }};
+      --color-shadow: {{ section.settings.colors_shadow.red }}, {{ section.settings.colors_shadow.green }}, {{ section.settings.colors_shadow.blue }};
+      --color-link: var(--color-foreground);
+      --color-heading: var(--color-foreground);
+      --color-button-background: {{ section.settings.colors_button_background.red }}, {{ section.settings.colors_button_background.green }}, {{ section.settings.colors_button_background.blue }};
+      --color-button-text: {{ section.settings.colors_button_label.red }}, {{ section.settings.colors_button_label.green }}, {{ section.settings.colors_button_label.blue }};
+      --color-button-border: var(--color-button-background);
+    }
+  {%- endstyle -%}
+
+  <link rel="stylesheet" href="{{ 'section-popup.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'section-popup.css' | asset_url | stylesheet_tag }}</noscript>
+  <script src="{{ 'gift-popup.js' | asset_url }}" defer="defer"></script>
+
+  <gift-popup 
+    data-section-id="{{ section.id }}" 
+    class="hidden" 
+    data-delay="{{ section.settings.delay }}" 
+    data-expiry="{{ section.settings.expiry }}" 
+    data-test-mode="{% if section.settings.mode == 'testing' %}true{% else %}false{% endif %}"
+    data-variant-id="43668412792963"
+  >
+    <div class="promo-popup gift-popup-wrapper" data-position="center">
+      <div class="popup-overlay" data-gift-popup-toggle></div>
+      <div class="popup-wrapper">
+        <button class="popup-close" type="button" aria-label="{{ 'accessibility.close' | t }}" data-gift-popup-toggle>
+          <span class="icon icon-plus-alt"></span>
+        </button>
+        <div class="popup center">
+          <div class="popup__content-wrapper popup__content-wrapper--split">
+            
+            <!-- Left side: Text + Form -->
+            <div class="popup__content popup__content--left">
+              
+              {%- if settings.gift_popup_heading != blank -%}
+                <h2 class="popup__heading h2">{{ settings.gift_popup_heading | escape }}</h2>
+              {%- elsif section.settings.heading != blank -%}
+                <h2 class="popup__heading h2">{{ section.settings.heading | escape }}</h2>
+              {%- endif -%}
+              
+              {%- if settings.gift_popup_subheading != blank -%}
+                <p class="popup__subheading h5">{{ settings.gift_popup_subheading | escape }}</p>
+              {%- elsif section.settings.subheading != blank -%}
+                <p class="popup__subheading h5">{{ section.settings.subheading | escape }}</p>
+              {%- endif -%}
+
+              {%- if section.settings.description != blank -%}
+                <div class="popup__text typeset rte">{{ section.settings.description }}</div>
+              {%- endif -%}
+
+              <div class="gift-popup__form">
+                {% form 'customer', class: 'popup__newsletter gift-form', id: 'form__gift_popup' %}
+                  <input type="hidden" name="contact[tags]" value="gift-bundle,newsletter"/>
+                  
+                  {%- if form.errors -%}
+                    <small class="form__message errors" id="Gift-error--{{ section.id }}">
+                      {% render 'icon', icon: 'error' %}
+                      {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+                    </small>
+                  {%- endif -%}
+                  
+                  {%- if form.posted_successfully? -%}
+                    <div class="gift-success">
+                      <p class="form__message h3" id="Gift-success--{{ section.id }}" tabindex="-1">
+                        {% render 'icon', icon: 'success' %}
+                        🎁 {{ section.settings.success_message | default: 'Дякуємо! Ваш подарунок додано в кошик!' }}
+                      </p>
+                      <button type="button" class="button button--small button--cta" data-gift-popup-close>
+                        <span class="label">Перейти в кошик</span>
+                        {% render 'icon', icon: 'arrow' %}
+                      </button>
+                    </div>
+                  {%- endif -%}
+
+                  {%- unless form.posted_successfully? -%}
+                    <div class="field">
+                      <input
+                        id="GiftForm--{{ section.id }}"
+                        type="email"
+                        name="contact[email]"
+                        class="field__input required{% if form.errors %} invalid{% endif %}"
+                        value="{{ form.email }}"
+                        aria-required="true"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        autocomplete="email"
+                        {% if form.errors %}
+                          autofocus
+                          aria-invalid="true"
+                          aria-describedby="Gift-error--{{ section.id }}"
+                        {% elsif form.posted_successfully? %}
+                          aria-describedby="Gift-success--{{ section.id }}"
+                        {% endif %}
+                        placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
+                        required
+                      />
+                      <label class="visually-hidden" for="GiftForm--{{ section.id }}">{{ section.settings.email_placeholder | default: 'Введіть ваш email' }}</label>
+                      <button type="button" class="button button--small button--cta" name="commit" data-gift-email-submit>
+                        <span class="label">{{ settings.gift_popup_button_text | default: section.settings.button_label | default: 'Get Free Gift' }}</span>
+                        {% render 'icon', icon: 'arrow' %}
+                      </button>
+                    </div>
+                    
+                    {%- if section.settings.disclaimer != blank -%}
+                      <div class="field newsletter__text rte">{{ section.settings.disclaimer }}</div>
+                    {%- endif -%}
+                  {%- endunless -%}
+                {% endform %}
+              </div>
+            </div>
+
+            <!-- Right side: Image -->
+            <div class="popup__content popup__content--right">
+              {%- if settings.gift_popup_image != blank -%}
+                <div class="popup__image">
+                  <img 
+                    src="{{ settings.gift_popup_image | image_url: width: 400 }}"
+                    alt="{{ settings.gift_popup_image.alt | escape }}"
+                    width="{{ settings.gift_popup_image.width }}"
+                    height="{{ settings.gift_popup_image.height }}"
+                    loading="lazy"
+                  />
+                </div>
+              {%- endif -%}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </gift-popup>
+
+  <style>
+    .gift-popup-wrapper {
+      --popup-max-width: min(500px, 90vw);
+    }
+    
+    .gift-form {
+      margin-top: 0 !important;
+    }
+    
+    .gift-form .field {
+      margin-top: 2rem;
+    }
+    
+    .gift-success {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    
+    .gift-success .form__message {
+      margin-bottom: 2rem;
+      color: #28a745;
+      font-weight: 500;
+    }
+    
+    .gift-popup__form .button {
+      background: rgb(var(--color-button-background));
+      color: rgb(var(--color-button-text));
+      border: 1px solid rgb(var(--color-button-border));
+    }
+    
+    .gift-popup__form .button:hover {
+      opacity: 0.8;
+    }
+    
+    /* Додаткові стилі для подарункового попапа */
+    .popup__heading {
+      margin-bottom: 1rem;
+    }
+    
+    .popup__subheading {
+      margin-bottom: 1.5rem;
+      color: rgba(var(--color-foreground), 0.7);
+    }
+    
+    .popup__text {
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    
+    @media screen and (max-width: 749px) {
+      .gift-popup-wrapper {
+        --popup-max-width: calc(100vw - 2rem);
+      }
+      
+      .popup__content {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Gift Bundle Popup",
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "options": [
+        {
+          "value": "enabled",
+          "label": "Enabled"
+        },
+        {
+          "value": "testing",
+          "label": "Testing mode"
+        }
+      ],
+      "default": "enabled",
+      "label": "Popup mode"
+    },
+    {
+      "type": "checkbox",
+      "id": "only_homepage",
+      "label": "Show only on homepage",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "only_visitor",
+      "label": "Show only to visitors (not customers)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "max": 60,
+      "min": 2,
+      "step": 1,
+      "unit": "s",
+      "label": "Delay before showing",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "expiry",
+      "max": 30,
+      "min": 1,
+      "step": 1,
+      "unit": "d",
+      "label": "Days before showing again",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "max": 800,
+      "min": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Popup width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "max": 80,
+      "min": 20,
+      "step": 4,
+      "unit": "px",
+      "label": "Popup padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Get Your Free Gift!",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Free gift bundle with subscription",
+      "label": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Subscribe to our newsletter and get a free gift bundle worth $100!</p>",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "default": "Enter your email",
+      "label": "Email placeholder"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Get Free Gift",
+      "label": "Button label"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "default": "Thank you! Your gift has been added to cart!",
+      "label": "Success message"
+    },
+    {
+      "type": "richtext",
+      "id": "disclaimer",
+      "default": "<p>One gift per person. Need to add another item to complete checkout.</p>",
+      "label": "Disclaimer text"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_button_label",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "colors_button_background",
+      "label": "Button background",
+      "default": "#1a1b18"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text",
+      "default": "#1a1b18"
+    },
+    {
+      "type": "color",
+      "id": "colors_border",
+      "label": "Border",
+      "default": "#d2d5d9"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_background",
+      "label": "Gradient background"
+    },
+    {
+      "type": "color",
+      "id": "colors_shadow",
+      "label": "Shadow",
+      "default": "#a8e8e2"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["custom.overlay"]
+  }
+}
+{% endschema %}

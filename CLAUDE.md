@@ -9,9 +9,8 @@ This is a Shopify theme called "Be Yours by roartheme" for the Lunesi e-commerce
 ## Development Commands
 
 ### Shopify CLI Commands
-- `npm run dev` - Start local development server (connects to spain-test-store-shampoo.myshopify.com, theme ID 151783342211)
-- `npm run push` - Push local changes to the Shopify store
-- `npm run pull` - Pull changes from the Shopify store to local
+- `npm run dev` - Start local development server (connects to spain-test-store-shampoo.myshopify.com, theme ID 154363592835)
+
 
 ## Architecture
 

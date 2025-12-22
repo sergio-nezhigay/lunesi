@@ -58,7 +58,6 @@
     assign button_style_class = 'button--transparent'
   endif
 -%}
-
 {%- if enable_color_swatches -%}
   {%- capture color_swatches -%}
     {%- liquid
@@ -539,7 +538,7 @@
         </span>
       {%- endfor -%}
     {%- endif -%}
-    
+
     {%- if card_product.available == false -%}
       <span class="badge badge--soldout" aria-hidden="true">
         {{ 'products.product.sold_out' | t }}
@@ -567,6 +566,20 @@
     {%- endif -%}
   </div>
 
+  {%- comment -%} Custom Label Badge {%- endcomment -%}
+  {%- if custom_label_text != blank and custom_label_text != '' and limited_product -%}
+    <div class="card__custom-badge">
+      <span class="badge badge--custom" style="background-color: {{ custom_label_bg | default: '#000000' }}; color: {{ custom_label_color | default: '#FFFFFF' }}; border-color: {{ custom_label_bg | default: '#000000' }};">
+        {{ custom_label_text | escape }}  
+      </span>
+    </div>
+  {%- endif -%}
+  
+{% unless card_product.available %}
+ <span class="badge badge--soldout" style="border-radius: 4px; display: inline-block; position: absolute; z-index: 99999; top: 17px; left: 12px;" aria-hidden="true">
+    {{ 'products.product.sold_out' | t }}
+  </span>
+{% endunless %}
   {%- if settings.quick_view_enabled and enable_quick_view -%}
     <quick-view-drawer>
       <details>
@@ -725,5 +738,36 @@
   .button--transparent:focus {
    border:0!important;
     background-color: #E6CEDF!important;
+  }
+
+  /* Custom Label Badge - positioned on the right */
+  .card__custom-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 3;
+  }
+
+  .card__custom-badge .badge--custom {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  @media screen and (max-width: 749px) {
+    .card__custom-badge {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .card__custom-badge .badge--custom {
+      padding: 0.4rem 0.8rem;
+      font-size: 1rem;
+    }
   }
 </style>

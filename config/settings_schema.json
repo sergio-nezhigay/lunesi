@@ -1,111 +1,111 @@
 [
-    {
-  "name": "Free Shipping Bar",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "free_shipping_bar_enable",
-      "label": "Enable Free Shipping Bar",
-      "default": true
-    },
-    {
-      "type": "number",
-      "id": "free_shipping_bar_threshold",
-      "label": "Items threshold for free shipping",
-      "default": 2
-    },
-    {
-      "type": "text",
-      "id": "free_shipping_need_more_text",
-      "label": "Text when more items needed",
-      "default": "Add [items_needed] item[s] more for FREE shipping Royal Mail"
-    },
-    {
-      "type": "text",
-      "id": "free_shipping_success_text",
-      "label": "Success text",
-      "default": "FREE shipping Royal Mail unlocked!"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_bar_bg_color",
-      "label": "Background color",
-      "default": "#F7F7F7"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_item_count_color",
-      "label": "Item count text color",
-      "default": "#282828"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_message_color",
-      "label": "Message text color",
-      "default": "#282828"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_success_color",
-      "label": "Success message color",
-      "default": "#4A5568"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_progress_color",
-      "label": "Progress bar color",
-      "default": "#D2D5D9"
-    },
-    {
-      "type": "color",
-      "id": "free_shipping_progress_success_color",
-      "label": "Progress bar success color",
-      "default": "#4CAF50"
-    }
-  ]
-},
   {
-  "name": "Waitlist Settings",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Waitlist Mode"
-    },
-    {
-      "type": "checkbox",
-      "id": "waitlist_mode",
-      "label": "Enable Waitlist Mode",
-      "default": false,
-      "info": "When enabled, all purchase buttons will be replaced with waitlist signup"
-    },
-    {
-      "type": "text",
-      "id": "waitlist_button_text",
-      "label": "Waitlist Button Text",
-      "default": "Join Waitlist",
-      "info": "Text displayed on waitlist buttons"
-    },
-    {
-      "type": "text", 
-      "id": "waitlist_popup_title",
-      "label": "Popup Title",
-      "default": "Join Waitlist"
-    },
-    {
-      "type": "textarea",
-      "id": "waitlist_popup_subtitle", 
-      "label": "Popup Subtitle",
-      "default": "We are starting very soon. See you when the product is available!"
-    }
-  ]
-},
+    "name": "Free Shipping Bar",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "free_shipping_bar_enable",
+        "label": "Enable Free Shipping Bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_bar_threshold",
+        "label": "Items threshold for free shipping",
+        "default": 2
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_need_more_text",
+        "label": "Text when more items needed",
+        "default": "Add [items_needed] item[s] more for FREE shipping Royal Mail"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_success_text",
+        "label": "Success text",
+        "default": "FREE shipping Royal Mail unlocked!"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_bar_bg_color",
+        "label": "Background color",
+        "default": "#F7F7F7"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_item_count_color",
+        "label": "Item count text color",
+        "default": "#282828"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_message_color",
+        "label": "Message text color",
+        "default": "#282828"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_success_color",
+        "label": "Success message color",
+        "default": "#4A5568"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_progress_color",
+        "label": "Progress bar color",
+        "default": "#D2D5D9"
+      },
+      {
+        "type": "color",
+        "id": "free_shipping_progress_success_color",
+        "label": "Progress bar success color",
+        "default": "#4CAF50"
+      }
+    ]
+  },
+  {
+    "name": "Waitlist Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Waitlist Mode"
+      },
+      {
+        "type": "checkbox",
+        "id": "waitlist_mode",
+        "label": "Enable Waitlist Mode",
+        "default": false,
+        "info": "When enabled, all purchase buttons will be replaced with waitlist signup"
+      },
+      {
+        "type": "text",
+        "id": "waitlist_button_text",
+        "label": "Waitlist Button Text",
+        "default": "Join Waitlist",
+        "info": "Text displayed on waitlist buttons"
+      },
+      {
+        "type": "text",
+        "id": "waitlist_popup_title",
+        "label": "Popup Title",
+        "default": "Join Waitlist"
+      },
+      {
+        "type": "textarea",
+        "id": "waitlist_popup_subtitle",
+        "label": "Popup Subtitle",
+        "default": "We are starting very soon. See you when the product is available!"
+      }
+    ]
+  },
   {
     "name": "theme_info",
     "theme_name": "Be Yours",
     "theme_version": "7.1.1",
     "theme_author": "RoarTheme",
-    "theme_documentation_url": "https://roartheme.co/blogs/beyours",
-    "theme_support_url": "https://haloroar.ticksy.com"
+    "theme_documentation_url": "https:\/\/roartheme.co\/blogs\/beyours",
+    "theme_support_url": "https:\/\/haloroar.ticksy.com"
   },
   {
     "name": "t:settings_schema.colors.name",
@@ -476,13 +476,23 @@
     ]
   },
   {
+    "name": "product",
+    "settings": [
+      {
+        "type": "product",
+        "id": "main_products",
+        "label": "Product"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.product_card.name",
     "settings": [
       {
-        "type":"checkbox",
-        "id":"enable-view",
-        "label":"Enable New Buy Layout",
-        "default":false
+        "type": "checkbox",
+        "id": "enable-view",
+        "label": "Enable New Buy Layout",
+        "default": false
       },
       {
         "type": "range",
@@ -698,12 +708,12 @@
   {
     "name": "t:settings_schema.cart-drawer.name",
     "settings": [
-       {
-      "type": "textarea",
-      "id": "tax_note",
-      "label": "Tax/Shipping note",
-      "default": "Taxes and shipping calculated at checkout."
-    },
+      {
+        "type": "textarea",
+        "id": "tax_note",
+        "label": "Tax\/Shipping note",
+        "default": "Taxes and shipping calculated at checkout."
+      },
       {
         "type": "checkbox",
         "id": "cart_drawer_enabled",
@@ -1078,6 +1088,144 @@
         "limit": 50
       }
     ]
+  },
+  {
+    "name": "Gift Bundle Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "General Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "gift_bundle_enabled",
+        "label": "Enable Gift Bundle",
+        "default": true,
+        "info": "Turn on\/off the entire gift bundle functionality"
+      },
+      {
+        "type": "text",
+        "id": "gift_variant_id",
+        "label": "Gift Product Variant ID",
+        "default": "43694372257923",
+        "info": "The variant ID of the product to give as a gift"
+      },
+      {
+        "type": "text",
+        "id": "gift_coupon_code",
+        "label": "URL Coupon Code",
+        "default": "freebundle",
+        "info": "Coupon code that when found in URL will auto-add gift (e.g. ?discount=freebundle)"
+      },
+      {
+        "type": "range",
+        "id": "gift_popup_delay",
+        "min": 1000,
+        "max": 9000,
+        "step": 1000,
+        "unit": "ms",
+        "label": "Popup Delay",
+        "default": 5000,
+        "info": "How long to wait before showing popup (in milliseconds)"
+      },
+      {
+        "type": "image_picker",
+        "id": "gift_popup_image",
+        "label": "Popup Image",
+        "info": "Image displayed on the right side of the popup (hidden on mobile)"
+      },
+      {
+        "type": "header",
+        "content": "Popup Text Settings"
+      },
+      {
+        "type": "text",
+        "id": "gift_popup_heading",
+        "label": "Popup Heading",
+        "default": "Get Your Free Gift!",
+        "info": "Main heading text in the popup"
+      },
+      {
+        "type": "textarea",
+        "id": "gift_popup_subheading",
+        "label": "Popup Description",
+        "default": "Subscribe to our newsletter and get a free gift bundle worth $100!",
+        "info": "Description text in the popup"
+      },
+      {
+        "type": "text",
+        "id": "gift_popup_button_text",
+        "label": "Popup Button Text",
+        "default": "Get Free Gift",
+        "info": "Text on the submit button in popup"
+      },
+      {
+        "type": "text",
+        "id": "gift_value_text",
+        "label": "Gift Value Text",
+        "default": "$100",
+        "info": "Text showing the value of the gift"
+      },
+      {
+        "type": "header",
+        "content": "Trigger Button Settings"
+      },
+      {
+        "type": "text",
+        "id": "gift_trigger_text",
+        "label": "Trigger Button Text",
+        "default": "Claim your free gift",
+        "info": "Main text on the trigger button"
+      },
+      {
+        "type": "text",
+        "id": "gift_trigger_subtext",
+        "label": "Trigger Button Subtext",
+        "default": "Get $100 bundle",
+        "info": "Secondary text on the trigger button"
+      },
+      {
+        "type": "header",
+        "content": "Cart Messages"
+      },
+      {
+        "type": "text",
+        "id": "gift_claim_button_text",
+        "label": "Claim Button Text",
+        "default": "Claim Gift",
+        "info": "Text on the claim gift button in cart"
+      },
+      {
+        "type": "text",
+        "id": "gift_validation_message",
+        "label": "Checkout Validation Message",
+        "default": "Add 1 more item for free gift",
+        "info": "Message shown when user tries to checkout with only gift item"
+      },
+      {
+        "type": "text",
+        "id": "gift_added_message",
+        "label": "Gift Added Message",
+        "default": "Gift bundle added",
+        "info": "Message shown when gift is in cart"
+      },
+      {
+        "type": "select",
+        "id": "gift_storage_type",
+        "label": "Storage Type",
+        "info": "Choose how to store user preferences",
+        "options": [
+          {
+            "value": "session",
+            "label": "Session Storage (clears when browser closes)"
+          },
+          {
+            "value": "local",
+            "label": "Local Storage (persists across sessions)"
+          }
+        ],
+        "default": "session"
+      }
+    ]
   }
-  
 ]

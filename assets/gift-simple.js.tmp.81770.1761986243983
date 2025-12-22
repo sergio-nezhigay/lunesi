@@ -1,0 +1,934 @@
+// Ultra Simple Gift Bundle
+
+// Silent mode - disabled for production
+const simpleDebugLog = () => {};
+
+// Get settings from admin (fallback to defaults)
+function getSettings() {
+  return window.giftBundleSettings || {
+    variantId: '43668412792963',
+    popupHeading: 'Get Your Free Gift!',
+    popupSubheading: 'Subscribe to our newsletter and get a free gift bundle worth $100!',
+    popupButtonText: 'Get Free Gift',
+    claimButtonText: 'Claim Gift',
+    giftValueText: '$100',
+    triggerText: 'Claim your free gift',
+    triggerSubtext: 'Get $100 bundle',
+    validationMessage: 'Add 1 more item for free gift',
+    giftAddedMessage: 'Gift bundle added',
+    couponCode: 'freebundle',
+    showPopupDelay: 5000,
+    enabled: true,
+    storageType: 'session'
+  };
+}
+
+// Storage helper functions
+function getStorage() {
+  const settings = getSettings();
+  return settings.storageType === 'local' ? localStorage : sessionStorage;
+}
+
+function setStorageItem(key, value) {
+  const storage = getStorage();
+  storage.setItem(key, value);
+}
+
+function getStorageItem(key) {
+  const storage = getStorage();
+  return storage.getItem(key);
+}
+
+function clearStorageItems() {
+  const storage = getStorage();
+  const keys = ['gift-email-submitted', 'gift-popup-closed', 'gift-coupon-used', 'gift-trigger-dismissed'];
+  keys.forEach(key => storage.removeItem(key));
+}
+
+// Simple state check
+function isEmailSubmitted() {
+  return getStorageItem('gift-email-submitted') === 'true';
+}
+
+function isPopupClosed() {
+  return getStorageItem('gift-popup-closed') === 'true';
+}
+
+// Cache cart data
+let cartCache = null;
+let cartCacheTime = 0;
+
+async function updateCartCache() {
+  try {
+    const response = await fetch('/cart.js');
+    const cartData = await response.json();
+    cartCache = cartData;
+    cartCacheTime = Date.now();
+    return cartData;
+  } catch (e) {
+    return null;
+  }
+}
+
+function getCartData() {
+  // Cache for 2 seconds
+  if (cartCache && (Date.now() - cartCacheTime) < 2000) {
+    return cartCache;
+  }
+  
+  // Update cache asynchronously
+  updateCartCache();
+  
+  return cartCache;
+}
+
+function isGiftInCart() {
+  const settings = getSettings();
+  
+  // Try to get cached cart data
+  const cartData = getCartData();
+  if (cartData && cartData.items) {
+    return cartData.items.some(item => item.variant_id.toString() === settings.variantId);
+  }
+  
+  // Fallback to DOM selectors - much more comprehensive
+  const selectors = [
+    `[data-variant-id="${settings.variantId}"]`,
+    `[data-variant="${settings.variantId}"]`, 
+    `[data-product-id="${settings.variantId}"]`,
+    `[data-line-item-id*="${settings.variantId}"]`,
+    `.cart-item[data-variant-id="${settings.variantId}"]`,
+    `.line-item[data-variant-id="${settings.variantId}"]`,
+    `.cart__item[data-variant-id="${settings.variantId}"]`
+  ];
+  
+  for (const selector of selectors) {
+    if (document.querySelector(selector)) {
+      return true;
+    }
+  }
+  
+  // Check all elements with variant data
+  const allVariantElements = document.querySelectorAll('[data-variant-id], [data-variant], [data-product-id]');
+  return Array.from(allVariantElements).some(elem => {
+    return elem.dataset.variantId === settings.variantId ||
+           elem.dataset.variant === settings.variantId ||
+           elem.dataset.productId === settings.variantId ||
+           elem.textContent.includes(settings.variantId);
+  });
+}
+
+function getOtherItemsCount() {
+  const settings = getSettings();
+  
+  // Try to get cached cart data
+  const cartData = getCartData();
+  if (cartData && cartData.items) {
+    return cartData.items.filter(item => item.variant_id.toString() !== settings.variantId).length;
+  }
+  
+  // Fallback to DOM counting
+  const allVariantElements = document.querySelectorAll('[data-variant-id], [data-variant], [data-product-id]');
+  return Array.from(allVariantElements).filter(elem => {
+    return elem.dataset.variantId !== settings.variantId &&
+           elem.dataset.variant !== settings.variantId &&
+           elem.dataset.productId !== settings.variantId &&
+           !elem.textContent.includes(settings.variantId);
+  }).length;
+}
+
+function shouldShowClaimButton() {
+  // Show if email submitted OR popup was closed OR coupon was used, but gift not in cart
+  const couponUsed = getStorageItem('gift-coupon-used') === 'true';
+  return (isEmailSubmitted() || isPopupClosed() || couponUsed) && !isGiftInCart();
+}
+
+function customerQualifiesForGift() {
+  return isEmailSubmitted() || isPopupClosed() || getStorageItem('gift-coupon-used') === 'true';
+}
+
+// Check for discount code in URL
+function checkForCoupon() {
+  const settings = getSettings();
+  
+  // Check URL parameters first
+  const urlParams = new URLSearchParams(window.location.search);
+  const discount = urlParams.get('discount') || urlParams.get('coupon') || urlParams.get('code');
+  
+  // Check URL path for /discount/code format
+  const pathMatch = window.location.pathname.match(/\/discount\/([^\/\?]+)/);
+  const pathDiscount = pathMatch ? pathMatch[1] : null;
+  
+  const foundCode = discount || pathDiscount;
+  
+  if (foundCode && foundCode.toLowerCase() === settings.couponCode.toLowerCase()) {
+    // Mark as coupon used to skip popup - set all flags immediately
+    setStorageItem('gift-email-submitted', 'true');
+    setStorageItem('gift-coupon-used', 'true');
+    setStorageItem('gift-popup-closed', 'true');
+    
+    // Add gift to cart immediately
+    setTimeout(() => {
+      addGiftToCart();
+    }, 500);
+    
+    // Clean URL only if it was from parameters, not discount path
+    if (discount && !pathDiscount) {
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+    
+    return true;
+  }
+  
+  return false;
+}
+
+// Submit email to Omnisend (using same logic as waitlist)
+async function submitToOmnisend(email) {
+  const OMNISEND_API_KEY = '66b4f08d3245832d9dfc8e4c-pGw52OhTA5rgmbd7iyaBEfnhHqwMJ317fyvHhAqsumBn1H1gES';
+  const settings = getSettings();
+  
+  
+  try {
+    // Check if email is valid first
+    if (!isValidEmail(email)) {
+      console.error('🎁 Invalid email format');
+      return false;
+    }
+    
+    // Check for existing contact first
+    const existingContact = await getExistingContact(email, OMNISEND_API_KEY);
+    
+    const customProperties = {
+      gift_bundle_claimed: 'true',
+      gift_bundle_date: new Date().toISOString(),
+      gift_bundle_value: settings.giftValueText,
+      gift_bundle_source: 'gift-popup',
+      gift_bundle_variant_id: settings.variantId
+    };
+    
+    let response;
+    
+    if (existingContact) {
+      // Update existing contact
+      response = await fetch(`https://api.omnisend.com/v3/contacts/${existingContact.contactID}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': OMNISEND_API_KEY
+        },
+        body: JSON.stringify({ 
+          customProperties, 
+          tags: ['gift-bundle']
+        })
+      });
+    } else {
+      simpleDebugLog('🎁 Creating new contact');
+      // Create new contact
+      response = await fetch('https://api.omnisend.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': OMNISEND_API_KEY
+        },
+        body: JSON.stringify({
+          email,
+          status: 'subscribed',
+          statusDate: new Date().toISOString(),
+          tags: ['gift-bundle'],
+          customProperties
+        })
+      });
+    }
+    
+    simpleDebugLog('🎁 Omnisend API response status:', response.status);
+    
+    if (response.ok) {
+      const responseData = await response.json();
+      simpleDebugLog('🎁 Omnisend API successful:', responseData);
+      
+      // Try to send event
+      try {
+        await sendGiftBundleEvent(email, settings);
+      } catch (e) {
+        console.warn('🎁 Event sending failed but contact created:', e);
+      }
+      
+      return true;
+    } else {
+      console.warn('🎁 Omnisend API failed, trying fallback approaches');
+      
+      // Try simple approach fallback
+      const simpleSuccess = await trySimpleApproach(email, settings, OMNISEND_API_KEY, existingContact);
+      if (simpleSuccess) return true;
+      
+      // Try SDK fallback
+      const sdkSuccess = await trySDKFallback(email, settings);
+      return sdkSuccess;
+    }
+    
+  } catch (error) {
+    console.error('🎁 Omnisend submission error:', error);
+    
+    // Try SDK fallback on any error
+    return await trySDKFallback(email, settings);
+  }
+}
+
+// Helper functions (same as waitlist)
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 100;
+}
+
+async function getExistingContact(email, apiKey) {
+  try {
+    const search = await fetch(`https://api.omnisend.com/v3/contacts?email=${encodeURIComponent(email)}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey }
+    });
+    
+    if (search.ok) {
+      const data = await search.json();
+      if (data.contacts?.length) {
+        return data.contacts[0];
+      }
+    }
+  } catch (e) {
+    console.warn('🎁 Failed to check existing contact:', e);
+  }
+  return null;
+}
+
+async function trySimpleApproach(email, settings, apiKey, existingContact) {
+  try {
+    const simpleProps = {
+      gift_bundle_claimed: 'true',
+      gift_bundle_date: new Date().toISOString(),
+      gift_bundle_value: settings.giftValueText,
+      gift_bundle_source: 'gift-popup'
+    };
+    
+    let res;
+    if (existingContact) {
+      res = await fetch(`https://api.omnisend.com/v3/contacts/${existingContact.contactID}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey
+        },
+        body: JSON.stringify({ customProperties: simpleProps, tags: ['gift-bundle'] })
+      });
+    } else {
+      res = await fetch('https://api.omnisend.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey
+        },
+        body: JSON.stringify({ email, tags: ['gift-bundle'], customProperties: simpleProps })
+      });
+    }
+    
+    if (res.ok) {
+      simpleDebugLog('🎁 Simple approach worked!');
+      return true;
+    }
+  } catch (e) {
+    console.warn('🎁 Simple approach failed:', e);
+  }
+  return false;
+}
+
+async function trySDKFallback(email, settings) {
+  try {
+    if (typeof window.omnisend === 'function') {
+      simpleDebugLog('🎁 Using Omnisend SDK function approach');
+      window.omnisend('identify', {
+        email,
+        tags: ['gift-bundle'],
+        properties: {
+          gift_bundle_claimed: 'true',
+          gift_bundle_date: new Date().toISOString(),
+          gift_bundle_value: settings.giftValueText,
+          gift_bundle_source: 'gift-popup'
+        }
+      });
+      simpleDebugLog('🎁 SDK identify successful');
+      return true;
+    } else if (window.omnisend && Array.isArray(window.omnisend)) {
+      simpleDebugLog('🎁 Using Omnisend SDK array approach');
+      window.omnisend.push(['identify', {
+        email,
+        tags: ['gift-bundle'],
+        properties: {
+          gift_bundle_claimed: 'true',
+          gift_bundle_date: new Date().toISOString(),
+          gift_bundle_value: settings.giftValueText,
+          gift_bundle_source: 'gift-popup'
+        }
+      }]);
+      simpleDebugLog('🎁 SDK push successful');
+      return true;
+    }
+  } catch (e) {
+    console.warn('🎁 SDK fallback failed:', e);
+  }
+  return false;
+}
+
+async function sendGiftBundleEvent(email, settings) {
+  const OMNISEND_API_KEY = '66b4f08d3245832d9dfc8e4c-pGw52OhTA5rgmbd7iyaBEfnhHqwMJ317fyvHhAqsumBn1H1gES';
+  
+  const eventFields = {
+    gift_bundle_value: settings.giftValueText,
+    gift_bundle_variant_id: settings.variantId,
+    gift_bundle_source: 'gift-popup',
+    gift_bundle_date: new Date().toISOString()
+  };
+  
+  try {
+    // Try v3 events API first
+    let res = await fetch('https://api.omnisend.com/v3/events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': OMNISEND_API_KEY
+      },
+      body: JSON.stringify({
+        email,
+        eventName: 'gift_bundle_claimed',
+        fields: eventFields
+      })
+    });
+    
+    if (res.ok) {
+      simpleDebugLog('🎁 Event sent successfully');
+      return true;
+    }
+    
+    // Try v5 events API as fallback
+    res = await fetch('https://api.omnisend.com/v5/events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': OMNISEND_API_KEY
+      },
+      body: JSON.stringify({
+        eventName: 'gift_bundle_claimed',
+        origin: 'api',
+        contact: { email },
+        properties: eventFields
+      })
+    });
+    
+    if (res.ok) {
+      simpleDebugLog('🎁 Event sent via v5 API');
+      return true;
+    }
+    
+  } catch (e) {
+    console.warn('🎁 Failed to send event:', e);
+  }
+  
+  return false;
+}
+
+// Show popup after delay if not submitted email and no coupon
+function maybeShowPopup() {
+  const settings = getSettings();
+  
+  if (!settings.enabled) {
+    return;
+  }
+  
+  // ГОЛОВНА ПЕРЕВІРКА: якщо gift вже в кошику - не показувати popup
+  if (isGiftInCart()) {
+    return;
+  }
+  
+  // Check for coupon first - if found, don't show popup
+  const couponFound = checkForCoupon();
+  if (couponFound) {
+    return;
+  }
+  
+  // Check if coupon was already used this session
+  if (getStorageItem('gift-coupon-used') === 'true') {
+    return;
+  }
+  
+  // Check if email was already submitted or popup was closed
+  if (isEmailSubmitted() || isPopupClosed()) {
+    return;
+  }
+  
+  setTimeout(() => {
+    // ПОВТОРНА ПЕРЕВІРКА: якщо gift додався за час очікування
+    if (isGiftInCart()) {
+      return;
+    }
+    
+    // Triple check before showing popup
+    if (getStorageItem('gift-coupon-used') === 'true') {
+      return;
+    }
+    
+    if (isEmailSubmitted() || isPopupClosed()) {
+      return;
+    }
+    
+    const popup = document.getElementById('gift-popup');
+    if (popup) {
+      popup.classList.add('is-visible');
+      popup.classList.remove('is-hidden');
+    }
+  }, settings.showPopupDelay);
+}
+
+// Add gift to cart (with duplicate prevention)
+let giftAddInProgress = false; // Prevent multiple simultaneous calls
+
+async function addGiftToCart() {
+  const settings = getSettings();
+  
+  // Prevent multiple simultaneous calls
+  if (giftAddInProgress) {
+    return;
+  }
+  
+  giftAddInProgress = true;
+  try {
+    // First get current cart to check for duplicates more accurately
+    const cartResponse = await fetch('/cart.js');
+    const cartData = await cartResponse.json();
+    
+    // Check if gift variant already exists in cart
+    const giftItem = cartData.items.find(item => item.variant_id.toString() === settings.variantId);
+    
+    if (giftItem) {
+      simpleDebugLog('🎁 Gift already exists in cart with quantity:', giftItem.quantity);
+      
+      // If quantity is not 1, fix it immediately without reload
+      if (giftItem.quantity !== 1) {
+        simpleDebugLog('🎁 Fixing gift quantity to 1');
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: giftItem.key,
+            quantity: 1
+          })
+        });
+        window.location.reload();
+      }
+      giftAddInProgress = false;
+      return;
+    }
+    
+    // Gift not in cart, add it
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: settings.variantId,
+        quantity: 1
+      })
+    });
+    
+    if (response.ok) {
+      simpleDebugLog('🎁 Gift added successfully');
+      // Reload page to update cart
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      console.error('🎁 Failed to add gift:', errorData);
+      giftAddInProgress = false;
+    }
+  } catch (error) {
+    console.error('🎁 Error adding gift:', error);
+    giftAddInProgress = false;
+  }
+}
+
+// Handle events
+document.addEventListener('click', (e) => {
+  // Close popup
+  if (e.target.closest('[data-popup-close]')) {
+    const popup = document.getElementById('gift-popup');
+    if (popup) {
+      popup.classList.remove('is-visible');
+      popup.classList.add('is-hidden');
+      setStorageItem('gift-popup-closed', 'true');
+      simpleDebugLog('🎁 Popup closed');
+    }
+  }
+  
+  // Trigger popup
+  if (e.target.closest('[data-gift-popup-trigger]')) {
+    const popup = document.getElementById('gift-popup');
+    if (popup) {
+      popup.classList.add('is-visible');
+      popup.classList.remove('is-hidden');
+      simpleDebugLog('🎁 Popup triggered');
+    }
+  }
+  
+  // Close trigger button
+  if (e.target.closest('[data-gift-trigger-close]')) {
+    const trigger = document.getElementById('gift-trigger-container');
+    if (trigger) {
+      trigger.style.display = 'none';
+      setStorageItem('gift-trigger-dismissed', 'true');
+      simpleDebugLog('🎁 Trigger dismissed');
+    }
+  }
+  
+  // Add gift button
+  if (e.target.closest('[data-gift-add]')) {
+    e.preventDefault();
+    addGiftToCart();
+  }
+});
+
+// Handle email form
+document.addEventListener('submit', async (e) => {
+  if (e.target.id === 'gift-email-form') {
+    e.preventDefault();
+    
+    const email = e.target.querySelector('input[type="email"]').value;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    
+    if (!email) {
+      alert('Please enter email');
+      return;
+    }
+    
+    // Show loading
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Adding gift...';
+    
+    try {
+      // Submit to Omnisend first
+      await submitToOmnisend(email);
+      
+      // Mark email as submitted
+      setStorageItem('gift-email-submitted', 'true');
+      
+      // Add gift
+      await addGiftToCart();
+      
+      // Show success
+      submitBtn.textContent = '🎉 Gift Added!';
+      
+      // Close popup after delay
+      setTimeout(() => {
+        const popup = document.getElementById('gift-popup');
+        if (popup) {
+          popup.classList.remove('is-visible');
+          popup.classList.add('is-hidden');
+          setStorageItem('gift-popup-closed', 'true');
+        }
+      }, 2000);
+      
+    } catch (error) {
+      console.error('🎁 Email submission error:', error);
+      alert('Something went wrong. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Get Free Gift';
+    }
+  }
+});
+
+// Ensure only 1 gift in cart
+async function enforceGiftQuantity() {
+  const settings = getSettings();
+  
+  try {
+    const cartResponse = await fetch('/cart.js');
+    const cartData = await cartResponse.json();
+    
+    // Find gift item in cart
+    const giftItem = cartData.items.find(item => item.variant_id.toString() === settings.variantId);
+    
+    if (giftItem && giftItem.quantity > 1) {
+      simpleDebugLog('🎁 Multiple gift items found, reducing to 1');
+      
+      // Update quantity to 1
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: giftItem.key,
+          quantity: 1
+        })
+      });
+      
+      // Reload to update UI
+      window.location.reload();
+    }
+  } catch (error) {
+    console.error('🎁 Error enforcing gift quantity:', error);
+  }
+}
+
+// Validate checkout buttons
+function validateCheckout() {
+  const giftInCart = isGiftInCart();
+  const otherItems = getOtherItemsCount();
+  const shouldBlock = giftInCart && otherItems === 0;
+  
+  // Find all checkout buttons - more comprehensive selectors
+  const checkoutButtons = document.querySelectorAll(`
+    button[name="checkout"], 
+    button[data-checkout-button],
+    input[name="checkout"],
+    input[type="submit"][value*="checkout" i],
+    input[type="submit"][value*="check out" i],
+    .btn--checkout,
+    .checkout-button,
+    .cart__checkout,
+    .cart-drawer__checkout,
+    [href*="/checkout"],
+    .shopify-payment-button button,
+    .dynamic-checkout__content button,
+    .additional-checkout-buttons button
+  `.replace(/\s+/g, ' ').trim());
+  
+  checkoutButtons.forEach(button => {
+    if (shouldBlock) {
+      button.disabled = true;
+      button.style.opacity = '0.5';
+      button.style.cursor = 'not-allowed';
+      button.style.pointerEvents = 'none';
+      if (button.textContent.includes('Checkout')) {
+        button.textContent = 'Add 1 more item for free gift';
+      }
+      
+      // Add click prevention
+      button.addEventListener('click', (e) => {
+        if (shouldBlock) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, true);
+      
+    } else {
+      button.disabled = false;
+      button.style.opacity = '1';
+      button.style.cursor = 'pointer';
+      button.style.pointerEvents = 'auto';
+      if (button.textContent.includes('Add 1 more')) {
+        button.textContent = 'Checkout';
+      }
+    }
+  });
+  
+  // Show/hide validation message
+  const validationContainer = document.getElementById('gift-validation-container') || 
+                               document.querySelector('.gift-validation-container') ||
+                               document.querySelector('.cart__validation') ||
+                               document.querySelector('.cart-validation');
+  
+  if (validationContainer) {
+    if (shouldBlock) {
+      const settings = getSettings();
+      validationContainer.innerHTML = `
+        <div class="gift-validation-message">
+          <div class="gift-validation-icon">⚠️</div>
+          <div class="gift-validation-text">${settings.validationMessage}</div>
+        </div>
+      `;
+      validationContainer.style.display = 'block';
+    } else {
+      validationContainer.style.display = 'none';
+    }
+  } else if (shouldBlock) {
+    // If no validation container exists, create one and insert it before checkout buttons
+    const firstCheckoutButton = checkoutButtons[0];
+    if (firstCheckoutButton) {
+      const settings = getSettings();
+      const validationDiv = document.createElement('div');
+      validationDiv.id = 'gift-validation-container';
+      validationDiv.innerHTML = `
+        <div class="gift-validation-message" style="
+          background: #f8f9fa;
+          border: 1px solid #e9ecef;
+          color: #6c757d;
+          padding: 12px 16px;
+          border-radius: 4px;
+          margin: 16px 0;
+          text-align: center;
+          font-size: 14px;
+        ">
+          <div class="gift-validation-text">Add one more item to proceed with checkout</div>
+        </div>
+      `;
+      firstCheckoutButton.parentNode.insertBefore(validationDiv, firstCheckoutButton);
+    }
+  }
+  
+  // Only log if state changed
+  if (window.lastCheckoutState !== shouldBlock) {
+    simpleDebugLog('🎁 Checkout validation changed:', { giftInCart, otherItems, shouldBlock });
+    window.lastCheckoutState = shouldBlock;
+  }
+}
+
+// Update claim gift buttons
+function updateClaimButtons() {
+  const shouldShow = shouldShowClaimButton();
+  const giftInCart = isGiftInCart();
+  const emailSubmitted = isEmailSubmitted();
+  const qualifies = customerQualifiesForGift();
+  
+  // Find gift sections and update them
+  const giftSections = document.querySelectorAll('#gift-section, .cart__gift-section, .mini-cart__gift-section');
+  
+  giftSections.forEach(section => {
+    // Don't show gift section if only gift in cart (to avoid conflict with validation message)
+    const otherItems = getOtherItemsCount();
+    const shouldHideWhenOnlyGift = giftInCart && otherItems === 0;
+    
+    if (shouldHideWhenOnlyGift) {
+      section.style.display = 'none';
+    } else if (qualifies && !giftInCart) {
+      // Show claim button if customer qualifies but gift not in cart
+      const settings = getSettings();
+      section.innerHTML = `
+        <div class="gift-claim-container">
+          <div class="gift-claim-content">
+            <div class="gift-claim-text">
+              <h4 class="gift-claim-title">Free Gift Available</h4>
+              <p class="gift-claim-description">Add your gift bundle to cart</p>
+            </div>
+          </div>
+          <button class="button button--small" data-gift-add>
+            Add Gift
+          </button>
+        </div>
+      `;
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+  
+  // Cache state to prevent unnecessary updates
+  const otherItems = getOtherItemsCount();
+  const currentState = `${qualifies}-${giftInCart}-${otherItems}`;
+  if (window.lastClaimState !== currentState) {
+    window.lastClaimState = currentState;
+  }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Check Omnisend availability
+  simpleDebugLog('🎁 Omnisend function available:', typeof window.omnisend === 'function');
+  simpleDebugLog('🎁 Omnisend array available:', window.omnisend && Array.isArray(window.omnisend));
+  simpleDebugLog('🎁 Omnisend object:', window.omnisend);
+  
+  maybeShowPopup();
+  updateClaimButtons();
+  enforceGiftQuantity();
+  
+  // Prevent cart form submission if only gift
+  document.addEventListener('submit', (e) => {
+    const form = e.target;
+    if (form.action && (form.action.includes('/checkout') || form.action.includes('/cart'))) {
+      const giftInCart = isGiftInCart();
+      const otherItems = getOtherItemsCount();
+      const shouldBlock = giftInCart && otherItems === 0;
+      
+      if (shouldBlock) {
+        e.preventDefault();
+        e.stopPropagation();
+        simpleDebugLog('🎁 Blocked checkout form submission - only gift in cart');
+        
+        const settings = getSettings();
+        alert(settings.validationMessage || 'Add 1 more item for free gift');
+        return false;
+      }
+    }
+  });
+  
+  // Prevent checkout link navigation
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href*="/checkout"]');
+    if (link) {
+      const giftInCart = isGiftInCart();
+      const otherItems = getOtherItemsCount();
+      const shouldBlock = giftInCart && otherItems === 0;
+      
+      if (shouldBlock) {
+        e.preventDefault();
+        e.stopPropagation();
+        simpleDebugLog('🎁 Blocked checkout link - only gift in cart');
+        
+        const settings = getSettings();
+        alert(settings.validationMessage || 'Add 1 more item for free gift');
+        return false;
+      }
+    }
+  });
+  
+  // Update UI every 3 seconds for stable validation (не кожні 2 секунди щоб уникнути конфліктів)
+  setInterval(() => {
+    // Тільки updateClaimButtons, а validateCheckout буде керуватися gift-bundle.js
+    updateClaimButtons();
+    enforceGiftQuantity();
+  }, 3000);
+  
+  // Validate on important events only
+  document.addEventListener('click', () => {
+    setTimeout(() => {
+      enforceGiftQuantity();
+    }, 100);
+  });
+  
+  // Extra validation for cart changes
+  document.addEventListener('cart:updated', () => {
+    validateCheckout();
+    enforceGiftQuantity();
+  });
+});
+
+// Simple test function
+window.testGift = () => {
+  simpleDebugLog('🎁 Email submitted:', isEmailSubmitted());
+  simpleDebugLog('🎁 Popup closed:', isPopupClosed());
+  simpleDebugLog('🎁 Gift in cart:', isGiftInCart());
+};
+
+window.clearGift = () => {
+  clearStorageItems();
+  // Clear all gift-related cookies
+  document.cookie = 'beyours:gift-popup=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'beyours:gift-bundle-claimed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  simpleDebugLog('🎁 Data cleared');
+  location.reload();
+};
+
+// Test URL coupon
+window.testCoupon = (code) => {
+  const settings = getSettings();
+  const testCode = code || settings.couponCode;
+  simpleDebugLog('🎁 Testing coupon:', testCode);
+  window.location.href = window.location.pathname + '?discount=' + testCode;
+};
+
+// Show current settings
+window.showSettings = () => {
+  console.table(getSettings());
+};
+
+// Test Omnisend integration
+window.testOmnisend = async (email = 'test@example.com') => {
+  simpleDebugLog('🎁 Testing Omnisend with email:', email);
+  const result = await submitToOmnisend(email);
+  simpleDebugLog('🎁 Omnisend test result:', result);
+  return result;
+};

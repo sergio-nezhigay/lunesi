@@ -1,0 +1,27 @@
+{{ 'gift-simple.js' | asset_url | script_tag }}
+
+<script>
+  // Global gift bundle settings from theme settings
+  window.giftBundleSettings = {
+    variantId: '{{ settings.gift_variant_id | default: "43694372257923" }}',
+    popupHeading: {{ settings.gift_popup_heading | default: "Get Your Free Gift!" | json }},
+    popupSubheading: {{ settings.gift_popup_subheading | default: "Subscribe to our newsletter and get a free gift bundle worth $100!" | json }},
+    popupButtonText: {{ settings.gift_popup_button_text | default: "Get Free Gift" | json }},
+    claimButtonText: {{ settings.gift_claim_button_text | default: "Claim Gift" | json }},
+    giftValueText: {{ settings.gift_value_text | default: "$100" | json }},
+    triggerText: {{ settings.gift_trigger_text | default: "Claim your free gift" | json }},
+    triggerSubtext: {{ settings.gift_trigger_subtext | default: "Get $100 bundle" | json }},
+    validationMessage: {{ settings.gift_validation_message | default: "Add 1 more item for free gift" | json }},
+    giftAddedMessage: {{ settings.gift_added_message | default: "Gift bundle added" | json }},
+    couponCode: {{ settings.gift_coupon_code | default: "freebundle" | json }},
+    showPopupDelay: {{ settings.gift_popup_delay | default: 5000 }},
+    enabled: {{ settings.gift_bundle_enabled | default: true }},
+    storageType: {{ settings.gift_storage_type | default: "session" | json }}
+  };
+  
+</script>
+
+{% comment %} 
+This section only loads the settings from theme settings (settings_schema.json)
+All configuration is now done in Theme Settings > Gift Bundle Settings
+{% endcomment %}

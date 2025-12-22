@@ -80,6 +80,15 @@ window.cartUpsellScriptLoaded = true;
     const host = e.currentTarget.closest?.('.mini-cart__upsell-add-button') || e.currentTarget;
     if (!host) return;
 
+    // Перевірка: якщо кнопка вже обробляється або disabled, не додавати товар
+    if (host.hasAttribute('disabled') || host.classList.contains('loading') || host.classList.contains('processing')) {
+      return;
+    }
+
+    // Позначити кнопку як обробляється
+    host.setAttribute('disabled', true);
+    host.classList.add('processing');
+
     const span     = host.querySelector('.custom-button-text');
     const original = host.getAttribute('data-original-text');
     const pid      = host.getAttribute('data-product-id');
@@ -110,8 +119,23 @@ window.cartUpsellScriptLoaded = true;
         body: JSON.stringify({ id: vid, quantity: 1 })
       })
       .then(res => res.json())
-      .then(() => document.dispatchEvent(new Event('cart:updated')))
-      .catch(() => {});
+      .then(() => {
+        document.dispatchEvent(new Event('cart:updated'));
+        // Зняти блокування після успішного додавання
+        setTimeout(() => {
+          host.removeAttribute('disabled');
+          host.classList.remove('processing');
+        }, 1000);
+      })
+      .catch(() => {
+        // Зняти блокування у разі помилки
+        host.removeAttribute('disabled');
+        host.classList.remove('processing');
+      });
+    } else {
+      // Якщо немає variant ID, зняти блокування
+      host.removeAttribute('disabled');
+      host.classList.remove('processing');
     }
   }
 

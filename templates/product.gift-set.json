@@ -124,15 +124,6 @@
             "keep_open": false
           }
         },
-        "text_XwJwzV": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "icon": "none",
-            "text": "Buy 2. Get More",
-            "text_style": "body"
-          }
-        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -177,7 +168,6 @@
         "collapsible_tab-1",
         "collapsible_tab_KwUMCe",
         "collapsible_tab_WHDamb",
-        "text_XwJwzV",
         "buy_buttons",
         "inventory_status",
         "related_buttons",
@@ -233,117 +223,6 @@
         "image": "{{ product.metafields.custom.product_content.value.image_banner_1.value }}",
         "image_position": "center center",
         "layout": "text_first",
-        "text_box_position": "middle",
-        "text_alignment": "left",
-        "image_ratio": "700px",
-        "enlarge_content": false,
-        "full_width": false,
-        "show_divider": false,
-        "image_behavior": "none",
-        "mobile_layout": "image_first",
-        "mobile_text_alignment": "left",
-        "mobile_image_ratio": "auto",
-        "enable_video_looping": false,
-        "video_url": "",
-        "use_custom_colors": true,
-        "colors_button_label": "#ffffff",
-        "colors_button_background": "#1a1b18",
-        "colors_text": "#474345",
-        "colors_background": "#f7f7f7",
-        "gradient_background": "",
-        "padding_top": 16,
-        "padding_bottom": 16
-      }
-    },
-    "tab_collage_JtBHAQ": {
-      "type": "tab-collage",
-      "blocks": {
-        "image_dCdwwi": {
-          "type": "image",
-          "settings": {
-            "image": "{{ product.metafields.custom.product_content.value.image_banner_2.value }}",
-            "image_link": "",
-            "image_position": "center center",
-            "heading": "{{ product.metafields.custom.product_content.value.tab_collage_title_1.value }}",
-            "description": "<p>{{ product.metafields.custom.product_content.value.tab_collage_description_1 | metafield_tag }}</p>",
-            "button_label": "",
-            "button_link": "",
-            "button_size": "medium",
-            "button_style_secondary": false
-          }
-        }
-      },
-      "block_order": [
-        "image_dCdwwi"
-      ],
-      "disabled": true,
-      "custom_css": [
-        ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
-        "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
-        ".grid__item.tab-collage__right {max-height: 750px;}",
-        ".metafield-multi_line_text_field {font-size: 16px;}",
-        "@media screen and (min-width: 1424px) {.tab-collage__content {padding-top: 75px !important; }}"
-      ],
-      "name": "t:sections.tab-collage.presets.name",
-      "settings": {
-        "layout": "text_first",
-        "text_box_position": "top",
-        "text_alignment": "left",
-        "image_ratio": "100vh",
-        "make_collapsible_rows": false,
-        "horizontal_titles": false,
-        "full_width": false,
-        "show_divider": false,
-        "heading": "",
-        "heading_size": "h1",
-        "heading_alignment": "center",
-        "heading_tag": "p",
-        "section_button_label": "",
-        "section_button_link": "",
-        "section_button_size": "medium",
-        "section_button_style_secondary": false,
-        "mobile_layout": "text_first",
-        "mobile_text_alignment": "left",
-        "mobile_image_ratio": "auto",
-        "colors_button_label": "#ffffff",
-        "colors_button_background": "#1a1b18",
-        "colors_text": "#474345",
-        "colors_border": "#d2d5d9",
-        "colors_background": "#f7f7f7",
-        "gradient_background": "",
-        "padding_top": 16,
-        "padding_bottom": 16
-      }
-    },
-    "image_with_text_Db7MtD": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_K8Byk9": {
-          "type": "heading",
-          "settings": {
-            "heading": "{{ product.metafields.custom.product_content.value.tab_collage_title_1.value }}",
-            "heading_size": "h2",
-            "heading_tag": "h2"
-          }
-        },
-        "text_i8rBUQ": {
-          "type": "text",
-          "settings": {
-            "text": "<p>{{ product.metafields.custom.product_content.value.tab_collage_description_1 | metafield_tag }}</p>",
-            "text_size": "typeset",
-            "secondary_color": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_K8Byk9",
-        "text_i8rBUQ"
-      ],
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "{{ product.metafields.custom.product_content.value.image_banner_2.value }}",
-        "image_position": "center center",
-        "layout": "image_first",
         "text_box_position": "middle",
         "text_alignment": "left",
         "image_ratio": "700px",
@@ -443,7 +322,6 @@
       "block_order": [
         "image_drEUet"
       ],
-      "disabled": true,
       "custom_css": [
         ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
         "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
@@ -530,7 +408,6 @@
         "image_3zQY7q",
         "image_L97JNF"
       ],
-      "disabled": true,
       "custom_css": [
         ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
         "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
@@ -818,9 +695,9 @@
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {
             "review_data": "sample_data",
-            "max_width": 1200,
             "show_shop_reviews": false,
-            "empty_state": "empty_widget"
+            "empty_state": "empty_widget",
+            "max_width": 1200
           }
         }
       },
@@ -839,8 +716,6 @@
   "order": [
     "main",
     "image_with_text_QJ6ftB",
-    "tab_collage_JtBHAQ",
-    "image_with_text_Db7MtD",
     "product-recommendations",
     "recently-viewed-products",
     "tab_collage_46E36M",

@@ -925,7 +925,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="{{ 'footer-accordion.js' | asset_url }}" defer></script>
 
-<footer class="footer{% if section.settings.show_divider %} footer--border-top{% endif %}">
+<footer id="footer-lunesi" class="footer{% if section.settings.show_divider %} footer--border-top{% endif %}">
   {%- liquid
     assign enable_right_column = false
     if section.settings.newsletter_enable or section.settings.show_social or section.settings.enable_follow_on_shop

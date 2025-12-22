@@ -698,3 +698,55 @@ promo-popup.hidden {
     margin-bottom: -1rem;
   }
 }
+
+/* Gift Popup Split Layout */
+.popup__content-wrapper--split {
+  display: flex !important;
+  gap: 2rem !important;
+  align-items: flex-start !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+.popup__content--left {
+  flex: 1 !important;
+  max-width: 400px !important;
+  min-width: 300px !important;
+}
+
+.popup__content--right {
+  flex: 1 !important;
+  max-width: 400px !important;
+  min-width: 300px !important;
+}
+
+.popup__image {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.popup__image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Mobile: Hide image, stack vertically */
+@media screen and (max-width: 768px) {
+  .popup__content-wrapper--split {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    max-width: 100% !important;
+  }
+  
+  .popup__content--right {
+    display: none !important; /* Hide image on mobile */
+  }
+  
+  .popup__content--left {
+    max-width: 100% !important;
+    min-width: auto !important;
+  }
+}

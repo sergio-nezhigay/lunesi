@@ -29,20 +29,24 @@
     </div>
     
     {%- if section.blocks.size > 0 -%}
+
       <tab-collage class="tab-collage grid grid--gapless grid--1-col grid--2-col-tablet{% if section.settings.layout == 'image_first' %} tab-collage__grid--reverse{% endif %}{% if section.settings.mobile_layout == 'image_first' %} tab-collage__grid-mobile--reverse{% endif %}{% if section.settings.horizontal_titles %} tab-collage--horizontal-titles{% endif %}"
         {%- if section.settings.make_collapsible_rows %} data-accordion{% endif -%}
       >
         <div class="grid__item tab-collage__left {{ section.settings.text_box_position }}">
           {%- unless section.settings.make_collapsible_rows -%}
             {%- if section.settings.horizontal_titles and section.blocks.size > 1 -%}
-              <div class="tab-collage__pagination">
-                {%- for block in section.blocks -%}
-                  <button class="tab-collage__dot{% if forloop.first %} is-active{% endif %}" 
-                          data-dot-index="{{ forloop.index0 }}" 
-                          type="button"
-                          aria-label="Go to slide {{ forloop.index }}">
-                  </button>
-                {%- endfor -%}
+              <div class="tab-collage__navigation">
+                <button class="tab-collage__nav-arrow tab-collage__nav-prev" type="button" aria-label="Previous slide">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+                </button>
+                <button class="tab-collage__nav-arrow tab-collage__nav-next" type="button" aria-label="Next slide">
+                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+                </button>
               </div>
             {%- endif -%}
           {%- endunless -%}
@@ -417,6 +421,20 @@
           {%- endfor -%}
         </use-animate>
 
+        {%- unless section.settings.make_collapsible_rows -%}
+          {%- if section.settings.horizontal_titles and section.blocks.size > 1 -%}
+            <div class="tab-collage__pagination">
+              {%- for block in section.blocks -%}
+                <button class="tab-collage__dot{% if forloop.first %} is-active{% endif %}" 
+                        data-dot-index="{{ forloop.index0 }}" 
+                        type="button"
+                        aria-label="Go to slide {{ forloop.index }}">
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endunless -%}
+
       </tab-collage>
     {%- endif -%}
   </div>
@@ -424,25 +442,36 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const tabCollages = document.querySelectorAll('.tab-collage--horizontal-titles');
+  const sections = document.querySelectorAll('.section--padding');
   
-  tabCollages.forEach(container => {
+  sections.forEach(section => {
+    const container = section.querySelector('.tab-collage--horizontal-titles');
+    if (!container) return;
+    
     const content = container.querySelector('.tab-collage__content');
     const headings = container.querySelectorAll('.tab-collage__heading');
     const descriptions = container.querySelectorAll('.tab-collage__desc');
     const cards = container.querySelectorAll('.tab-collage__card');
     const dots = container.querySelectorAll('.tab-collage__dot');
+    const prevBtn = section.querySelector('.tab-collage__nav-prev');
+    const nextBtn = section.querySelector('.tab-collage__nav-next');
     
     let currentIndex = 0;
-    let itemWidth = 0;
-    let isScrolling = false;
+    let isTransitioning = false;
     
-    function calculateItemWidth() {
-      if (window.innerWidth <= 749 && headings.length > 0) {
-        const firstItem = headings[0].closest('.tab-collage__item');
-        const containerStyle = window.getComputedStyle(content);
-        const gap = parseFloat(containerStyle.gap) || 10;
-        itemWidth = firstItem.offsetWidth + gap;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isDragging = false;
+    
+    function updateSlidePosition() {
+      if (window.innerWidth <= 749) {
+        const translateX = -currentIndex * 100;
+        headings.forEach((heading, index) => {
+          const item = heading.closest('.tab-collage__item');
+          item.style.transform = `translateX(${translateX}%)`;
+        });
       }
     }
     
@@ -462,82 +491,117 @@ document.addEventListener('DOMContentLoaded', function() {
       dots.forEach((dot, i) => {
         dot.classList.toggle('is-active', i === index);
       });
-    }
-    
-    function scrollToTab(index) {
-      if (window.innerWidth <= 749 && itemWidth > 0) {
-        isScrolling = true;
-        const targetItem = headings[index].closest('.tab-collage__item');
-        const containerRect = content.getBoundingClientRect();
-        const itemRect = targetItem.getBoundingClientRect();
-        
-        const scrollLeft = content.scrollLeft + (itemRect.left - containerRect.left) - (containerRect.width / 2) + (itemRect.width / 2);
-        
-        content.scrollTo({
-          left: Math.max(0, scrollLeft),
-          behavior: 'smooth'
-        });
-        
-        setTimeout(() => {
-          isScrolling = false;
-        }, 300);
+      
+      if (prevBtn && nextBtn) {
+        prevBtn.classList.toggle('disabled', index === 0);
+        nextBtn.classList.toggle('disabled', index === headings.length - 1);
       }
     }
     
-    function goToTab(index) {
-      if (index < 0 || index >= headings.length) return;
+    function goToSlide(index) {
+      if (isTransitioning || index < 0 || index >= headings.length) return;
       
+      isTransitioning = true;
       currentIndex = index;
-      scrollToTab(index);
+      
+      updateSlidePosition();
       updateActiveStates(index);
+      
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 300);
     }
     
-    function updateFromScroll() {
-      if (isScrolling || window.innerWidth > 749) return;
+    function nextSlide() {
+      goToSlide(currentIndex + 1);
+    }
+    
+    function prevSlide() {
+      goToSlide(currentIndex - 1);
+    }
+    
+    function handleTouchStart(e) {
+      if (window.innerWidth > 749 || isTransitioning) return;
       
-      const containerRect = content.getBoundingClientRect();
-      const containerCenter = containerRect.left + containerRect.width / 2;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isDragging = true;
+    }
+    
+    function handleTouchMove(e) {
+      if (!isDragging || window.innerWidth > 749) return;
       
-      let closestIndex = 0;
-      let closestDistance = Infinity;
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
       
-      headings.forEach((heading, index) => {
-        const itemRect = heading.closest('.tab-collage__item').getBoundingClientRect();
-        const itemCenter = itemRect.left + itemRect.width / 2;
-        const distance = Math.abs(containerCenter - itemCenter);
-        
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
+      const deltaX = Math.abs(currentX - startX);
+      const deltaY = Math.abs(currentY - startY);
       
-      if (closestIndex !== currentIndex) {
-        currentIndex = closestIndex;
-        updateActiveStates(closestIndex);
+      if (deltaX > deltaY) {
+        e.preventDefault();
       }
+    }
+    
+    function handleTouchEnd(e) {
+      if (!isDragging || window.innerWidth > 749) return;
+      
+      const deltaX = currentX - startX;
+      const deltaY = Math.abs(currentY - startY);
+      const threshold = 50;
+      
+      if (Math.abs(deltaX) > threshold && Math.abs(deltaX) > deltaY) {
+        if (deltaX > 0) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
+      }
+      
+      isDragging = false;
+      startX = 0;
+      startY = 0;
+      currentX = 0;
+      currentY = 0;
     }
     
     headings.forEach((heading, index) => {
-      heading.addEventListener('click', () => goToTab(index));
+      heading.addEventListener('click', () => goToSlide(index));
     });
     
     dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => goToTab(index));
+      dot.addEventListener('click', () => goToSlide(index));
     });
     
-    let scrollTimeout;
-    content.addEventListener('scroll', () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(updateFromScroll, 100);
-    });
+    if (prevBtn) {
+      prevBtn.addEventListener('click', prevSlide);
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', nextSlide);
+    }
+    
+    if (content) {
+      content.addEventListener('touchstart', handleTouchStart, { passive: false });
+      content.addEventListener('touchmove', handleTouchMove, { passive: false });
+      content.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
+    
+    // Add swipe functionality to image area
+    const imageArea = container.querySelector('.tab-collage__right');
+    if (imageArea) {
+      imageArea.addEventListener('touchstart', handleTouchStart, { passive: false });
+      imageArea.addEventListener('touchmove', handleTouchMove, { passive: false });
+      imageArea.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
     
     function init() {
-      calculateItemWidth();
+      updateSlidePosition();
       updateActiveStates(0);
       
       window.addEventListener('resize', () => {
-        setTimeout(calculateItemWidth, 100);
+        setTimeout(() => {
+          updateSlidePosition();
+        }, 100);
       });
     }
     

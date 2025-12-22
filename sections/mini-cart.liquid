@@ -1,3 +1,9 @@
+<style>
+  .main_image_header{
+    width: 50px !important;
+    height: auto;
+  }
+</style>
 {% comment %}theme-check-disable TemplateLength{% endcomment %}
 {%- liquid
     if linklists.gift-wrapping.links != blank and linklists.gift-wrapping.links.first.type == 'product_link'
@@ -55,20 +61,49 @@
           endif
         -%}
         <span class="mini-cart__border"></span>
-        {% if settings.free_shipping_bar_enable %}
+
+        {%- liquid
+          # Gift logic variables
+          assign gift_variant_id = 43694372257923
+          assign gift_in_cart = false
+          assign non_gift_items_count = 0
+
+          for item in cart.items
+            if item.variant_id == gift_variant_id
+              assign gift_in_cart = true
+            else
+              assign non_gift_items_count = non_gift_items_count | plus: item.quantity
+            endif
+          endfor
+        -%}
+
+        {%- comment -%} Показать free shipping bar только если в корзине минимум 1 продукт {%- endcomment -%}
+        {% if settings.free_shipping_bar_enable and non_gift_items_count >= 1 and non_gift_items_count < 2 or gift_in_cart %}
     {%- liquid
       assign free_shipping_threshold = settings.free_shipping_bar_threshold | default: 2
+      assign gift_variant_id_for_shipping = 43694372257923
       assign current_items = cart.item_count
+
+      # Exclude gift wrapping
       if gift_wraps_in_cart
         assign current_items = current_items | minus: gift_wraps_in_cart
       endif
+
+      # Exclude gift set from count
+      for item in cart.items
+        if item.variant_id == gift_variant_id_for_shipping
+          assign current_items = current_items | minus: item.quantity
+          break
+        endif
+      endfor
+
       assign items_needed = free_shipping_threshold | minus: current_items
       assign progress_percentage = current_items | times: 100 | divided_by: free_shipping_threshold
       if progress_percentage > 100
         assign progress_percentage = 100
       endif
     -%}
-  
+
     <style>
     .free-shipping-bar {
       margin-top: 24px;
@@ -86,6 +121,7 @@
       color: {{ settings.free_shipping_item_count_color | default: '#282828' }};
       display: block;
       letter-spacing: 0.2px;
+      display: none;
     }
   
     .progress-container {
@@ -155,8 +191,8 @@
   
     @media screen and (max-width: 420px) {
       .free-shipping-bar {
-        padding: 12px 14px;
-        margin-bottom: 16px;
+        padding: 10px 14px;
+        margin: 10px 0 0;
       }
       
       .item-count {
@@ -177,15 +213,20 @@
       }
     }
     </style>
-  
-    <div class="free-shipping-bar">
+    {% comment %} {% render 'free-shipping', minimum_amount: settings.free_shipping_minimum_amount %} {% endcomment %}
+
+  {% comment %} {% render 'component-free-shipping', minimum_amount: section.settings.minimum_amount settings.free_shipping_minimum_amount %} {% endcomment %}
+
+    {% comment %} <div class="free-shipping-bar">
       <div class="shipping-info">
         <span class="item-count">{{ current_items }} item{% if current_items != 1 %}s{% endif %}</span>
       </div>
-      
- <div class="shipping-message">
+      <div class="shipping-message">
         {%- if current_items >= free_shipping_threshold -%}
-          <span class="message-success">{{ settings.free_shipping_success_text | default: 'FREE shipping Royal Mail unlocked!' }}</span>
+          {%- comment -%} Скрыть success message если показываем кнопку ADD GIFT {%- endcomment -%}
+          {%- unless non_gift_items_count >= 2 and gift_in_cart == false -%}
+            <span class="message-success">{{ settings.free_shipping_success_text | default: 'FREE shipping Royal Mail unlocked!' }}</span>
+          {%- endunless -%}
         {%- else -%}
           {%- assign items_needed_suffix = '' -%}
           {%- if items_needed != 1 -%}
@@ -204,11 +245,52 @@
       </div>
       
      
-      </div>
+    </div> {% endcomment %}
        {%- endif -%}
+
+      {%- comment -%} Gift section - visibility controlled by JavaScript {%- endcomment -%}
+      {%- liquid
+        assign should_show_gift = false
+        if cart != empty and non_gift_items_count >= 2 and gift_in_cart == false
+          assign should_show_gift = true
+        endif
+      -%}
+         <div class="mini-cart__gift-section" id="gift-section" style="display: {% if should_show_gift %}block{% else %}none{% endif %}; margin: 20px 0 16px 0;" data-mini-gift-offer>
+          <div class="gift-claim-container">
+            <div class="gift-claim-content">
+              <div class="gift-icon">{{ settings.main_products.featured_image | image_url: width: settings.main_products.featured_image.widthsettings.main_products.featured_image | image_tag: class: "main_image_header" }}</div>
+              <div class="gift-text">
+                <h4 class="gift-title">{{settings.main_products.title}}</h4>
+              </div>
+            </div>
+            <button class="button button--gift" data-id={{ settings.main_products.variants.first.id }} data-gift-add>
+              ADD GIFT
+            </button>
+          </div>
+        </div>
+        <script>
+          const productId = {{ product.variants.first.id }};
+          const productHandle = "{{ product.handle }}";
+        </script>
+
+        {% comment %} <div class="mini-cart__gift-section" id="gift-section" style="display: block; margin: 20px 0 16px 0;">
+          <div class="gift-claim-container">
+            <div class="gift-claim-content">
+              <div class="gift-icon">🎁</div>
+              <div class="gift-text">
+                <h4 class="gift-title">Free Gift Available</h4>
+                <p class="gift-description">Add your gift bundle to cart</p>
+              </div>
+            </div>
+            <button class="button button--gift" data-gift-add>
+              ADD GIFT
+            </button>
+          </div>
+        </div> {% endcomment %}
+
          </div>
       <div class="mini-cart__empty center" data-animate data-animate-delay-{{ animate_count }}>
-        <p class="mini-cart__empty-text h3">{{ 'sections.cart.empty' | t }}</p>
+        {% comment %} <p class="mini-cart__empty-text h3">{{ 'sections.cart.empty' | t }}</p> {% endcomment %}
         <div class="mini-cart__empty-message typeset">{{ settings.empty_cart_message }}</div>
         {%- if settings.empty_cart_collections == blank -%}
           <a href="{{ routes.all_products_collection_url }}" class="button{% if settings.empty_cart_button_secondary %} button--tertiary{% endif %}">{{ 'general.continue_shopping' | t }}</a>
@@ -409,7 +491,14 @@
                   {% render 'icon', icon: 'spinner' %}
                 </div>
               </div>
-              <cart-remove-button id="Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}"{% unless gift_wrap_id == nil or item.id != gift_wrap_id %} class="hidden"{% endunless %}>
+              {%- liquid
+                # Hide remove button ONLY for gift wrapping (NOT for gift bundle)
+                assign hide_remove_button = false
+                if gift_wrap_id and item.id == gift_wrap_id
+                  assign hide_remove_button = true
+                endif
+              -%}
+              <cart-remove-button id="Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}"{% if hide_remove_button %} class="hidden"{% endif %}>
                 <a  href="{{ item.url_to_remove }}" class="delete-product" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}" data-no-instant>
                   {% render 'icon', icon: 'close-alt' %}
                 </a>
@@ -499,23 +588,33 @@
                   
                   <div class="product-quantity">
                     <dt>
+                      {%- liquid
+                        # Check if this is gift bundle (variant_id = 43694372257923)
+                        assign is_gift_bundle = false
+                        if item.variant_id == 43694372257923
+                          assign is_gift_bundle = true
+                        endif
+                      -%}
+
                       {%- if gift_wrap_id == nil or item.id != gift_wrap_id -%}
                         <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">{{ 'products.product.quantity.label' | t }}</label>
                         <quantity-input class="quantity">
-                          <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          <button class="quantity__button no-js-hidden test" name="minus" type="button">
                             <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
                             {% render 'icon', icon: 'minus' %}
                           </button>
-                          <input class="quantity__input"
+                          <input class="quantity__input d"
                             type="number"
                             name="updates[]"
                             value="{{ item.quantity }}"
                             min="0"
+                            max="{{item.variant.inventory_quantity }}"
                             aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                             id="Quantity-{{ item.index | plus: 1 }}"
+                            oninput="if(this.value > this.max) this.value = this.max;"
                             data-index="{{ item.index | plus: 1 }}"
                           />
-                          <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          <button class="quantity__button no-js-hidden test" name="plus" type="button">
                             <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
                             {% render 'icon', icon: 'plus' %}
                           </button>
@@ -548,28 +647,54 @@
                         </gift-quantity>
                       {%- endif -%}
                     </dt>
-  
-                    {%- if item.original_price != item.final_price -%}
-                      <dl class="cart-item__discounted-prices">
-                        <dt class="visually-hidden">
-                          {{ 'products.product.price.regular_price' | t }}
-                        </dt>
-                        <dd class="price--on-sale">
-                          <s class="price price-item--regular">
-                            <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
-                          </s>
-                        </dd>
-                        <dt class="visually-hidden">
-                          {{ 'products.product.price.sale_price' | t }}
-                        </dt>
+
+                    {%- if is_gift_bundle -%}
+                      {%- comment -%} Gift bundle - show discounted price with strikethrough {%- endcomment -%}
+                      {%- if item.original_price != item.final_price -%}
+                        <dl class="cart-item__discounted-prices">
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.regular_price' | t }}
+                          </dt>
+                          <dd class="price--on-sale">
+                            <s class="price price-item--regular">
+                              <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
+                            </s>
+                          </dd>
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.sale_price' | t }}
+                          </dt>
+                          <dd class="price">
+                            <price-money><bdi>{{ item.final_price | money }}</bdi></price-money>
+                          </dd>
+                        </dl>
+                      {%- else -%}
                         <dd class="price">
-                          <price-money><bdi>{{ item.final_price | money }}</bdi></price-money>
+                          <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
                         </dd>
-                      </dl>
+                      {%- endif -%}
                     {%- else -%}
-                      <dd class="price">
-                        <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
-                      </dd>
+                      {%- if item.original_price != item.final_price -%}
+                        <dl class="cart-item__discounted-prices">
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.regular_price' | t }}
+                          </dt>
+                          <dd class="price--on-sale">
+                            <s class="price price-item--regular">
+                              <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
+                            </s>
+                          </dd>
+                          <dt class="visually-hidden">
+                            {{ 'products.product.price.sale_price' | t }}
+                          </dt>
+                          <dd class="price">
+                            <price-money><bdi>{{ item.final_price | money }}</bdi></price-money>
+                          </dd>
+                        </dl>
+                      {%- else -%}
+                        <dd class="price">
+                          <price-money><bdi>{{ item.original_price | money }}</bdi></price-money>
+                        </dd>
+                      {%- endif -%}
                     {%- endif -%}
                   </div>
                   <p class="cart-item__error form__message errors" id="Line-item-error-{{ item.index | plus: 1 }}">
@@ -617,6 +742,29 @@
         {%- endif -%}
   
   {%- liquid
+    # Перевірити чи є гіфт-бандл в кошику
+    assign gift_variant_id = 43694372257923
+    assign gift_variant_id_string = '43694372257923'
+    assign gift_in_cart = false
+    assign non_gift_items_count = 0
+    assign customer_qualifies_for_gift = false
+    
+    for item in cart.items
+      if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
+        assign gift_in_cart = true
+      else
+        assign non_gift_items_count = non_gift_items_count | plus: item.quantity
+      endif
+    endfor
+    
+    # Перевірити чи кастомер має право на подарунок (вже використовував раніше, підписаний, або мав подарунок в кошику)
+    assign gift_cookie_check = request.headers.cookie | split: 'beyours:gift-popup=true'
+    assign gift_claimed_cookie = request.headers.cookie | split: 'beyours:gift-bundle-claimed=true'
+    
+    if gift_cookie_check.size > 1 or gift_claimed_cookie.size > 1 or customer or gift_in_cart
+      assign customer_qualifies_for_gift = true
+    endif
+    
     assign first_cart_item = cart.items.first
     if first_cart_item.product.metafields.custom.cart_upsell_products_ != blank
       assign upsell_products = first_cart_item.product.metafields.custom.cart_upsell_products_.value
@@ -625,6 +773,301 @@
     endif
     assign upsell_heading = settings.upsell_heading | default: "Complete your routine"
   -%}
+
+  <script>
+    // Передати інформацію про кошик в JavaScript для mini-cart
+    window.miniCartGiftInCart = {{ gift_in_cart | json }};
+    window.miniCartNonGiftItemsCount = {{ non_gift_items_count | json }};
+  </script>
+
+  <style>
+    li[data-handle="gift-bundle"] .cart-item__discounted-prices .price-item--regular {
+  display: none !important;
+}
+
+    .mini-cart__gift-section {
+      margin: 20px 0 16px 0;
+      padding: 0 20px;
+    }
+
+    .mini-cart__validation-section {
+      margin: 16px 0;
+      padding: 0 20px;
+    }
+
+    .gift-claim-container {
+      background: linear-gradient(135deg, #f8f4ff 0%, #fff5f7 100%);
+      border: 2px solid #e6cedf;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(230, 206, 223, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .gift-claim-container:hover {
+      box-shadow: 0 4px 12px rgba(230, 206, 223, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .gift-claim-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .gift-icon {
+      font-size: 32px;
+      line-height: 1;
+      animation: giftBounce 2s ease-in-out infinite;
+    }
+
+    .gift-icon img {
+      width: 200px;
+      height: auto;
+    } 
+
+    @keyframes giftBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .gift-text {
+      flex: 1;
+    }
+
+    .gift-title {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2d2d2d;
+      letter-spacing: 0.3px;
+    }
+
+    .gift-description {
+      margin: 0;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .button--gift {
+      background: #e6cedf;
+      border: 2px solid #e6cedf;
+      color: #2d2d2d;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      padding: 12px 24px;
+      border-radius: 25px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(230, 206, 223, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+    }
+
+    .button--gift:hover {
+      background: #d4b5c7;
+      border-color: #d4b5c7;
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(230, 206, 223, 0.4);
+    }
+
+    .button--gift:active {
+      transform: scale(0.98);
+    }
+
+    .button--gift.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 100, 200;
+        stroke-dashoffset: -15;
+      }
+      100% {
+        stroke-dasharray: 100, 200;
+        stroke-dashoffset: -125;
+      }
+    }
+
+    @media screen and (max-width: 420px) {
+      .gift-claim-container {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      .gift-icon {
+        font-size: 28px;
+      }
+
+      .gift-title {
+        font-size: 14px;
+      }
+
+      .gift-description {
+        font-size: 12px;
+      }
+
+      .button--gift {
+        font-size: 11px;
+        padding: 10px 18px;
+      }
+    }
+    
+    .gift-bundle-offer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    
+    .gift-bundle-content {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .gift-bundle-icon {
+      display: none;
+    }
+    
+    .gift-bundle-text {
+      flex: 1;
+    }
+    
+    .gift-bundle-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 4px 0;
+      color: #212529;
+    }
+    
+    .gift-bundle-description {
+      font-size: 12px;
+      margin: 0;
+      color: #6c757d;
+      line-height: 1.3;
+    }
+    
+    .gift-bundle-add,
+    .gift-bundle-remove {
+      flex-shrink: 0;
+      min-width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin-left: 12px;
+    }
+    
+    .gift-bundle-add {
+      background: #28a745;
+      border-color: #28a745;
+    }
+    
+    .gift-bundle-add:hover {
+      background: #218838;
+      border-color: #218838;
+    }
+    
+    .gift-bundle-add:disabled {
+      background: #6c757d;
+      border-color: #6c757d;
+      cursor: not-allowed;
+    }
+    
+    .gift-bundle-remove {
+      background: transparent;
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+    
+    .gift-bundle-remove:hover {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .gift-validation-message {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    
+    .validation-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .validation-text p {
+      margin: 0;
+      font-size: 12px;
+      color: #6c757d;
+      line-height: 1.3;
+      text-align: center;
+    }
+    
+    @media screen and (max-width: 749px) {
+      .mini-cart__gift-section {
+        padding: 0 16px;
+      }
+      
+      .gift-bundle-offer {
+        padding: 12px;
+      }
+      
+      .gift-bundle-icon {
+        font-size: 24px;
+        margin-right: 8px;
+      }
+      
+      .gift-bundle-title {
+        font-size: 13px;
+      }
+      
+      .gift-bundle-description {
+        font-size: 11px;
+      }
+      
+      .gift-bundle-add,
+      .gift-bundle-remove {
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+    }
+
+    .button--disabled {
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+    }
+    
+    .button--disabled:hover {
+      opacity: 1 !important;
+    }
+  </style>
   
     {% assign available_upsell_products = 0 %}
     {% for product in collections.upsell-products.products %}
@@ -1187,7 +1630,12 @@
         </div>
   
         <div class="button-container">
-          <button class="button" name="checkout" type="submit">
+          <button
+            class="button"
+            name="checkout"
+            type="submit"
+            data-checkout-button
+          >
             {{ 'sections.cart.checkout' | t }}
             {%- if settings.disable_view_cart -%}
               <span class="price" id="mini-cart-subtotal">{{ cart.total_price | money_with_currency }}</span>
@@ -1197,6 +1645,17 @@
             <a class="button button--secondary" href="{{ routes.cart_url }}">{{ 'general.cart.view' | t }}</a>
           {%- endunless -%}
         </div>
+        
+        <style>
+          .button--disabled {
+            cursor: not-allowed !important;
+            opacity: 1 !important;
+          }
+          
+          .button--disabled:hover {
+            opacity: 1 !important;
+          }
+        </style>
       </div>
     </div>
   </form>

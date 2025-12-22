@@ -725,26 +725,26 @@ localization-form .localization-selector {
     }
     
     updateCartCounter() {
-      fetch('/cart.js')
-        .then(response => response.json())
-        .then(data => {
-          const count = data.item_count || 0;
+      // fetch('/cart.js')
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     const count = data.item_count || 0;
           
-          const desktopTrigger = document.getElementById('desktop-cart-trigger');
-          if (desktopTrigger) {
-            desktopTrigger.textContent = `CART${count > 0 ? ` (${count})` : ' (0)'}`;
-          }
+      //     const desktopTrigger = document.getElementById('desktop-cart-trigger');
+      //     if (desktopTrigger) {
+      //       desktopTrigger.textContent = `CART${count > 0 ? ` (${count})` : ' (0)'}`;
+      //     }
           
-          const cartBubbles = document.querySelectorAll('.cart-count-bubble');
-          cartBubbles.forEach(bubble => {
-            const countSpan = bubble.querySelector('span[aria-hidden="true"]');
-            if (countSpan) {
-              countSpan.textContent = count;
-            }
-            bubble.style.display = count > 0 ? 'flex' : 'none';
-          });
-        })
-        .catch(() => {});
+      //     const cartBubbles = document.querySelectorAll('.cart-count-bubble');
+      //     cartBubbles.forEach(bubble => {
+      //       const countSpan = bubble.querySelector('span[aria-hidden="true"]');
+      //       if (countSpan) {
+      //         countSpan.textContent = count;
+      //       }
+      //       bubble.style.display = count > 0 ? 'flex' : 'none';
+      //     });
+      //   })
+      //   .catch(() => {});
     }
 
     // Виправлена функція з флагом для transition

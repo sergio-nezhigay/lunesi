@@ -36,6 +36,9 @@
         "show_text_box": false,
         "full_width": false,
         "show_divider": false,
+        "limit_text_width": false,
+        "text_width_desktop": 600,
+        "text_width_mobile": 350,
         "image_behavior": "none",
         "mobile_text_alignment": "center",
         "mobile_image_ratio": "auto",
@@ -58,12 +61,13 @@
       "type": "main-login",
       "custom_css": [
         ".login {background-color: white; padding-bottom: 16px;}",
-        ".required {border-radius: 20px;}"
+        ".required {border-radius: 20px;}",
+        ".login-image-container {background-color: #f7f7f7;}"
       ],
       "settings": {
         "padding_top": 32,
         "padding_bottom": 32,
-        "login_image": "shopify://shop_images/19may6507_2_814a0ede-6fa4-4ae7-80e6-3a2f12eeedbc.jpg",
+        "login_image": "shopify://shop_images/19may6507_2_814a0ede-6fa4-4ae7-80e6-3a2f12eeedbc.png",
         "forms_bg_color": "#f7f7f7"
       }
     }

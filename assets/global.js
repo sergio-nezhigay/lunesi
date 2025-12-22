@@ -1944,6 +1944,11 @@ class AddToCart extends HTMLElement {
   }
 
   onClickHandler() {
+    // Перевірка: якщо кнопка вже обробляється, не додавати товар
+    if (this.hasAttribute('disabled') || this.classList.contains('loading') || this.classList.contains('processing')) {
+      return;
+    }
+
     const variantId = this.dataset.variantId;
 
     if (variantId) {
@@ -1959,6 +1964,7 @@ class AddToCart extends HTMLElement {
 
       this.setAttribute('disabled', true);
       this.classList.add('loading');
+      this.classList.add('processing');
       const sections = this.miniCart ? this.miniCart.getSectionsToRender().map((section) => section.id) : [];
 
       const body = JSON.stringify({
@@ -1993,6 +1999,7 @@ class AddToCart extends HTMLElement {
         })
         .finally(() => {
           this.classList.remove('loading');
+          this.classList.remove('processing');
           this.removeAttribute('disabled');
         });
     }

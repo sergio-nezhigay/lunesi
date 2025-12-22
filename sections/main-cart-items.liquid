@@ -35,7 +35,7 @@
   </div>
 
   <div class="cart__warnings">
-    <p class="cart__empty-text h2">{{ 'sections.cart.empty' | t }}</p>
+    {% comment %} <p class="cart__empty-text h2">{{ 'sections.cart.empty' | t }}</p> {% endcomment %}
     <a href="{{ routes.all_products_collection_url }}" class="button button--tertiary">{{ 'general.continue_shopping' | t }}</a>
   </div>
 
@@ -55,7 +55,7 @@
             </thead>
             <tbody>
               {%- for item in cart.items -%}
-                <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
+                <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}" data-variant-id="{{ item.variant_id }}">
                   <td class="cart-item__media">
                     {% if item.image %}
                       <span class="media-wrapper media-wrapper--small">
@@ -220,6 +220,14 @@
                   </td>
 
                   <td class="cart-item__quantity">
+                    {%- liquid
+                      # Check if this is gift bundle (variant_id = 43694372257923)
+                      assign is_gift_bundle = false
+                      if item.variant_id == 43694372257923
+                        assign is_gift_bundle = true
+                      endif
+                    -%}
+
                     <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">{{ 'products.product.quantity.label' | t }}</label>
                     {%- if gift_wrap_id == nil or item.id != gift_wrap_id -%}
                       <quantity-input class="quantity">
@@ -232,6 +240,7 @@
                           name="updates[]"
                           value="{{ item.quantity }}"
                           min="0"
+                          max="{{ item.variant.inventory_quantity }}"
                           aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                           id="Quantity-{{ item.index | plus: 1 }}"
                           data-index="{{ item.index | plus: 1 }}"

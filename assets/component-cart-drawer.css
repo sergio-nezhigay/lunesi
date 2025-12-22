@@ -97,6 +97,12 @@
   --max-height: 100%;
 }
 
+@media only screen and (max-width: 768px) {
+  .cart-drawer {
+    width: 100%;
+  }
+}
+
 .shopify-section-header-sticky.shopify-section-header-hidden .cart-drawer {
   height: 100vh;
 }
@@ -174,6 +180,7 @@ details[open].menu-opening > .cart-drawer {
 
 .mini-cart__header {
   padding: 2rem;
+  padding-bottom: 0;
 }
 
 @media screen and (min-width: 750px) {
