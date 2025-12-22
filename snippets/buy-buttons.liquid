@@ -63,8 +63,8 @@
 
       {% if settings.waitlist_mode %}
         <!-- Waitlist Button -->
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="button button--full-width waitlist-trigger"
           data-product-id="{{ product.id }}"
           data-product-name="{{ product.title | escape }}"
@@ -80,7 +80,7 @@
           type="submit"
           name="add"
           class="product-form__submit button{% if show_dynamic_checkout %} button--secondary{% endif %} button--full-width"
-          {%- if product.selected_or_first_available_variant.available == false %} disabled="disabled"{% endif -%}
+          {%- unless product.selected_or_first_available_variant.available %} disabled="disabled"{% endunless -%}
           {%- if product.template_suffix == 'pre-order' %} data-pre-order="true"{% endif -%}
         >
           {%- liquid

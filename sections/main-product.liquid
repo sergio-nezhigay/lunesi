@@ -1166,46 +1166,6 @@
   </animate-sticky>
 {%- endif -%}
 </section>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-  const buttons = document.querySelectorAll('.product-form__submit');
-
-  buttons.forEach(button => {
-    // 🔁 1. Видаляємо disabled при старті
-    if (button.disabled) {
-      button.disabled = false;
-      console.log('🟢 Кнопка розблокована');
-    }
-
-    // 🛡 2. Спостерігаємо за спробами змінити атрибути
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'disabled'
-        ) {
-          button.removeAttribute('disabled');
-          console.log('🚫 Заборонено додавати disabled');
-        }
-      });
-    });
-
-    observer.observe(button, { attributes: true });
-
-    // 🔒 3. Перевизначаємо властивість disabled
-    Object.defineProperty(button, 'disabled', {
-      configurable: false,
-      enumerable: true,
-      get: function () {
-        return false;
-      },
-      set: function (value) {
-        console.warn('❌ Спроба встановити disabled заблокована');
-      }
-    });
-  });
-});
-</script>
 {%- if product.media.size > 0 -%}
   <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>

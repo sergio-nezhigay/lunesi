@@ -1541,8 +1541,11 @@ class VariantSelects extends HTMLElement {
         if (text) addButton.textContent = text;
       }
       else {
-        addButton.removeAttribute('disabled');
-        addButton.textContent = addButton.dataset.preOrder === 'true' ? theme.variantStrings.preOrder : theme.variantStrings.addToCart;
+        // Only remove disabled if the variant is actually available
+        if (this.currentVariant && this.currentVariant.available) {
+          addButton.removeAttribute('disabled');
+          addButton.textContent = addButton.dataset.preOrder === 'true' ? theme.variantStrings.preOrder : theme.variantStrings.addToCart;
+        }
       }
 
       if (!modifyClass) return;
@@ -1709,7 +1712,7 @@ customElements.define('variant-radios', VariantRadios);
 
 class ProductForm extends HTMLElement {
   constructor() {
-    super();   
+    super();
 
     this.miniCart = document.querySelector('mini-cart');
     this.form = this.querySelector('form');
