@@ -131,7 +131,7 @@
     "featured_collection_WAtHqF": {
       "type": "featured-collection",
       "custom_css": [
-        ".card-information__button .button:not(.loading) {width: 3.4rem; min-height: 3.4rem;}"
+        ".card-information__button .button:not(.loading) {min-width: 3.4rem; min-height: 3.4rem;}"
       ],
       "settings": {
         "sold_out_product": false,
