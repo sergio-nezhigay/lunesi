@@ -651,17 +651,29 @@ class QuantityInput extends HTMLElement {
   }
 
   showMaxReachedFeedback() {
+    console.log('[DEBUG] showMaxReachedFeedback called');
+
     const cartItem = this.closest('.cart-item');
+    console.log('[DEBUG] cartItem:', cartItem);
+
     const debugInfo = cartItem?.querySelector('.cart-item-debug');
+    console.log('[DEBUG] debugInfo element:', debugInfo);
+    console.log('[DEBUG] debugInfo display before:', debugInfo ? debugInfo.style.display : 'N/A');
 
     // Show debug info
     if (debugInfo) {
       debugInfo.style.display = 'block';
+      console.log('[DEBUG] Set debugInfo display to block');
+      console.log('[DEBUG] debugInfo display after:', debugInfo.style.display);
+      console.log('[DEBUG] debugInfo computed display:', window.getComputedStyle(debugInfo).display);
 
       // Hide after 3 seconds
       setTimeout(() => {
         debugInfo.style.display = 'none';
+        console.log('[DEBUG] Hidden debugInfo after 3s');
       }, 3000);
+    } else {
+      console.log('[DEBUG] ❌ No debugInfo element found!');
     }
 
     // Flash the quantity input
