@@ -131,7 +131,7 @@
                     {%- else -%}
                       {%- liquid
                         assign file_name_final = blank
-                        if file_name_custom != blank and images[file_name_custom] != blank 
+                        if file_name_custom != blank and images[file_name_custom] != blank
                           assign file_name_final = file_name_custom
                         elsif images[file_name_uniq] != blank
                           assign file_name_final = file_name_uniq
@@ -213,7 +213,7 @@
         if card_product.featured_media.aspect_ratio == nil
           assign featured_media_aspect_ratio = 1
         endif
-        
+
         assign card_product_media = card_product.featured_media
       -%}
 
@@ -242,10 +242,10 @@
               >
                 {%- if image.preview_image != blank -%}
                 {{ image.preview_image | image_url: width: 1100 | image_tag: loading: image_loading,
-                  class: 'motion-reduce', 
-                  sizes: sizes, 
+                  class: 'motion-reduce',
+                  sizes: sizes,
                   widths: widths,
-                  alt: alt, 
+                  alt: alt,
                   is: 'lazy-image'  }}
                 {%- else -%}
                   {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image' }}
@@ -253,8 +253,8 @@
               </div>
             </div>
           </noscript>
-          
-          {%- liquid 
+
+          {%- liquid
             assign ratio_diff = card_product_media.aspect_ratio | minus: image.aspect_ratio | abs
             if ratio_diff < 0.01 and ratio_diff > 0
               assign fix_ratio = true
@@ -278,10 +278,10 @@
                   >
                     {%- assign alt = 'sections.video.load_video' | t: description: block.settings.description | escape -%}
                     {{ image.preview_image | image_url: width: 1100 | image_tag: loading: image_loading,
-                      class: 'motion-reduce', 
-                      sizes: sizes, 
+                      class: 'motion-reduce',
+                      sizes: sizes,
                       widths: widths,
-                      alt: alt, 
+                      alt: alt,
                       is: 'lazy-image' }}
                   </div>
                 {%- else -%}
@@ -348,7 +348,7 @@
             <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
             <div class="card-article-info caption-with-letter-spacing">{{ card_product.vendor }}</div>
           {%- endif -%}
-          
+
           {%- liquid
             if enable_color_swatches and settings.color_swatches_position == 'top'
               echo color_swatches
@@ -368,13 +368,13 @@
 
       {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
         {% liquid
-          assign rating_decimal = 0 
-          assign decimal = card_product.metafields.reviews.rating.value.rating | modulo: 1 
+          assign rating_decimal = 0
+          assign decimal = card_product.metafields.reviews.rating.value.rating | modulo: 1
           if decimal >= 0.3 and decimal <= 0.7
             assign rating_decimal = 0.5
           elsif decimal > 0.7
             assign rating_decimal = 1
-          endif 
+          endif
         %}
         {% comment %}
         <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: card_product.metafields.reviews.rating.value, rating_max: card_product.metafields.reviews.rating.value.scale_max }}">
@@ -404,10 +404,10 @@
       <div class="img-det">
        <div class="img-area">
          {% if card_product.metafields.custom.product_card_small_hover_image_ != blank %}
-             <img 
-  src="{{ card_product.metafields.custom.product_card_small_hover_image_ | img_url: '400x' }}" 
-  alt="{{ card_product.metafields.custom.product_card_small_hover_image_ | escape }}" 
-  loading="lazy" 
+             <img
+  src="{{ card_product.metafields.custom.product_card_small_hover_image_ | img_url: '400x' }}"
+  alt="{{ card_product.metafields.custom.product_card_small_hover_image_ | escape }}"
+  loading="lazy"
   class="product-card-image"
             >
          {% endif %}
@@ -415,12 +415,12 @@
        <div class="img-title">
          <p class="product-title">{{ card_product.title }}</p>
        </div>
-       
+
      <div class="full-btn">
   <p>Full Details</p>
-  
+
   {% if settings.waitlist_mode %}
-    <button 
+    <button
       type="button"
       class="{{ button_class }} buy-button {{ button_style_class }} waitlist-trigger"
       data-product-id="{{ card_product.id }}"
@@ -431,33 +431,39 @@
     >
       <span class="buy-button-content">
         <span class="buy-text">
-          <span class="buy-bold">JOIN</span> 
+          <span class="buy-bold">JOIN</span>
           <span class="buy-normal">WAITLIST</span>
         </span>
         <span class="price-display">{{ card_product.selected_or_first_available_variant.price | money }}</span>
       </span>
-      
+
       <svg class="icon icon-cart" aria-hidden="true" focusable="false">
         <use href="#icon-cart"></use>
       </svg>
     </button>
   {% else %}
     <!-- Оригінальна кнопка в hover overlay -->
-    <add-to-cart class="{{ button_class }} buy-button {{ button_style_class }}" data-variant-id="{{ card_product.selected_or_first_available_variant.id }}">
-      <span class="buy-button-content">
-        <span class="buy-text">
-          <span class="buy-bold">BUY</span> 
-          {%- if card_product.metafields.custom.buy_text -%}
-          <span class="buy-normal">{{ card_product.metafields.custom.buy_text }}</span>
-          {%- endif -%}
+    {% if card_product.available %}
+      <add-to-cart class="{{ button_class }} buy-button {{ button_style_class }}" data-variant-id="{{ card_product.selected_or_first_available_variant.id }}">
+        <span class="buy-button-content">
+          <span class="buy-text">
+            <span class="buy-bold">BUY</span>
+            {%- if card_product.metafields.custom.buy_text -%}
+            <span class="buy-normal">{{ card_product.metafields.custom.buy_text }}</span>
+            {%- endif -%}
+          </span>
+          <span class="price-display">{{ card_product.selected_or_first_available_variant.price | money }}</span>
         </span>
-        <span class="price-display">{{ card_product.selected_or_first_available_variant.price | money }}</span>
-      </span>
-      
-      <svg class="icon icon-cart" aria-hidden="true" focusable="false">
-        <use href="#icon-cart"></use>
-      </svg>
-    </add-to-cart>
+
+        <svg class="icon icon-cart" aria-hidden="true" focusable="false">
+          <use href="#icon-cart"></use>
+        </svg>
+      </add-to-cart>
+    {% else %}
+      <button type="button" class="{{ button_class }} buy-button {{ button_style_class }} button--soldout" disabled>
+        {{ 'products.product.sold_out' | t }}
+      </button>
+    {% endif %}
   {% endif %}
        </div>
      </div>
@@ -471,8 +477,8 @@
   {%- if show_quick_buy -%}
     {% if settings.waitlist_mode %}
       <!-- Waitlist кнопка замість звичайної -->
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="{{ button_class }} {% if settings.enable-view %}control-arena{% endif %} {{ button_style_class }} waitlist-trigger"
         data-product-id="{{ card_product.id }}"
         data-product-name="{{ card_product.title | escape }}"
@@ -570,11 +576,11 @@
   {%- if custom_label_text != blank and custom_label_text != '' and limited_product -%}
     <div class="card__custom-badge">
       <span class="badge badge--custom" style="background-color: {{ custom_label_bg | default: '#000000' }}; color: {{ custom_label_color | default: '#FFFFFF' }}; border-color: {{ custom_label_bg | default: '#000000' }};">
-        {{ custom_label_text | escape }}  
+        {{ custom_label_text | escape }}
       </span>
     </div>
   {%- endif -%}
-  
+
 {% unless card_product.available %}
  <span class="badge badge--soldout" style="border-radius: 4px; display: inline-block; position: absolute; z-index: 99999; top: 17px; left: 12px;" aria-hidden="true">
     {{ 'products.product.sold_out' | t }}
@@ -603,7 +609,7 @@
   use-animate.card > a {
     border-radius: 20px;
   }
-  
+
   .img-det {
     display: flex;
     width: 100%;
@@ -614,15 +620,15 @@
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  
+
   .height-control {
     {% if settings.enable-view != false %} height: 22rem !important; {% endif %}
   }
-  
+
   .card-wrapper:hover .img-det {
     opacity: 1;
   }
-  
+
   .img-area {
     width: 35%;
     padding: 5px;
@@ -630,7 +636,7 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .img-area img {
     width: 100%;
     height: auto;
@@ -638,7 +644,7 @@
     object-fit: contain;
     border-radius: 6px;
   }
-  
+
   .img-title {
     width: 65%;
     text-align: left;
@@ -646,7 +652,7 @@
     display: flex;
     align-items: center;
   }
-  
+
   .product-title {
     font-size: 1.5rem;
     line-height: 1.3;
@@ -661,14 +667,14 @@
     -webkit-box-orient: vertical;
     font-weight: 500;
   }
-  
+
   .full-btn {
     border-top: 1px solid gray;
     width: 100%;
     padding-top: 8px;
     margin-top: 10px;
   }
-  
+
   .full-btn p {
     text-transform: uppercase;
     text-align: left;
@@ -677,7 +683,7 @@
     padding-left: 5px;
     margin: 0 0 8px 0;
   }
-  
+
   .buy-button {
     display: flex;
     justify-content: space-between;
@@ -685,41 +691,41 @@
     align-items: center;
     padding: 8px 15px;
   }
-  
+
   .buy-button-content {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
-  
+
   .buy-text {
     display: inline-block;
   }
-  
+
   .buy-bold {
     font-weight: bold;
   }
-  
+
   .buy-normal {
     font-weight: normal;
   }
-  
+
   .price-display {
     text-align: right;
     white-space: nowrap;
   }
-  
+
   @media(min-width: 990px) {
     .card-information__wrapper, .control-arena {
       {% if settings.enable-view != false %} display: none !important {% endif %}
     }
   }
-  
+
   @media(max-width: 989px) {
     .height-control .img-det {
       display: none !important;
     }
-    
+
     .height-control {
       height: 3.4rem !important;
     }
@@ -738,6 +744,16 @@
   .button--transparent:focus {
    border:0!important;
     background-color: #E6CEDF!important;
+  }
+
+  .button--soldout {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+  }
+
+  .button--soldout:hover {
+    background-color: inherit !important;
   }
 
   /* Custom Label Badge - positioned on the right */
