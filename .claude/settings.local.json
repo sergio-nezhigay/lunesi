@@ -3,7 +3,11 @@
     "allow": [
       "Bash(tsc --noEmit)",
       "WebSearch",
-      "Bash(npm run tsc:*)"
+      "Bash(npm run tsc:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node -c:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
