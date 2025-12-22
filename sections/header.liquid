@@ -41,9 +41,7 @@
 {%- endstyle -%}
 
 <style>
-.search.search-modal__form{
-  justify-content: end;
-}
+
 
 .header-wrapper{
   margin-top:0px;
@@ -59,6 +57,9 @@
 @media screen and (min-width: 750px) {
   #shopify-section-{{ section.id }} {
     --image-logo-height: {{ section.settings.logo_height }}px;
+  }
+  .search.search-modal__form{
+    justify-content: end;
   }
 }
 
@@ -242,12 +243,12 @@ localization-form .localization-selector {
   .header__right-text {
     display: none !important;
   }
-  
+
   .header__icon--search,
   .header__icon--cart {
     display: inline-flex !important;
   }
-  
+
   .header__icon--account {
     display: none !important;
   }
@@ -257,17 +258,17 @@ localization-form .localization-selector {
   .header--middle-left .header__inline-menu {
     text-align: start !important;
   }
-  
+
   #shopify-section-sections--18798158905475__header .header__heading-logo {
-    width: 140px !important; 
+    width: 140px !important;
   }
-  
+
   .header__right-text {
     display: flex !important;
   }
-  
-  .header__icon--search, 
-  .header__icon--account, 
+
+  .header__icon--search,
+  .header__icon--account,
   .header__icon--cart {
     display: none !important;
   }
@@ -337,7 +338,7 @@ localization-form .localization-selector {
         min-height: 0;
         padding-top: 10px;
     }
-    
+
     .header__heading-logo svg {
         min-width: var(--image-logo-height);
         min-height: 20px !important;
@@ -488,7 +489,7 @@ localization-form .localization-selector {
     {%- if request.page_type != 'index' -%}
       <a href="{{ routes.root_url }}" class="header__heading-link focus-inset">
     {%- endif -%}
-      
+
       {%- liquid
         assign logo_height = section.settings.logo_height
         assign mobile_logo_height = section.settings.mobile_logo_height
@@ -529,7 +530,7 @@ localization-form .localization-selector {
           CART{% if cart != empty %} ({{ cart.item_count }}){% else %} (0){% endif %}
         </span>
       </div>
-      
+
       <search-modal>
         <details>
           <summary class="header__icon header__icon--summary header__icon--search focus-inset modal__toggle" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">
@@ -684,10 +685,10 @@ localization-form .localization-selector {
       this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
 
       this.createObserver();
-      
+
       // Застосовуємо початкові стилі без transition
       this.applyHomepageLogoFilter(false);
-      
+
       document.addEventListener('DOMContentLoaded', () => {
         this.setupCartTrigger();
       });
@@ -696,20 +697,20 @@ localization-form .localization-selector {
     setupCartTrigger() {
       const desktopTrigger = document.getElementById('desktop-cart-trigger');
       const mobileTrigger = document.getElementById('mobile-cart-trigger');
-      
+
       if (desktopTrigger && mobileTrigger) {
         desktopTrigger.addEventListener('click', () => {
           mobileTrigger.click();
         });
       }
-      
+
       this.setupOverlayClose();
       this.updateCartCounter();
       setInterval(() => {
         this.updateCartCounter();
       }, 3000);
     }
-    
+
     setupOverlayClose() {
       const cartContainer = document.querySelector('.cart-drawer-container');
       if (cartContainer) {
@@ -723,18 +724,18 @@ localization-form .localization-selector {
         });
       }
     }
-    
+
     updateCartCounter() {
       // fetch('/cart.js')
       //   .then(response => response.json())
       //   .then(data => {
       //     const count = data.item_count || 0;
-          
+
       //     const desktopTrigger = document.getElementById('desktop-cart-trigger');
       //     if (desktopTrigger) {
       //       desktopTrigger.textContent = `CART${count > 0 ? ` (${count})` : ' (0)'}`;
       //     }
-          
+
       //     const cartBubbles = document.querySelectorAll('.cart-count-bubble');
       //     cartBubbles.forEach(bubble => {
       //       const countSpan = bubble.querySelector('span[aria-hidden="true"]');
@@ -750,27 +751,27 @@ localization-form .localization-selector {
     // Виправлена функція з флагом для transition
     applyHomepageLogoFilter(withTransition = true) {
       if (this.isTransitioning) return; // Запобігаємо конфліктам
-      
+
       const isHome = window.location.pathname === '/' || document.body.classList.contains('template-index');
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
+
       // Визначаємо потрібний стан
       const newState = (isHome && scrollTop === 0) ? 'inverted' : 'normal';
-      
+
       // Якщо стан не змінився, не робимо нічого
       if (this.currentState === newState) return;
-      
+
       this.isTransitioning = true;
       this.currentState = newState;
-      
+
       const headerLogosDesktop = document.querySelectorAll('.header__heading-logo.small-hide svg');
       const headerLogosMobile = document.querySelectorAll('.header__heading-logo.large-up-hide svg');
       const headerRightText = document.querySelector('.header__right-text');
       const header = document.querySelector('.header-wrapper');
-      
+
       // Встановлюємо transition тільки коли потрібно
       const transitionValue = withTransition ? 'filter 0.3s ease' : 'none';
-      
+
       if (newState === 'inverted') {
         // Стан для головної сторінки на топі
         if (header) {
@@ -778,7 +779,7 @@ localization-form .localization-selector {
           header.style.backgroundColor = '';
           header.style.color = 'white';
         }
-        
+
         headerLogosDesktop.forEach(logo => {
           logo.style.transition = transitionValue;
           logo.style.filter = 'invert(100%)';
@@ -796,7 +797,7 @@ localization-form .localization-selector {
           header.style.transition = withTransition ? 'background-color 0.3s ease, color 0.3s ease' : 'none';
           header.style.backgroundColor = '#ffffff';
         }
-        
+
         headerLogosDesktop.forEach(logo => {
           logo.style.transition = transitionValue;
           logo.style.filter = 'invert(0%)';
@@ -809,7 +810,7 @@ localization-form .localization-selector {
           headerRightText.style.color = 'rgb(var(--color-header-foreground))';
         }
       }
-      
+
       // Знімаємо флаг після завершення transition
       setTimeout(() => {
         this.isTransitioning = false;
@@ -849,7 +850,7 @@ localization-form .localization-selector {
     // Спрощена функція onScroll
     onScroll() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
+
       // Викликаємо функцію зміни логотипу тільки коли це необхідно
       this.applyHomepageLogoFilter(true);
 
@@ -877,7 +878,7 @@ localization-form .localization-selector {
       else {
         if (scrollTop > this.headerBounds.bottom) {
           if (this.sticky()) return;
-          
+
           requestAnimationFrame(this.hide.bind(this));
 
           setTimeout(() => {
