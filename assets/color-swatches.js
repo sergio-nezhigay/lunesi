@@ -1,6 +1,6 @@
 class ColorSwatch extends HTMLElement {
   constructor() {
-    super();
+    super(); 
 
     this.cached = {};
     this.variantId = this.dataset.variantId;
