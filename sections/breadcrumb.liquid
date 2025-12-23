@@ -1,3 +1,5 @@
+{{ 'section-breadcrumb.css' | asset_url | stylesheet_tag }}
+
 {%- style -%}
   :root  {
     --svg_fill: {{ section.settings.breadcrumb_text_color}}
@@ -11,7 +13,7 @@
   }
 
   .breadcrumbs {
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 1rem 0;
     color: {{ section.settings.breadcrumb_text_color }}
     ;
     background-color: {{ section.settings.breadcrumb_bg_color }}
@@ -82,8 +84,9 @@
 {%- endstyle -%}
 
 
-<div class="breadcrumbs" aria-label="breadcrumbs">
-  {%- unless template == 'index' or template == 'cart' -%}
+<div class="page-width section--padding">
+  <div class="breadcrumbs" aria-label="breadcrumbs">
+    {%- unless template == 'index' or template == 'cart' -%}
     {%- if section.settings.breadcrumbs_home_icon_bool -%}
       <div class="home-icon-container">
         <svg
@@ -324,6 +327,7 @@
       {%- endfor -%}
     {%- endcase -%}
   {%- endunless -%}
+  </div>
 </div>
 
 <script defer>
