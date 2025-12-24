@@ -617,14 +617,61 @@ class QuantityInput extends HTMLElement {
     );
 
     this.input.addEventListener('focus', this.onInputFocus.bind(this));
+    this.input.addEventListener('input', this.onInputChange.bind(this));
+  }
+
+  onInputChange(event) {
+    const max = parseInt(this.input.getAttribute('max'));
+    const value = parseInt(this.input.value);
+
+    // Check if manually entered value exceeds max
+    if (max && value > max) {
+      // Cap at max
+      this.input.value = max;
+
+      // Show feedback
+      this.showMaxReachedFeedback();
+    }
   }
 
   onButtonClick(event) {
     event.preventDefault();
     const previousValue = this.input.value;
+    const max = parseInt(this.input.getAttribute('max')) || Infinity;
+    const isPlus = event.target.name === 'plus';
+
+    // Check if trying to go over max
+    if (isPlus && parseInt(previousValue) >= max) {
+      this.showMaxReachedFeedback();
+      return;
+    }
 
     event.target.name === 'plus' ? this.input.stepUp() : this.input.stepDown();
     if (previousValue !== this.input.value) this.input.dispatchEvent(this.changeEvent);
+  }
+
+  showMaxReachedFeedback() {
+    const cartItem = this.closest('.cart-item');
+    const debugInfo = cartItem?.querySelector('.cart-item-debug');
+
+    // Show debug info
+    if (debugInfo) {
+      debugInfo.style.display = 'block';
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        debugInfo.style.display = 'none';
+      }, 3000);
+    }
+
+    // Flash the quantity input
+    this.input.style.borderColor = '#ff0000';
+    this.input.style.backgroundColor = '#fff0f0';
+
+    setTimeout(() => {
+      this.input.style.borderColor = '';
+      this.input.style.backgroundColor = '';
+    }, 1500);
   }
 
   onInputFocus() {
@@ -695,7 +742,7 @@ class MenuDrawer extends HTMLElement {
     }
 
     if (detailsElement === this.mainDetailsToggle) {
-      if (isOpen) event.preventDefault();
+      event.preventDefault();
       isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
     } else {
       setTimeout(() => {
@@ -2740,7 +2787,7 @@ class RecentlyViewedProducts extends HTMLElement {
     if (this.dataset.productId && items.includes(parseInt(this.dataset.productId))) {
       items.splice(items.indexOf(parseInt(this.dataset.productId)), 1);
     }
-    return items.map((item) => "id:" + (typeof item === 'object' && item.id ? item.id : item)).slice(0, 4).join(" OR ");
+    return items.map((item) => "id:" + item).slice(0, 4).join(" OR ");
   }
 }
 customElements.define('recently-viewed-products', RecentlyViewedProducts);

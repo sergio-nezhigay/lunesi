@@ -3,7 +3,7 @@ class MiniCart extends HTMLElement {
     super();
     this.isLoading = false;
   }
-   
+  
   connectedCallback() {
     this.header = document.querySelector('sticky-header');
     this.drawer = document.querySelector('cart-drawer');

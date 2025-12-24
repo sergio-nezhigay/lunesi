@@ -110,7 +110,7 @@ class CartItems extends HTMLElement {
             }
           }
         }));
-        
+
         this.updateQuantityLiveRegions(line, parsedState.item_count);
         
         const lineItem = document.getElementById(`CartItem-${line}`);
@@ -157,12 +157,12 @@ class CartItems extends HTMLElement {
           .innerHTML = theme.cartStrings.quantityError.replace(
             '[quantity]',
             document.getElementById(`Quantity-${line}`).value
-          ); 
+          );
       }
     }
 
     this.currentItemCount = itemCount;
-    
+
     if (this.lineItemStatusElement) this.lineItemStatusElement.setAttribute('aria-hidden', true);
 
     const cartStatus = document.getElementById('cart-live-region-text');
