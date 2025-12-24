@@ -2,12 +2,8 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}"
   {%- if text_direction == 'rtl' %} dir="rtl"{% endif -%}
-> 
+>
   <head>
-    <link rel="alternate" hreflang="en" href="https://lunesi.co.uk/" />
-    <link rel="alternate" hreflang="sq" href="https://lunesi.co.uk/sq" />
-
-
     <meta name="robots" content="index, follow">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,7 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-N8LRVNHB');</script>
 <!-- End Google Tag Manager -->
-    
+
     <script src="{{ 'vendor-v4.js' | asset_url | split: '?' | first }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
@@ -60,7 +56,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {%- liquid
       render 'css-variables'
       echo 'base.css' | asset_url | stylesheet_tag: preload: true
-      
+
       if text_direction == 'rtl'
         echo 'rtl.css' | asset_url | stylesheet_tag
       endif
@@ -72,7 +68,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {%- unless settings.type_header_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}
-    
+
     {%- if settings.predictive_search_enabled -%}
       <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
     {%- endif -%}
@@ -167,13 +163,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}">
     <script src="{{ 'cart-upsell.js' | asset_url }}" defer></script>
-    {% render 'changable-upsell' %} 
+    {% render 'changable-upsell' %}
           {% comment %} <script>
   window.addEventListener('load', function() {
     document.querySelectorAll('video').forEach(function(video) {
       video.muted = true;
       video.autoplay = true;
-      
+
       video.play().catch(function(error) {
         console.log('autoplay is blocked:', error);
       });
@@ -335,19 +331,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     function normalizeImageUrl(imageUrl) {
         if (!imageUrl) return '';
-        
+
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
             return imageUrl;
         }
-        
+
         if (imageUrl.startsWith('//')) {
             return `https:${imageUrl}`;
         }
-        
+
         if (imageUrl.startsWith('/')) {
             return `https://${window.location.hostname}${imageUrl}`;
         }
-        
+
         return `https://${window.location.hostname}/${imageUrl}`;
     }
 
@@ -356,7 +352,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             preorder_product_name: productData.name,
             preorder_product_url: `${window.location.origin}/products/${productData.handle}`,
             preorder_product_image: normalizeImageUrl(productData.image),
-            
+
             waitlist_products: [
                 {
                     name: productData.name || 'Unknown Product',
@@ -379,7 +375,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     fields: eventFields
                 })
             });
-            
+
             if (res.ok) {
                 return true;
             }
@@ -399,7 +395,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     properties: eventFields
                 })
             });
-            
+
             if (res.ok) {
                 return true;
             }
@@ -452,8 +448,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 });
             }
             if (response.ok) {
-                try { 
-                    await sendWaitinglistEvent(email, productData); 
+                try {
+                    await sendWaitinglistEvent(email, productData);
                 } catch (e) {}
                 if (isUpdate) {
                     showStatus('Updated in waitlist!', 'success');
@@ -463,7 +459,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     showStatus('Successfully added!', 'success');
                 }
                 success = true;
-            } else {  
+            } else {
                 success = await trySimpleApproach(email, products, productData, OMNISEND_API_KEY, existingContact);
             }
         } catch (e) {
@@ -582,20 +578,20 @@ window.dataLayer.push({
 document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('click', function(e) {
     const removeLink = e.target.closest('a[href*="/cart/change"][href*="quantity=0"]');
-    
+
     if (removeLink) {
       const href = removeLink.getAttribute('href');
       const variantIdMatch = href.match(/id=([^:&]+)/);
       const variantId = variantIdMatch ? variantIdMatch[1] : 'unknown';
-      
+
       const ariaLabel = removeLink.getAttribute('aria-label');
       const productName = ariaLabel ? ariaLabel.replace('Remove ', '') : 'Unknown Product';
-      
+
       fetch('/cart.js')
         .then(response => response.json())
         .then(cart => {
           const cartItem = cart.items.find(item => item.variant_id == variantId);
-          
+
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({
             event: 'remove_from_cart',
@@ -623,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('change', function(e) {
       if (e.target.type === 'radio' && (e.target.name === 'checkout[shipping_rate][id]' || e.target.name.includes('shipping'))) {
         const shippingMethod = e.target.closest('label')?.textContent?.trim() || 'Standard';
-        
+
         fetch('/cart.js')
           .then(response => response.json())
           .then(cart => {
@@ -655,20 +651,20 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   // ShopPay button tracking
   document.addEventListener('click', function(e) {
-    if (e.target.closest('[data-shopify-buttonpay]') || 
+    if (e.target.closest('[data-shopify-buttonpay]') ||
         e.target.closest('.shopify-payment-button') ||
         e.target.textContent.toLowerCase().includes('shop pay')) {
-      
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({'event': 'express_shoppay'});
     }
-    
+
     // Google Pay button tracking
-    if (e.target.closest('[data-google-pay]') || 
+    if (e.target.closest('[data-google-pay]') ||
         e.target.closest('.google-pay-button') ||
         e.target.textContent.toLowerCase().includes('google pay') ||
         e.target.textContent.toLowerCase().includes('g pay')) {
-      
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({'event': 'express_gpay'});
     }
@@ -680,14 +676,14 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('submit', function(e) {
     const form = e.target;
-    
+
     // Check if it's newsletter form
-    if (form.querySelector('input[type="email"]') && 
-        (form.action.includes('customer') || 
+    if (form.querySelector('input[type="email"]') &&
+        (form.action.includes('customer') ||
          form.querySelector('[name*="email"]') ||
          form.classList.contains('newsletter') ||
          form.id.includes('newsletter'))) {
-      
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({'event': 'submit_subscription_form'});
     }
@@ -700,26 +696,26 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('submit', function(e) {
     const form = e.target;
     const formAction = form.action || '';
-    
+
     // Login form
-    if (formAction.includes('/account/login') || 
-        (form.querySelector('input[name="customer[email]"]') && 
+    if (formAction.includes('/account/login') ||
+        (form.querySelector('input[name="customer[email]"]') &&
          form.querySelector('input[name="customer[password]"]'))) {
-      
+
       // Send event immediately and synchronously
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({'event': 'log_in_form'});
-      
+
       // Also try to send via beacon API for better reliability
       if (navigator.sendBeacon) {
         const data = JSON.stringify({event: 'log_in_form'});
         navigator.sendBeacon('/api/track', data);
       }
-      
+
       console.log('Login event sent synchronously');
     }
-    
-    // Registration form  
+
+    // Registration form
     if (formAction.includes('register') || form.querySelector('input[name*="first_name"]')) {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({'event': 'sign_up_form'});
@@ -800,13 +796,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function getPageType() {
     const path = window.location.pathname;
-    
+
     if (path === '/' || path === '') return 'home';
     if (path.includes('/products/')) return 'product';
     if (path.includes('/collections/')) return 'collection';
     if (path.includes('/pages/')) return 'page';
     if (path.includes('/blogs/')) return 'blog';
-    
+
     return 'other';
   }
 
@@ -821,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageType = getPageType();
     const path = window.location.pathname;
     const origin = window.location.origin;
-    
+
     const itemListElement = [{
       "@type": "ListItem",
       "position": 1,
@@ -834,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pageType === 'product') {
       const productTitle = document.querySelector('.product__title, h1')?.textContent?.trim();
       const pathParts = path.split('/').filter(p => p);
-      
+
       if (window.ShopifyAnalytics?.meta?.product?.type) {
         const collectionHandle = window.ShopifyAnalytics.meta.product.type.toLowerCase().replace(/\s+/g, '-');
         itemListElement.push({
@@ -859,9 +855,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pageType === 'collection') {
       const collectionTitle = document.querySelector('.collection-hero__title, h1')?.textContent?.trim();
       const pathParts = path.split('/').filter(p => p);
-      
+
       const collectionHandle = pathParts[pathParts.indexOf('collections') + 1];
-      
+
       if (collectionTitle) {
         itemListElement.push({
           "@type": "ListItem",
@@ -881,7 +877,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (pageType === 'page') {
       const pageTitle = document.querySelector('h1')?.textContent?.trim();
-      
+
       if (pageTitle) {
         itemListElement.push({
           "@type": "ListItem",
@@ -895,10 +891,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pageType === 'blog') {
       const pathParts = path.split('/').filter(p => p);
       const blogIndex = pathParts.indexOf('blogs');
-      
+
       if (blogIndex !== -1) {
         const blogHandle = pathParts[blogIndex + 1];
-        
+
         itemListElement.push({
           "@type": "ListItem",
           "position": position,
@@ -909,7 +905,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (pathParts[blogIndex + 2]) {
           const articleTitle = document.querySelector('.article__title, h1')?.textContent?.trim();
-          
+
           if (articleTitle) {
             itemListElement.push({
               "@type": "ListItem",
@@ -1109,9 +1105,9 @@ document.addEventListener('DOMContentLoaded', function() {
 {{ "upsell-swiper.js" | asset_url| script_tag }}
    <!-- {% render 'quit-redirect' %}-->
     {% render 'gift-bundle-trigger' %}
-    
+
     {%- section 'gift-bundle-settings' -%}
-    
+
     <!-- Simple Gift Popup -->
     <div id="gift-popup" class="gift-popup is-hidden">
       <div class="popup-overlay" data-popup-close></div>
@@ -1122,13 +1118,13 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="popup-left">
             <h2 id="popup-heading">{{ settings.gift_popup_heading | default: 'Get Your Free Gift!' }}</h2>
             <p id="popup-subheading">{{ settings.gift_popup_subheading | default: 'Subscribe to our newsletter and get a free gift bundle worth $100!' }}</p>
-            
+
             <form id="gift-email-form">
               <div class="form-group">
-                <input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  required 
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  required
                   class="email-input"
                 />
                 <button type="submit" class="submit-btn" id="popup-button">
@@ -1137,11 +1133,11 @@ document.addEventListener('DOMContentLoaded', function() {
               </div>
             </form>
           </div>
-          
+
           <!-- Right side: Image -->
           <div class="popup-right">
             {%- if settings.gift_popup_image != blank -%}
-              <img 
+              <img
                 src="{{ settings.gift_popup_image | image_url: width: 400 }}"
                 alt="{{ settings.gift_popup_image.alt | escape }}"
                 class="popup-image"
@@ -1149,10 +1145,10 @@ document.addEventListener('DOMContentLoaded', function() {
             {%- endif -%}
           </div>
         </div>
-        
+
         <script>
 
-          
+
           document.addEventListener('DOMContentLoaded', function () {
   const popup = document.getElementById('gift-popup');
   const closeButton = popup?.querySelector('[data-popup-close]');
@@ -1183,13 +1179,13 @@ document.addEventListener('DOMContentLoaded', function() {
               const heading = document.getElementById('popup-heading');
               const subheading = document.getElementById('popup-subheading');
               const button = document.getElementById('popup-button');
-              
+
               if (heading) heading.innerHTML = window.giftBundleSettings.popupHeading;
               if (subheading) subheading.textContent = window.giftBundleSettings.popupSubheading;
               if (button) button.textContent = window.giftBundleSettings.popupButtonText;
             }
           }
-          
+
           // Update text when settings load
           if (window.giftBundleSettings) {
             updatePopupText();
@@ -1201,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </script>
       </div>
     </div>
-    
+
     <style>
       /* Simple Gift Popup Styles */
       .gift-popup {
@@ -1232,19 +1228,19 @@ document.addEventListener('DOMContentLoaded', function() {
       font-size: 14px;
     }
 
-    
+
     }
 
-      
-      
+
+
       .gift-popup.is-hidden {
         display: none;
       }
-      
+
       .gift-popup.is-visible {
         display: flex;
       }
-      
+
       .popup-overlay {
         position: absolute;
         top: 0;
@@ -1253,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         height: 100%;
         cursor: pointer;
       }
-      
+
       .popup-content {
         position: relative;
         background: white;
@@ -1263,7 +1259,7 @@ document.addEventListener('DOMContentLoaded', function() {
         box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         animation: popup-scale-in 0.3s ease;
       }
-      
+
       .popup-close {
         position: absolute;
         top: 15px;
@@ -1281,17 +1277,17 @@ document.addEventListener('DOMContentLoaded', function() {
         color: #999;
         z-index: 10;
       }
-      
+
       .popup-close:hover {
         background: #e5e5e5;
         color: #333;
       }
-      
+
       .popup-inner {
         padding: 0px;
         text-align: center;
       }
-      
+
       .popup-split {
         display: flex;
         gap: 3rem;
@@ -1300,20 +1296,20 @@ document.addEventListener('DOMContentLoaded', function() {
         max-width: 100%;
         margin: 0 auto;
       }
-      
+
       .popup-left {
         flex: 1;
         max-width: 450px;
         min-width: 350px;
         padding-left: 30px;
       }
-      
+
       .popup-right {
         flex: 1;
         max-width: 450px;
         min-width: 350px;
       }
-      
+
       .popup-image {
         width: 100%;
         height: auto;
@@ -1323,28 +1319,28 @@ document.addEventListener('DOMContentLoaded', function() {
         position: relative;
         top: 5px;
       }
-      
+
       .popup-inner h2 {
         margin: 0 0 15px 0;
         font-size: 28px;
         color: #1a1b18;
         text-align: center;
       }
-      
+
       .popup-inner p {
         margin: 0;
         color: #666;
         line-height: 1.6;
         text-align: center;
       }
-      
+
       .form-group {
         display: flex;
         flex-direction: column;
         gap: 15px;
         margin: 20px 0;
       }
-      
+
       .email-input {
         flex: 1;
         padding: 15px;
@@ -1353,13 +1349,13 @@ document.addEventListener('DOMContentLoaded', function() {
         font-size: 16px;
         min-width: 200px;
       }
-      
+
       .email-input:focus {
         border-color: #e6cedf;
         outline: none;
         box-shadow: 0 0 0 3px rgba(230, 206, 223, 0.2);
       }
-      
+
       .submit-btn {
         padding: 15px 25px;
         background: #e6cedf;
@@ -1373,24 +1369,24 @@ document.addEventListener('DOMContentLoaded', function() {
         transition: all 0.3s ease;
         text-transform: uppercase;
       }
-      
+
       .submit-btn:hover {
         background: #d4b5c7;
         transform: translateY(-1px);
       }
-      
+
       .submit-btn:disabled {
         background: #ccc;
         cursor: not-allowed;
         transform: none;
       }
-      
+
       .disclaimer {
         margin-top: 15px !important;
         font-size: 12px !important;
         color: #999 !important;
       }
-      
+
       @keyframes popup-scale-in {
         0% {
           transform: scale(0.9);
@@ -1405,18 +1401,18 @@ document.addEventListener('DOMContentLoaded', function() {
       [data-address] button.button {
       margin: 10px;
       }
-      
+
       @media screen and (max-width: 768px) {
         .popup-split {
           flex-direction: column;
           gap: 1rem;
           text-align: center;
         }
-        
+
         .popup-right {
           display: none; /* Hide image on mobile */
         }
-        
+
         .popup-left {
           max-width: 100%;
           min-width:0;
@@ -1433,29 +1429,29 @@ document.addEventListener('DOMContentLoaded', function() {
         height: 30px;
       }
       }
-      
+
       @media screen and (max-width: 600px) {
         .popup-content {
           width: 95%;
           margin: 20px;
         }
-        
+
         .popup-inner {
           padding: 30px 20px;
         }
-        
+
         .form-group {
           flex-direction: column;
         }
-        
+
         .submit-btn {
           width: 100%;
         }
       }
     </style>
-    
+
   </body>
-  
+
   <script>
     (function () {
       function updateCartCount() {
@@ -1469,16 +1465,16 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(() => {});
       }
-      
+
       document.addEventListener('DOMContentLoaded', updateCartCount);
-      
+
       const originalFetch = window.fetch;
-      
+
       window.fetch = function () {
         return originalFetch.apply(this, arguments).then(response => {
           try {
             const url = response.url;
-            
+
             if (
               url.includes('/cart/add') ||
               url.includes('/cart/change') ||
@@ -1488,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', function() {
               updateCartCount();
             }
           } catch (e) {}
-          
+
           return response;
         });
       };
