@@ -20,24 +20,26 @@
 
   /* Navigation links styling */
   .page-404__navigation {
-    margin-top: 3rem;
-    padding: 2rem 0;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
     border-top: 1px solid rgb(var(--color-foreground) / 0.1);
     border-bottom: 1px solid rgb(var(--color-foreground) / 0.1);
   }
 
-  .page-404__nav-section {
-    margin-bottom: 2rem;
+  .page-404__nav-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .page-404__nav-section:last-child {
-    margin-bottom: 0;
+  .page-404__nav-section {
+    text-align: center;
   }
 
   .page-404__nav-heading {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: rgb(var(--color-foreground));
   }
 
@@ -47,7 +49,7 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
     justify-content: center;
   }
 
@@ -58,12 +60,12 @@
   .page-404__nav-link {
     color: rgb(var(--color-foreground));
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.75rem;
     border: 1px solid rgb(var(--color-foreground) / 0.2);
     border-radius: 0.25rem;
     display: inline-block;
     transition: all 0.2s ease;
-    font-size: 0.95rem;
+    font-size: 1.4rem;
   }
 
   .page-404__nav-link:hover {
@@ -75,27 +77,34 @@
     margin-top: 2rem;
   }
 
-  @media screen and (max-width: 749px) {
+  @media screen and (min-width: 750px) {
     .page-404__navigation {
-      margin-top: 2rem;
-      padding: 1.5rem 0;
+      padding: 1.25rem 0;
     }
 
-    .page-404__nav-section {
-      margin-bottom: 1.5rem;
+    .page-404__nav-container {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .page-404__navigation {
+      margin-top: 1.5rem;
+      padding: 1.25rem 0;
+    }
+
+    .page-404__nav-container {
+      gap: 1.25rem;
     }
 
     .page-404__nav-heading {
-      font-size: 1.1rem;
-    }
-
-    .page-404__nav-list {
-      gap: 0.75rem;
+      font-size: 1.3rem;
     }
 
     .page-404__nav-link {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.8rem;
+      font-size: 1.2rem;
+      padding: 0.35rem 0.65rem;
     }
   }
 </style>
@@ -113,52 +122,54 @@
 
   {%- comment -%} Navigation Links Section {%- endcomment -%}
   <div class="page-404__navigation">
-    {%- comment -%} Featured Product {%- endcomment -%}
-    <div class="page-404__nav-section">
-      <h2 class="page-404__nav-heading">Featured Product</h2>
-      <ul class="page-404__nav-list">
-        <li>
-          <a href="/products/illuminating-leave" class="page-404__nav-link">
-            Illuminating Leave-In
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    {%- comment -%} Popular Collections {%- endcomment -%}
-    <div class="page-404__nav-section">
-      <h2 class="page-404__nav-heading">Popular Collections</h2>
-      <ul class="page-404__nav-list">
-        <li>
-          <a href="{{ routes.collections_url }}/main-collection" class="page-404__nav-link">
-            All Products
-          </a>
-        </li>
-        <li>
-          <a href="{{ routes.collections_url }}/bundles" class="page-404__nav-link">
-            Bundles
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    {%- comment -%} Help & Support {%- endcomment -%}
-    <div class="page-404__nav-section">
-      <h2 class="page-404__nav-heading">Need Help?</h2>
-      <ul class="page-404__nav-list">
-        {%- if pages['contact'] -%}
+    <div class="page-404__nav-container">
+      {%- comment -%} Featured Product {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Featured Product</h2>
+        <ul class="page-404__nav-list">
           <li>
-            <a href="{{ pages['contact'].url }}" class="page-404__nav-link">
-              Contact Us
+            <a href="/products/illuminating-leave" class="page-404__nav-link">
+              Illuminating Leave-In
             </a>
           </li>
-        {%- endif -%}
-        <li>
-          <a href="{{ routes.all_products_collection_url }}" class="page-404__nav-link">
-            Browse All Products
-          </a>
-        </li>
-      </ul>
+        </ul>
+      </div>
+
+      {%- comment -%} Popular Collections {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Popular Collections</h2>
+        <ul class="page-404__nav-list">
+          <li>
+            <a href="{{ routes.collections_url }}/main-collection" class="page-404__nav-link">
+              All Products
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.collections_url }}/bundles" class="page-404__nav-link">
+              Bundles
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {%- comment -%} Help & Support {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Need Help?</h2>
+        <ul class="page-404__nav-list">
+          {%- if pages['contact'] -%}
+            <li>
+              <a href="{{ pages['contact'].url }}" class="page-404__nav-link">
+                Contact Us
+              </a>
+            </li>
+          {%- endif -%}
+          <li>
+            <a href="{{ routes.all_products_collection_url }}" class="page-404__nav-link">
+              Browse All Products
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
