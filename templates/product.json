@@ -769,10 +769,11 @@
     },
     "recently-viewed-products": {
       "type": "recently-viewed-products",
+      "custom_css": [],
       "settings": {
         "show_divider": false,
         "heading": "Recently Viewed",
-        "heading_size": "h1",
+        "heading_size": "h2",
         "heading_alignment": "center",
         "heading_tag": "h2",
         "max_products": 8,
