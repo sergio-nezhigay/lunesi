@@ -113,22 +113,6 @@
 
   {%- comment -%} Navigation Links Section {%- endcomment -%}
   <div class="page-404__navigation">
-    {%- comment -%} Main Menu Links {%- endcomment -%}
-    {%- if linklists['main-menu'] and linklists['main-menu'].links.size > 0 -%}
-      <div class="page-404__nav-section">
-        <h2 class="page-404__nav-heading">Explore Our Site</h2>
-        <ul class="page-404__nav-list">
-          {%- for link in linklists['main-menu'].links limit: 5 -%}
-            <li>
-              <a href="{{ link.url }}" class="page-404__nav-link">
-                {{ link.title }}
-              </a>
-            </li>
-          {%- endfor -%}
-        </ul>
-      </div>
-    {%- endif -%}
-
     {%- comment -%} Featured Product {%- endcomment -%}
     <div class="page-404__nav-section">
       <h2 class="page-404__nav-heading">Featured Product</h2>
