@@ -300,8 +300,10 @@
       <span class="breadcrumb-delimeter" aria-hidden="true"></span>
       <a href="{{ product.url }}">{{ product.title }}</a>
     {%- else -%}
+      {%- assign rendered_link = false -%}
       {% for link in linklists.main-menu.links %}
         {% if link.child_active or link.active %}
+          {%- assign rendered_link = true -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
           <!--Breadcrumb delimeter-->
           <a href="{{ link.url }}">
@@ -325,6 +327,23 @@
           {%- endfor -%}
         {% endif %}
       {%- endfor -%}
+
+      {%- if rendered_link == false -%}
+        {%- case template.name -%}
+          {%- when 'page' -%}
+          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
+          <a href="{{ page.url }}">{{ page.title }}</a>
+          {%- when 'collection' -%}
+          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
+          <a href="{{ collection.url }}">{{ collection.title }}</a>
+          {%- when 'blog' -%}
+          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
+          <a href="{{ blog.url }}">{{ blog.title }}</a>
+          {%- when 'search' -%}
+          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
+          <a href="/search">Search</a>
+        {%- endcase -%}
+      {%- endif -%}
     {%- endcase -%}
   {%- endunless -%}
   </div>
