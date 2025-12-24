@@ -404,7 +404,6 @@
     },
     "recently-viewed-products": {
       "type": "recently-viewed-products",
-      "disabled": true,
       "settings": {
         "show_divider": false,
         "heading": "Recently Viewed",

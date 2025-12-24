@@ -2740,7 +2740,7 @@ class RecentlyViewedProducts extends HTMLElement {
     if (this.dataset.productId && items.includes(parseInt(this.dataset.productId))) {
       items.splice(items.indexOf(parseInt(this.dataset.productId)), 1);
     }
-    return items.map((item) => "id:" + item).slice(0, 4).join(" OR ");
+    return items.map((item) => "id:" + (typeof item === 'object' && item.id ? item.id : item)).slice(0, 4).join(" OR ");
   }
 }
 customElements.define('recently-viewed-products', RecentlyViewedProducts);

@@ -9,7 +9,8 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(done)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
