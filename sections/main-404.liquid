@@ -61,16 +61,25 @@
     color: rgb(var(--color-foreground));
     text-decoration: none;
     padding: 0.4rem 0.75rem;
-    border: 1px solid rgb(var(--color-foreground) / 0.2);
-    border-radius: 0.25rem;
     display: inline-block;
-    transition: all 0.2s ease;
     font-size: 1.4rem;
+    background-color: transparent;
+    background-image: linear-gradient(to top, rgb(var(--color-foreground)) 0px, rgb(var(--color-foreground)) 0px), linear-gradient(to top, transparent 0px, transparent 0px);
+    background-repeat: no-repeat;
+    background-position: right bottom, right bottom;
+    background-size: 0% 0.1rem, 100% 0.1rem;
+    transition-property: background-size;
+    transition-timing-function: ease;
+    transition-duration: var(--duration-default);
   }
 
   .page-404__nav-link:hover {
-    background-color: rgb(var(--color-foreground) / 0.05);
-    border-color: rgb(var(--color-foreground) / 0.4);
+    background-position: left bottom, left bottom;
+    background-size: 100% 0.1rem, 100% 0.1rem;
+  }
+
+  #shopify-section-template--20613706055811__you-may-also-like .view-all {
+    display: none;
   }
 
   .page-404__cta {
@@ -105,6 +114,18 @@
     .page-404__nav-link {
       font-size: 1.2rem;
       padding: 0.35rem 0.65rem;
+      background-image: linear-gradient(to top, rgb(var(--color-foreground)) 0px, rgb(var(--color-foreground)) 0px), linear-gradient(to top, transparent 0px, transparent 0px);
+      background-repeat: no-repeat;
+      background-position: right bottom, right bottom;
+      background-size: 0% 0.1rem, 100% 0.1rem;
+      transition-property: background-size;
+      transition-timing-function: ease;
+      transition-duration: var(--duration-default);
+    }
+
+    .page-404__nav-link:active {
+      background-position: left bottom, left bottom;
+      background-size: 100% 0.1rem, 100% 0.1rem;
     }
   }
 </style>
