@@ -57,12 +57,12 @@
       "settings": {
         "show_divider": false,
         "heading": "Recently Viewed",
-        "heading_size": "h1",
+        "heading_size": "h2",
         "heading_alignment": "center",
         "heading_tag": "h2",
         "max_products": 8,
-        "products_per_row": "4",
-        "columns_tablet": "4",
+        "products_per_row": "3",
+        "columns_tablet": "3",
         "card_max_width": 600,
         "columns_mobile": "2",
         "swipe_on_mobile": true,
@@ -78,7 +78,7 @@
         "enable_countdown": true,
         "button_style": "transparent",
         "padding_top": 16,
-        "padding_bottom": 36
+        "padding_bottom": 16
       }
     }
   },
