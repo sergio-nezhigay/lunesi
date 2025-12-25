@@ -16,7 +16,8 @@
       "Bash(du:*)",
       "Bash(wc:*)",
       "Bash(find:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git branch:*)"
     ],
     "deny": [],
     "ask": []

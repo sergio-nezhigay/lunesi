@@ -1,0 +1,38 @@
+========================================
+LIGHTHOUSE BASELINE - MOBILE
+Date: 2025-12-25
+URL: https://spain-test-store-shampoo.myshopify.com/?preview_theme_id=154401570947
+========================================
+
+Performance Score: ___ / 100
+  (Overall score - aim for 90+)
+
+First Contentful Paint (FCP): ___ s
+  (Target: <1.8s - when first content appears)
+
+Largest Contentful Paint (LCP): ___ s
+  (Target: <2.5s - when main content loads)
+
+Total Blocking Time (TBT): ___ ms
+  (Target: <200ms - time JavaScript blocks the page)
+
+Cumulative Layout Shift (CLS): ___
+  (Target: <0.1 - visual stability, no content jumping)
+
+Speed Index: ___ s
+  (How quickly content visually appears)
+
+========================================
+SCREENSHOT SAVED:
+[ ] Right-click report > "Save as PDF" > Save as "baseline-lighthouse-mobile.pdf"
+
+NOTES:
+- What looks slow when the page loads?
+- Any red/orange items in the report?
+- What does Lighthouse suggest to improve?
+
+Write your observations here:
+
+
+
+========================================
