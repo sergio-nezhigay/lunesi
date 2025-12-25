@@ -10,7 +10,13 @@
       "Bash(findstr:*)",
       "Bash(done)",
       "Bash(grep:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(wmic datafile where \"name=''C:\\\\projects\\\\lunesi\\\\assets\\\\vendor-v4.js''\" get FileSize)",
+      "Bash(du:*)",
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
