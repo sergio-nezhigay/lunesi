@@ -276,7 +276,7 @@ details[open].menu-opening > .cart-drawer {
 
 .mini-cart__navigation li {
   position: relative;
-  padding: 1.6rem 0;
+  padding: 3rem 0;
   border-top: 0.1rem solid rgb(var(--color-border));
 }
 
@@ -525,7 +525,7 @@ details[open].menu-opening > .cart-drawer {
 .mini-cart__footer .button-container .button {
   width: 100%;
   min-width: auto;
- 
+
   white-space: nowrap;
 }
 
@@ -556,7 +556,7 @@ details[open].menu-opening > .cart-drawer {
   .mini-cart__footer .button-container {
     text-align: center;
   }
-  
+
   .mini-cart__footer .button-container .button + .button {
     display: inline-block;
     width: auto;
