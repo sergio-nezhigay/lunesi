@@ -405,7 +405,7 @@
        <div class="img-area">
          {% if card_product.metafields.custom.product_card_small_hover_image_ != blank %}
              <img
-  src="{{ card_product.metafields.custom.product_card_small_hover_image_ | img_url: '400x' }}"
+  src="{{ card_product.metafields.custom.product_card_small_hover_image_ | image_url: width: 400 }}"
   alt="{{ card_product.metafields.custom.product_card_small_hover_image_ | escape }}"
   loading="lazy"
   class="product-card-image"
