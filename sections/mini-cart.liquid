@@ -621,7 +621,7 @@
 
                         {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
                         <div class="cart-item-warning" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
-                          ⚠ Maximum stock reached: {{ item.variant.inventory_quantity }} items
+                          Last {{ item.variant.inventory_quantity }} available
                         </div>
                       {%- else -%}
                         <gift-quantity class="quantity"

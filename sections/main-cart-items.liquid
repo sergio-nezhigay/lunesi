@@ -279,7 +279,7 @@
 
                     {%- comment -%} Debug info inline - only shows when max reached {%- endcomment -%}
                     <div class="cart-item-warning" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
-                      ⚠ Maximum stock reached: {{ item.variant.inventory_quantity }} items
+                      Last {{ item.variant.inventory_quantity }} available
                     </div>
                   </td>
 
