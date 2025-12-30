@@ -278,7 +278,7 @@
                     {%- endif -%}
 
                     {%- comment -%} Debug info inline - only shows when max reached {%- endcomment -%}
-                    <div class="cart-item-warning" style="position: absolute; z-index: 10; font-size: 11px; color: #ff0000; background: #fff0f0; border: 1px solid #ff0000; border-radius: 4px; padding: 4px 8px; font-family: monospace; margin-top: 8px; transition: opacity 0.3s ease; display: none; font-weight: bold; white-space: nowrap;" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
+                    <div class="cart-item-warning" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
                       ⚠ Maximum stock reached: {{ item.variant.inventory_quantity }} items
                     </div>
                   </td>

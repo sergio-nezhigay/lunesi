@@ -444,6 +444,7 @@ details[open].menu-opening > .cart-drawer {
   align-items: flex-end;
   justify-content: space-between;
   margin-top: 1rem;
+  position: relative;
 }
 
 .mini-cart__navigation .product-quantity dd {
@@ -946,4 +947,23 @@ details[open].menu-opening > .cart-drawer [data-animate] {
 }
 .wallet-cart-grid{
   justify-content: center !important;
+}
+
+.cart-item-warning {
+  position: absolute;
+  z-index: 10;
+  font-size: 11px;
+  color: #666666;
+  background-color: #faf8fa;
+  border: 1px solid #e0d0dd;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.9rem;
+  margin-top: 0.5rem;
+  transition: opacity 0.3s ease;
+  font-weight: 400;
+  white-space: nowrap;
+  box-shadow: none;
+  display: none;
+  left: 0;
+  pointer-events: none;
 }

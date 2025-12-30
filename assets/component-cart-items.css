@@ -219,6 +219,7 @@ cart-remove-button .icon-remove {
 
   .cart-item__quantity {
     grid-column: 2 / 4;
+    position: relative;
   }
 
   .cart-item__quantity label {
@@ -276,4 +277,8 @@ cart-remove-button .icon-remove {
 }
 .wallet-cart-grid{
   justify-content: center !important;
+}
+
+.cart-item__quantity {
+  position: relative;
 }
