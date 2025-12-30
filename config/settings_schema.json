@@ -715,6 +715,38 @@
         "default": "Taxes and shipping calculated at checkout."
       },
       {
+        "type": "header",
+        "content": "Custom Tax Messages (Cart Drawer)"
+      },
+      {
+        "type": "text",
+        "id": "cart_drawer_eu_threshold_text",
+        "default": "EUR:150",
+        "label": "EU countries threshold (Currency:Amount)",
+        "info": "Comma-separated list of thresholds. Example: 'EUR:150,SEK:1750,DKK:1120'. Falls back to EUR or first number found."
+      },
+      {
+        "type": "number",
+        "id": "cart_drawer_non_eu_threshold",
+        "default": 50,
+        "label": "Non-EU countries threshold (EUR)",
+        "info": "Show custom tax message for non-EU countries when cart total exceeds this amount"
+      },
+      {
+        "type": "textarea",
+        "id": "cart_drawer_default_tax_message",
+        "default": "Please note: Taxes not included",
+        "label": "Default tax message (below threshold)",
+        "info": "Message to show when cart total is below threshold. Leave empty to use standard Shopify messages."
+      },
+      {
+        "type": "textarea",
+        "id": "cart_drawer_custom_tax_message",
+        "default": "Please note: buyer pays taxes and duties",
+        "label": "Custom tax message (above threshold)",
+        "info": "Message to show when cart total exceeds threshold. Leave empty to use default translation."
+      },
+      {
         "type": "checkbox",
         "id": "cart_drawer_enabled",
         "default": true,
