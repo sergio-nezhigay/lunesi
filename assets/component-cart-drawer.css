@@ -964,6 +964,7 @@ details[open].menu-opening > .cart-drawer [data-animate] {
   white-space: nowrap;
   box-shadow: none;
   display: none;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   pointer-events: none;
 }
