@@ -43,7 +43,7 @@
       ],
       "settings": {
         "show_cart_note": true,
-        "eu_threshold": 150,
+        "eu_threshold_text": "EUR:150,SEK:1750,DKK:1120",
         "non_eu_threshold": 50,
         "default_tax_message": "",
         "custom_tax_message": "Tax included. International duties may apply. \nShipping calculated at checkout.",

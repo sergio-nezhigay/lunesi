@@ -64,6 +64,7 @@
     "color_swatches_max_items": 4,
     "disable_collection_portion": true,
     "tax_note": "Tax included. International duties may apply. \nShipping calculated at checkout.",
+    "cart_drawer_eu_threshold_text": "EUR:150,SEK:1750,DKK:1120",
     "cart_drawer_enabled": true,
     "show_cart_note": true,
     "show_shipping_calculator": true,
