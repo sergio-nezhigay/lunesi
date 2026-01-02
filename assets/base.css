@@ -3627,3 +3627,7 @@ span[data-highlight=underline] mark svg path {
         padding-inline-end: 0 !important;
     }
 }
+
+details[open] > .search-modal {
+    padding-inline-end: 0;
+}
