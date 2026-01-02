@@ -3623,7 +3623,7 @@ span[data-highlight=underline] mark svg path {
 
 @media screen and (min-width: 750px) {
     .search-modal.modal__content {
-    top: -88px !important;
-    padding-inline-end: 0 !important;
-}
+        top: -88px !important;
+        padding-inline-end: 0 !important;
+    }
 }
