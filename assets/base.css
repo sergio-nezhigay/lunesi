@@ -3620,3 +3620,8 @@ span[data-highlight=underline] mark svg path {
 .faq--colored {
   max-width:none !important;
 }
+
+.search-modal.modal__content {
+    top: -88px !important;
+    padding-inline-end: 0 !important;
+}
