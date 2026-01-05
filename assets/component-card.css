@@ -316,9 +316,13 @@
     text-indent: -9999px;
     flex: 0 0 auto;
     width: 3.6rem;
+    height: 3.6rem;
     min-width: auto;
+    min-height: auto;
     padding: 0;
     box-shadow: none;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
   }
 }
 

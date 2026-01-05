@@ -588,14 +588,14 @@
     >
       {{ 'products.product.sold_out' | t }}
     </span>
-    
+
     <script>
       window.addEventListener('load', function () {
         document.querySelectorAll('.badge--soldout-main').forEach(function (badge) {
           badge.style.display = 'inline-block';
         });
       });
-      
+
       window.addEventListener('beforeunload', function () {
         document.querySelectorAll('.badge--soldout-main').forEach(function (badge) {
           badge.style.display = 'none';
@@ -751,6 +751,20 @@
     margin-right: 5px;
   }
 
+@media screen and (max-width: 749px) {
+  .control-arena {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    width: 3.4rem !important;
+    height: 3.4rem !important;
+    min-width: auto !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
   .button--transparent {
     background: transparent !important;
     color: var(--color-button, #222) !important;

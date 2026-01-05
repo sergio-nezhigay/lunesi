@@ -34,7 +34,12 @@
 
   .product-grid:not(.grid--1-col-mobile) .card-information__button .button {
     width: 3.4rem;
-    min-height: 3.4rem;
+    height: 3.4rem;
+    min-width: auto;
+    min-height: auto;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
   }
 
   .product-grid:not(.grid--1-col-mobile) .card-information .button--soldout {
@@ -51,7 +56,7 @@
 .custom-last-item .card {
   border-radius: 10px;
   overflow: hidden;
-  height: 100%; 
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -60,7 +65,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-  aspect-ratio: 1 / 1; 
+  aspect-ratio: 1 / 1;
   height: 99%;
 }
 
@@ -71,14 +76,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0; 
+  border-radius: 0;
 }
 
 .custom-last-item .card__content {
   border-radius: 10px;
   height: 100%;
   padding: 20px;
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 
