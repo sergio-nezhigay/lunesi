@@ -215,6 +215,11 @@
   transform: translateY(-1.5rem);
   width: calc(100% - 3rem);
 }
+
+
+.recently-viewed-products .card-information__button {
+    overflow: visible;
+}
 .card-information__button .button--soldout {
   display: none !important;
 }
