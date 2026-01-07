@@ -218,7 +218,7 @@
 
 
 .recently-viewed-products .card-information__button {
-    overflow: visible;
+    overflow: visible !important;
 }
 .card-information__button .button--soldout {
   display: none !important;
