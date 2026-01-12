@@ -12,6 +12,7 @@
     "free_shipping_bar_threshold": 2,
     "free_shipping_need_more_text": "Add one more product to unlock your gift",
     "free_shipping_success_text": "Gift has been added to the cart",
+    "empty_cart_redirect_url": "/collections/main-collection",
     "free_shipping_progress_success_color": "#4A5568",
     "waitlist_mode": false,
     "colors_solid_button_labels": "#212326",
