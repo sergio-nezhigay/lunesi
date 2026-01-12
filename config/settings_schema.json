@@ -848,6 +848,11 @@
         "label": "t:settings_schema.cart-drawer.settings.empty_cart_collections.label"
       },
       {
+        "type": "url",
+        "id": "empty_cart_redirect_url",
+        "label": "Empty cart button link"
+      },
+      {
         "type": "checkbox",
         "id": "empty_cart_button_secondary",
         "default": true,

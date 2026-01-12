@@ -185,7 +185,7 @@
             </li>
           {%- endif -%}
           <li>
-            <a href="{{ routes.all_products_collection_url }}" class="page-404__nav-link">
+            <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="page-404__nav-link">
               Browse All Products
             </a>
           </li>
@@ -195,7 +195,7 @@
   </div>
 
   <div class="page-404__cta">
-    <a href="{{ routes.all_products_collection_url }}" class="button button--tertiary">
+    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">
       {{ 'general.continue_shopping' | t }}
     </a>
   </div>

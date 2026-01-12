@@ -63,27 +63,27 @@ Place this in your contact page template or as a section
         <p>Thank you for contacting us! We'll get back to you soon.</p>
       </div>
     {% endif %}
-    
+
     <div class="form-group">
-      <input 
-        type="text" 
-        id="contact-name" 
-        name="contact[name]" 
-        class="form-input" 
-        value="{{ form.name }}" 
-        required 
+      <input
+        type="text"
+        id="contact-name"
+        name="contact[name]"
+        class="form-input"
+        value="{{ form.name }}"
+        required
         placeholder="First and Last Name*"
       >
     </div>
 
     <div class="form-group">
-      <input 
-        type="email" 
-        id="contact-email" 
-        name="contact[email]" 
-        class="form-input" 
-        value="{{ form.email }}" 
-        required 
+      <input
+        type="email"
+        id="contact-email"
+        name="contact[email]"
+        class="form-input"
+        value="{{ form.email }}"
+        required
         placeholder="Email*"
       >
     </div>
@@ -110,12 +110,12 @@ Place this in your contact page template or as a section
 
     <!-- Conditional Order Number Field -->
     <div class="form-group" id="order-number-group" style="display: none;">
-      <input 
-        type="text" 
-        id="contact-order-number" 
-        name="contact[order_number]" 
-        class="form-input" 
-        value="{{ form.order_number }}" 
+      <input
+        type="text"
+        id="contact-order-number"
+        name="contact[order_number]"
+        class="form-input"
+        value="{{ form.order_number }}"
         placeholder="Order Number*"
       >
       <div id="cancel-modify-notice" class="order-notice" style="display: none;">
@@ -125,34 +125,34 @@ Place this in your contact page template or as a section
 
     <!-- Conditional Items with Issues Field -->
     <div class="form-group" id="items-issues-group" style="display: none;">
-      <input 
-        type="text" 
-        id="contact-items-issues" 
-        name="contact[items_issues]" 
-        class="form-input" 
-        value="{{ form.items_issues }}" 
+      <input
+        type="text"
+        id="contact-items-issues"
+        name="contact[items_issues]"
+        class="form-input"
+        value="{{ form.items_issues }}"
         placeholder="Item(s) with issues"
       >
     </div>
 
     <div class="form-group">
-      <input 
-        type="text" 
-        id="contact-topic" 
-        name="contact[topic]" 
-        class="form-input" 
-        value="{{ form.topic }}" 
-        required 
+      <input
+        type="text"
+        id="contact-topic"
+        name="contact[topic]"
+        class="form-input"
+        value="{{ form.topic }}"
+        required
         placeholder="Topic*"
       >
     </div>
 
     <div class="form-group">
-      <textarea 
-        id="contact-body" 
-        name="contact[body]" 
-        class="form-textarea" 
-        required 
+      <textarea
+        id="contact-body"
+        name="contact[body]"
+        class="form-textarea"
+        required
         placeholder="Tell us the details.*"
       >{{ form.body }}</textarea>
     </div>
@@ -171,9 +171,9 @@ Place this in your contact page template or as a section
           <span>Drag or paste image here</span>
         </div>
         <a class="file-upload-button" id="file-select-btn">
-          <div class="file-upload-icon"> 
+          <div class="file-upload-icon">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAADHElEQVR4nO2cz05UMRSHP10wIkRYmKgvI74IwisggWfQlUQxsNIXUDAuDEs3ok/gn5WudCVoAGdZ09iJzci9c+9lpqfQ35eczfy5bc932pk7aQeEEEIIIYQQQgghhMibHvAA+A58A+6Hx0QCpoBXgBuKPeCKDNgk30mCffKdJNgn30mCffKdJNgn30mCffKdJNgn30mCffKdJDSnB7wekci655u8V3fMZ6j8vXC3W/V8m2uIDpU/qN6q13S5lgAet0xYnYCmEjaU+b9cBk5aVusoAU0kHAGXht5TrIB+y6WiiYBREvqhbQE8a7lONxVQJ+GpMv+P2SChH5aGhyM+JNsIIFxrI1y7H5Lv2xRDNF2T2wqIr691fwy4jgLEmHASYIuTgP+ZB5aBXeATcHxKkg6BTWA6QwFXgSfAz1OuexzGtAMshbFmg/9dZT0k1zWM7QwFbLfo/wGwlsPPGbeA9y06PoiTM94EuTEL8H353WEc74CbGCb/a4dOXyQBLuQguYRex8ofxNY5X4LcUOynXo7WO3bUr52PMv0Qng6/yrb5LItjlUTMj+jkc2ABmJlgH9wEBNQxE8a0U9P2D2COBCzXdGIlRQdILyBmtab9uyk6sFvR+AvS4QwFmOfgc0XjtylHwEJF+/5mbeIcVTQ+W5CA2Yr2fW4u/OApvQ9FDz5CApCA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovougZcFix6y4lRQvYPKV9v+UxJUULmA6baU9CbI1hv2lbihaQw6lHCTBGAoyRAGMkoFQBOWzOteZaRQ5+WW5P91u2S+GO5fb0qmM6/vFSeFlzPGviLOVwUM2QtZrxL6Y6pHdQ04ndMEUneUgvNTNhTFWVn/SQ3qgqKDVWSEgvHNO3HrTLJN6G/yxNij+e/yWDwTvj8Dm4gRHXgTcZJMEZxb7ln3UMmArffn5kkBCXKPxY71ksO3XMhZPi/rDyx5o75vMYR8CHMLbFlN92hBBCCCGEEEIIIQQXhj937+tQmPExPQAAAABJRU5ErkJggg==" alt="upload--v1">
-          </div> 
+          </div>
           <span>Upload</span>
         </a>
         <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx" style="display: none;">
@@ -262,8 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let selectedBase64s = [];
   let compressedFiles = []; // Store compressed File objects for FormData
   const maxFiles = 5;
-  const maxTotalSize = 3 * 1024 * 1024; // 3MB max total
-  const maxFileSize = 2 * 1024 * 1024; // 2MB per file max (before compression)
+  const maxTotalSize = 50 * 1024 * 1024; // 50MB max total
+  const maxFileSize = 50 * 1024 * 1024; // 50MB per file max (before compression)
   const maxCompressedSize = 150 * 1024; // 150KB target after compression
   const maxBase64TotalSize = 500 * 1024; // 500KB max for all base64 data combined
   let dragCounter = 0;
@@ -282,11 +282,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle contact reason change
   contactReason.addEventListener('change', function() {
     const selectedReason = this.value;
-    
+
     if (orderRelatedReasons.includes(selectedReason)) {
       orderNumberGroup.style.display = 'block';
       orderNumberInput.required = true;
-      
+
       if (selectedReason === 'Cancel or modify an order') {
         cancelModifyNotice.style.display = 'block';
       } else {
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (orderRelatedReasons.includes(contactReason.value)) {
     orderNumberGroup.style.display = 'block';
     orderNumberInput.required = true;
-    
+
     if (contactReason.value === 'Cancel or modify an order') {
       cancelModifyNotice.style.display = 'block';
     }
@@ -499,13 +499,13 @@ document.addEventListener('DOMContentLoaded', function() {
     e.stopPropagation();
     fileInput.click();
   });
-  
+
   fileUploadArea.addEventListener('click', (e) => {
     if (e.target === fileUploadArea || e.target.closest('.file-upload-text')) {
       fileInput.click();
     }
   });
-  
+
   fileInput.addEventListener('change', handleFileSelect);
 
   // Drag and drop
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleDragLeave(e) {
     e.preventDefault();
     dragCounter--;
-    
+
     if (dragCounter === 0) {
       fileUploadArea.classList.remove('dragover');
       fileUploadArea.style.backgroundColor = '';
@@ -556,20 +556,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function handleDrop(e) {
     e.preventDefault();
-    
+
     dragCounter = 0;
     fileUploadArea.classList.remove('dragover');
     fileUploadArea.style.backgroundColor = '';
     fileUploadArea.style.borderColor = '';
     fileUploadArea.style.transform = '';
-    
+
     fileUploadArea.style.backgroundColor = '#d4edda';
     fileUploadArea.style.borderColor = '#28a745';
     setTimeout(() => {
       fileUploadArea.style.backgroundColor = '';
       fileUploadArea.style.borderColor = '';
     }, 500);
-    
+
     const files = Array.from(e.dataTransfer.files);
     addFiles(files);
   }
@@ -586,7 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fileUploadArea.style.backgroundColor = '';
         fileUploadArea.style.borderColor = '';
       }, 300);
-      
+
       addFiles(files);
     }
   }
@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const newSize = files.reduce((sum, file) => sum + file.size, 0);
 
     if (currentSize + newSize > maxTotalSize) {
-      alert('Total file size must be less than 3MB. Images will be automatically compressed.');
+      alert('Total file size must be less than 50MB. Images will be automatically compressed.');
       showErrorFeedback();
       return;
     }
@@ -610,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
     files.forEach(file => {
       if (file) {
         if (file.size > maxFileSize) {
-          alert(`File "${file.name}" is too large. Max size is 2MB per file. Images will be compressed automatically.`);
+          alert(`File "${file.name}" is too large. Max size is 50MB per file. Images will be compressed automatically.`);
           showErrorFeedback();
         } else {
           selectedFiles.push(file);
