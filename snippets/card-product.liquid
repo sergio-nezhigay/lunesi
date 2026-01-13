@@ -549,6 +549,10 @@
       <span class="badge badge--soldout" aria-hidden="true">
         {{ 'products.product.sold_out' | t }}
       </span>
+    {%- elsif card_product.metafields.custom.is_gift.value == true -%}
+      <span class="badge badge--gift" aria-hidden="true">
+        {{ 'products.product.gift' | t }}
+      </span>
     {%- elsif card_product.compare_at_price > card_product.price -%}
       {%- assign on_sale_text = 'products.product.on_sale' | t -%}
       {%- if on_sale_text != blank and settings.sale_badge_basis != 'disable' -%}
@@ -583,7 +587,7 @@
   {% unless card_product.available %}
     <span
       class="badge badge--soldout badge--soldout-main"
-      style="border-radius:4px; display:none; position:absolute; z-index:2; top:17px; left:12px;"
+      style="border-radius:4px; display:none; position:absolute; z-index:2; top:1rem; left:1rem;"
       aria-hidden="true"
     >
       {{ 'products.product.sold_out' | t }}
