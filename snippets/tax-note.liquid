@@ -69,12 +69,24 @@
 
 <small class="tax-note caption-large rte">
   {%- if is_gb -%}
-    Tax included. Shipping calculated at checkout.
+    {%- if settings.cart_tax_gb_message != blank -%}
+      {{ settings.cart_tax_gb_message }}
+    {%- else -%}
+      Tax included. Shipping calculated at checkout.
+    {%- endif -%}
   {%- elsif is_eu_country -%}
     {%- if cart_total_cents <= eu_threshold_cents -%}
-      Tax included. International duties may apply. Shipping calculated at checkout.
+      {%- if settings.cart_tax_eu_below_threshold_message != blank -%}
+        {{ settings.cart_tax_eu_below_threshold_message }}
+      {%- else -%}
+        Tax included. International duties may apply. Shipping calculated at checkout.
+      {%- endif -%}
     {%- else -%}
-      Tax excluded. International duties may apply. Shipping calculated at checkout.
+      {%- if settings.cart_tax_eu_above_threshold_message != blank -%}
+        {{ settings.cart_tax_eu_above_threshold_message }}
+      {%- else -%}
+        Tax excluded. International duties may apply. Shipping calculated at checkout.
+      {%- endif -%}
     {%- endif -%}
   {%- else -%}
     {%- if show_custom_tax_message -%}
