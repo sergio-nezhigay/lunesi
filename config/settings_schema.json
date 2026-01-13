@@ -706,46 +706,56 @@
     ]
   },
   {
-    "name": "t:settings_schema.cart-drawer.name",
+    "name": "Tax Messages",
     "settings": [
+      {
+        "type": "paragraph",
+        "content": "Configure tax and shipping messages displayed in cart drawer and cart page. Messages are based on customer location and cart total thresholds."
+      },
       {
         "type": "textarea",
         "id": "tax_note",
-        "label": "Tax\/Shipping note",
-        "default": "Taxes and shipping calculated at checkout."
+        "label": "Tax\/Shipping note (Legacy)",
+        "default": "Taxes and shipping calculated at checkout.",
+        "info": "Legacy fallback setting. Only used if 'Default tax message' below is empty."
       },
       {
         "type": "header",
-        "content": "Custom Tax Messages (Cart Drawer)"
+        "content": "Dynamic Tax Messages"
       },
       {
         "type": "text",
-        "id": "cart_drawer_eu_threshold_text",
+        "id": "cart_tax_eu_threshold",
         "default": "EUR:150",
         "label": "EU countries threshold (Currency:Amount)",
         "info": "Comma-separated list of thresholds. Example: 'EUR:150,SEK:1750,DKK:1120'. Falls back to EUR or first number found."
       },
       {
         "type": "number",
-        "id": "cart_drawer_non_eu_threshold",
+        "id": "cart_tax_non_eu_threshold",
         "default": 50,
         "label": "Non-EU countries threshold (EUR)",
-        "info": "Show custom tax message for non-EU countries when cart total exceeds this amount"
+        "info": "Show custom tax message for non-EU countries when cart total exceeds this amount."
       },
       {
         "type": "textarea",
-        "id": "cart_drawer_default_tax_message",
+        "id": "cart_tax_default_message",
         "default": "Please note: Taxes not included",
         "label": "Default tax message (below threshold)",
-        "info": "Message to show when cart total is below threshold. Leave empty to use standard Shopify messages."
+        "info": "Message shown when cart total is below threshold. Leave empty to use standard Shopify messages or legacy tax note above."
       },
       {
         "type": "textarea",
-        "id": "cart_drawer_custom_tax_message",
+        "id": "cart_tax_custom_message",
         "default": "Please note: buyer pays taxes and duties",
         "label": "Custom tax message (above threshold)",
-        "info": "Message to show when cart total exceeds threshold. Leave empty to use default translation."
-      },
+        "info": "Message shown when cart total exceeds threshold for non-EU countries. This is the main message you'll want to customize."
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.cart-drawer.name",
+    "settings": [
       {
         "type": "checkbox",
         "id": "cart_drawer_enabled",
