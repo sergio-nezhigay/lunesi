@@ -8,11 +8,18 @@
   // CONFIGURATION
   // ===========================================
   const CONFIG = {
-    discountCode: 'BXGY01501b',
-    giftVariantId: '43668421771395', // Stardust Nourishing Shampoo variant ID
-    storageKey: 'bxgy-eligible',
-    debug: true // Set to false in production
+    // Discount code prefix - any code starting with this triggers auto-gift
+    discountPrefix: 'BXGY-',
+    // Storage key prefix for localStorage
+    storageKeyPrefix: 'bxgy-auto-gift',
+    // Debug mode - set to false in production
+    debug: true,
+    // Legacy support: if discount code doesn't contain variant ID, use this default
+    defaultGiftVariantId: '43668421771395'
   };
+
+  // Current session state (detected from discount code)
+  let currentGiftVariantId = null;
 
   // ===========================================
   // DEBUG LOGGING
@@ -28,14 +35,44 @@
   // ===========================================
 
   /**
-   * Check if customer arrived via the BXGY discount URL
-   * Shopify redirects /discount/CODE to homepage, so we check multiple sources:
-   * 1. Current URL path (if no redirect yet)
-   * 2. URL query parameters (?discount=CODE)
-   * 3. document.referrer (catches the redirect from /discount/CODE)
+   * Parse discount code to extract variant ID
+   * Format: BXGY-{variantId} (e.g., BXGY-43668421771395)
+   * Returns variant ID or null if not a valid BXGY code
+   */
+  function parseDiscountCode(code) {
+    if (!code) return null;
+
+    const upperCode = code.toUpperCase();
+    const prefix = CONFIG.discountPrefix.toUpperCase();
+
+    // Check if code starts with BXGY prefix
+    if (upperCode.startsWith(prefix)) {
+      const variantPart = code.substring(CONFIG.discountPrefix.length);
+      log('Parsed variant ID from discount code:', variantPart);
+
+      // Validate it looks like a variant ID (numeric, reasonable length)
+      if (/^\d{10,20}$/.test(variantPart)) {
+        return variantPart;
+      } else {
+        log('Variant part is not a valid ID, using default:', CONFIG.defaultGiftVariantId);
+        return CONFIG.defaultGiftVariantId;
+      }
+    }
+
+    // Legacy support: check for old format codes starting with BXGY (without dash)
+    if (upperCode.startsWith('BXGY')) {
+      log('Legacy BXGY code detected, using default variant:', CONFIG.defaultGiftVariantId);
+      return CONFIG.defaultGiftVariantId;
+    }
+
+    return null;
+  }
+
+  /**
+   * Check if customer arrived via a BXGY discount URL
+   * Shopify redirects /discount/CODE to homepage, so we check multiple sources
    */
   function checkDiscountUrl() {
-    const targetCode = CONFIG.discountCode.toLowerCase();
     let foundCode = null;
     let source = null;
 
@@ -70,25 +107,21 @@
       }
     }
 
-    // Method 4: Check window variable set by Liquid
-    if (!foundCode && window.bxgyDiscountApplied) {
-      log('Discount detected via Liquid! Applied code:', window.bxgyAppliedCode);
-      setEligible(true);
-      return true;
+    // Method 4: Check window variable set by Liquid (most reliable)
+    if (!foundCode && window.bxgyDiscountApplied && window.bxgyAppliedCode) {
+      foundCode = window.bxgyAppliedCode;
+      source = 'Liquid';
     }
 
-    // Method 5: Check Shopify's discount cookie
+    // Method 5: Check Shopify's discount cookie for BXGY codes
     if (!foundCode) {
       const cookies = document.cookie.split(';');
       for (const cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
-        // Shopify stores discount codes in various cookies
-        if (name && (name.includes('discount') || name.includes('code'))) {
-          log('Found cookie:', name, '=', value);
-          if (value && value.toLowerCase().includes(targetCode.toLowerCase())) {
-            foundCode = value;
-            source = 'cookie';
-          }
+        if (name && value && value.toUpperCase().includes('BXGY')) {
+          foundCode = decodeURIComponent(value);
+          source = 'cookie';
+          break;
         }
       }
     }
@@ -96,12 +129,16 @@
     if (foundCode) {
       log('Detected discount code:', foundCode, 'via', source);
 
-      if (foundCode.toLowerCase() === targetCode) {
-        log('Customer eligible for auto-gift (code matches)');
-        setEligible(true);
+      // Parse the discount code to extract variant ID
+      const variantId = parseDiscountCode(foundCode);
+
+      if (variantId) {
+        log('BXGY discount detected! Gift variant ID:', variantId);
+        currentGiftVariantId = variantId;
+        setEligible(true, variantId, foundCode);
         return true;
       } else {
-        log('Code does not match target:', targetCode);
+        log('Not a BXGY discount code, ignoring');
       }
     }
 
@@ -110,16 +147,28 @@
 
   /**
    * Store eligibility in localStorage
+   * @param {boolean} value - Whether eligible
+   * @param {string} variantId - Gift variant ID
+   * @param {string} discountCode - The discount code used
    */
-  function setEligible(value) {
+  function setEligible(value, variantId = null, discountCode = null) {
+    const storageKey = CONFIG.storageKeyPrefix;
     try {
       if (value) {
-        localStorage.setItem(CONFIG.storageKey, 'true');
-        localStorage.setItem(CONFIG.storageKey + '-timestamp', Date.now().toString());
-        log('Eligibility stored in localStorage');
+        localStorage.setItem(storageKey + '-eligible', 'true');
+        localStorage.setItem(storageKey + '-timestamp', Date.now().toString());
+        if (variantId) {
+          localStorage.setItem(storageKey + '-variant', variantId);
+        }
+        if (discountCode) {
+          localStorage.setItem(storageKey + '-code', discountCode);
+        }
+        log('Eligibility stored in localStorage (variant:', variantId, ')');
       } else {
-        localStorage.removeItem(CONFIG.storageKey);
-        localStorage.removeItem(CONFIG.storageKey + '-timestamp');
+        localStorage.removeItem(storageKey + '-eligible');
+        localStorage.removeItem(storageKey + '-timestamp');
+        localStorage.removeItem(storageKey + '-variant');
+        localStorage.removeItem(storageKey + '-code');
         log('Eligibility cleared from localStorage');
       }
     } catch (e) {
@@ -129,16 +178,34 @@
 
   /**
    * Check if customer is eligible for the gift
+   * Also loads the variant ID from storage
    */
   function isEligible() {
+    const storageKey = CONFIG.storageKeyPrefix;
     try {
-      const eligible = localStorage.getItem(CONFIG.storageKey) === 'true';
+      const eligible = localStorage.getItem(storageKey + '-eligible') === 'true';
       log('Checking eligibility:', eligible);
+
+      if (eligible) {
+        // Load variant ID from storage if not already set
+        if (!currentGiftVariantId) {
+          currentGiftVariantId = localStorage.getItem(storageKey + '-variant') || CONFIG.defaultGiftVariantId;
+          log('Loaded variant ID from storage:', currentGiftVariantId);
+        }
+      }
+
       return eligible;
     } catch (e) {
       log('localStorage error:', e);
       return false;
     }
+  }
+
+  /**
+   * Get current gift variant ID
+   */
+  function getGiftVariantId() {
+    return currentGiftVariantId || CONFIG.defaultGiftVariantId;
   }
 
   // ===========================================
@@ -225,12 +292,13 @@
     try {
       const response = await fetch('/cart.js');
       const cart = await response.json();
+      const giftVariantId = getGiftVariantId();
 
       const found = cart.items.some(item =>
-        item.variant_id.toString() === CONFIG.giftVariantId
+        item.variant_id.toString() === giftVariantId
       );
 
-      log('Gift in cart check:', found);
+      log('Gift in cart check (variant ' + giftVariantId + '):', found);
       return found;
     } catch (e) {
       log('Error checking cart:', e);
@@ -245,9 +313,10 @@
     try {
       const response = await fetch('/cart.js');
       const cart = await response.json();
+      const giftVariantId = getGiftVariantId();
 
       const nonGiftItems = cart.items.filter(item =>
-        item.variant_id.toString() !== CONFIG.giftVariantId
+        item.variant_id.toString() !== giftVariantId
       );
 
       log('Non-gift items in cart:', nonGiftItems.length);
@@ -271,8 +340,9 @@
       return;
     }
 
+    const giftVariantId = getGiftVariantId();
     addingGift = true;
-    log('Adding gift to cart, variant:', CONFIG.giftVariantId);
+    log('Adding gift to cart, variant:', giftVariantId);
 
     try {
       // Get mini-cart sections for UI update
@@ -284,7 +354,7 @@
       }
 
       const body = JSON.stringify({
-        id: parseInt(CONFIG.giftVariantId),
+        id: parseInt(giftVariantId),
         quantity: 1,
         sections: sections,
         sections_url: window.location.pathname
@@ -372,28 +442,34 @@
     status: function() {
       log('=== BXGY Status ===');
       log('Eligible:', isEligible());
+      log('Current Gift Variant ID:', getGiftVariantId());
+      log('Stored Code:', localStorage.getItem(CONFIG.storageKeyPrefix + '-code'));
       log('Config:', CONFIG);
-      log('Variant ID:', CONFIG.giftVariantId);
     },
 
-    // Manually set eligibility (for testing)
-    setEligible: function(value) {
-      setEligible(value);
-      log('Eligibility set to:', value);
+    // Manually set eligibility with a specific variant ID
+    setEligible: function(variantId) {
+      const vid = variantId || CONFIG.defaultGiftVariantId;
+      setEligible(true, vid, 'MANUAL-TEST');
+      currentGiftVariantId = vid;
+      log('Eligibility set with variant:', vid);
     },
 
     // Clear all BXGY data
     clear: function() {
       setEligible(false);
+      currentGiftVariantId = null;
       log('BXGY data cleared');
       location.reload();
     },
 
-    // Simulate arriving via discount URL and set up listeners
-    simulate: function() {
-      setEligible(true);
+    // Simulate arriving via discount URL with variant ID
+    simulate: function(variantId) {
+      const vid = variantId || CONFIG.defaultGiftVariantId;
+      currentGiftVariantId = vid;
+      setEligible(true, vid, 'BXGY-' + vid);
       setupCartListeners();
-      log('Simulated discount URL arrival - customer now eligible, listeners active');
+      log('Simulated discount arrival - variant:', vid);
       log('Now add a product to cart to trigger auto-gift');
     },
 
@@ -410,7 +486,10 @@
     },
 
     // Manually add gift (bypass eligibility check)
-    addGift: function() {
+    addGift: function(variantId) {
+      if (variantId) {
+        currentGiftVariantId = variantId;
+      }
       addGiftToCart();
     },
 
@@ -427,6 +506,13 @@
     checkLiquid: function() {
       log('bxgyDiscountApplied:', window.bxgyDiscountApplied);
       log('bxgyAppliedCode:', window.bxgyAppliedCode);
+    },
+
+    // Parse a discount code to test
+    parseCode: function(code) {
+      const result = parseDiscountCode(code);
+      log('Parsed "' + code + '" → variant:', result);
+      return result;
     }
   };
 
