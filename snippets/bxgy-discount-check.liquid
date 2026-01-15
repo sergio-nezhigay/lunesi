@@ -1,0 +1,32 @@
+{%- comment -%}
+  BXGY Discount Detection
+  Checks if the BXGY discount code is applied and passes to JavaScript
+{%- endcomment -%}
+
+<script>
+  // Check if BXGY discount is applied via Shopify's discount system
+  window.bxgyDiscountApplied = false;
+  window.bxgyDiscountCode = 'BXGY01501b';
+
+  {%- if cart.discount_applications.size > 0 -%}
+    {%- for discount in cart.discount_applications -%}
+      {%- assign discount_code_lower = discount.title | downcase -%}
+      {%- if discount_code_lower contains 'bxgy' -%}
+        window.bxgyDiscountApplied = true;
+        window.bxgyAppliedCode = {{ discount.title | json }};
+        console.log('🎁 BXGY: Discount detected via Liquid:', {{ discount.title | json }});
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- comment -%} Also check checkout discount codes if available {%- endcomment -%}
+  {%- if checkout.discount_applications.size > 0 -%}
+    {%- for discount in checkout.discount_applications -%}
+      {%- assign discount_code_lower = discount.title | downcase -%}
+      {%- if discount_code_lower contains 'bxgy' -%}
+        window.bxgyDiscountApplied = true;
+        window.bxgyAppliedCode = {{ discount.title | json }};
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+</script>
