@@ -63,27 +63,27 @@ Place this in your contact page template or as a section
         <p>Thank you for contacting us! We'll get back to you soon.</p>
       </div>
     {% endif %}
-
+    
     <div class="form-group">
-      <input
-        type="text"
-        id="contact-name"
-        name="contact[name]"
-        class="form-input"
-        value="{{ form.name }}"
-        required
+      <input 
+        type="text" 
+        id="contact-name" 
+        name="contact[name]" 
+        class="form-input" 
+        value="{{ form.name }}" 
+        required 
         placeholder="First and Last Name*"
       >
     </div>
 
     <div class="form-group">
-      <input
-        type="email"
-        id="contact-email"
-        name="contact[email]"
-        class="form-input"
-        value="{{ form.email }}"
-        required
+      <input 
+        type="email" 
+        id="contact-email" 
+        name="contact[email]" 
+        class="form-input" 
+        value="{{ form.email }}" 
+        required 
         placeholder="Email*"
       >
     </div>
@@ -110,12 +110,12 @@ Place this in your contact page template or as a section
 
     <!-- Conditional Order Number Field -->
     <div class="form-group" id="order-number-group" style="display: none;">
-      <input
-        type="text"
-        id="contact-order-number"
-        name="contact[order_number]"
-        class="form-input"
-        value="{{ form.order_number }}"
+      <input 
+        type="text" 
+        id="contact-order-number" 
+        name="contact[order_number]" 
+        class="form-input" 
+        value="{{ form.order_number }}" 
         placeholder="Order Number*"
       >
       <div id="cancel-modify-notice" class="order-notice" style="display: none;">
@@ -125,41 +125,41 @@ Place this in your contact page template or as a section
 
     <!-- Conditional Items with Issues Field -->
     <div class="form-group" id="items-issues-group" style="display: none;">
-      <input
-        type="text"
-        id="contact-items-issues"
-        name="contact[items_issues]"
-        class="form-input"
-        value="{{ form.items_issues }}"
+      <input 
+        type="text" 
+        id="contact-items-issues" 
+        name="contact[items_issues]" 
+        class="form-input" 
+        value="{{ form.items_issues }}" 
         placeholder="Item(s) with issues"
       >
     </div>
 
     <div class="form-group">
-      <input
-        type="text"
-        id="contact-topic"
-        name="contact[topic]"
-        class="form-input"
-        value="{{ form.topic }}"
-        required
+      <input 
+        type="text" 
+        id="contact-topic" 
+        name="contact[topic]" 
+        class="form-input" 
+        value="{{ form.topic }}" 
+        required 
         placeholder="Topic*"
       >
     </div>
 
     <div class="form-group">
-      <textarea
-        id="contact-body"
-        name="contact[body]"
-        class="form-textarea"
-        required
+      <textarea 
+        id="contact-body" 
+        name="contact[body]" 
+        class="form-textarea" 
+        required 
         placeholder="Tell us the details.*"
       >{{ form.body }}</textarea>
     </div>
 
     <div class="form-group file-upload-group">
       <div class="file-size-info">
-        (Optional: 5 files max, images will be automatically compressed)
+        (Optional: 10 files max, total file size must be less than 50MB)
       </div>
       <div class="file-upload-area" id="file-upload-area">
         <div class="file-upload-text">
@@ -171,9 +171,9 @@ Place this in your contact page template or as a section
           <span>Drag or paste image here</span>
         </div>
         <a class="file-upload-button" id="file-select-btn">
-          <div class="file-upload-icon">
+          <div class="file-upload-icon"> 
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAADHElEQVR4nO2cz05UMRSHP10wIkRYmKgvI74IwisggWfQlUQxsNIXUDAuDEs3ok/gn5WudCVoAGdZ09iJzci9c+9lpqfQ35eczfy5bc932pk7aQeEEEIIIYQQQgghhMibHvAA+A58A+6Hx0QCpoBXgBuKPeCKDNgk30mCffKdJNgn30mCffKdJNgn30mCffKdJNgn30mCffKdJDSnB7wekci655u8V3fMZ6j8vXC3W/V8m2uIDpU/qN6q13S5lgAet0xYnYCmEjaU+b9cBk5aVusoAU0kHAGXht5TrIB+y6WiiYBREvqhbQE8a7lONxVQJ+GpMv+P2SChH5aGhyM+JNsIIFxrI1y7H5Lv2xRDNF2T2wqIr691fwy4jgLEmHASYIuTgP+ZB5aBXeATcHxKkg6BTWA6QwFXgSfAz1OuexzGtAMshbFmg/9dZT0k1zWM7QwFbLfo/wGwlsPPGbeA9y06PoiTM94EuTEL8H353WEc74CbGCb/a4dOXyQBLuQguYRex8ofxNY5X4LcUOynXo7WO3bUr52PMv0Qng6/yrb5LItjlUTMj+jkc2ABmJlgH9wEBNQxE8a0U9P2D2COBCzXdGIlRQdILyBmtab9uyk6sFvR+AvS4QwFmOfgc0XjtylHwEJF+/5mbeIcVTQ+W5CA2Yr2fW4u/OApvQ9FDz5CApCA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovQjMACSiv+iI0A5CA8qovougZcFix6y4lRQvYPKV9v+UxJUULmA6baU9CbI1hv2lbihaQw6lHCTBGAoyRAGMkoFQBOWzOteZaRQ5+WW5P91u2S+GO5fb0qmM6/vFSeFlzPGviLOVwUM2QtZrxL6Y6pHdQ04ndMEUneUgvNTNhTFWVn/SQ3qgqKDVWSEgvHNO3HrTLJN6G/yxNij+e/yWDwTvj8Dm4gRHXgTcZJMEZxb7ln3UMmArffn5kkBCXKPxY71ksO3XMhZPi/rDyx5o75vMYR8CHMLbFlN92hBBCCCGEEEIIIQQXhj937+tQmPExPQAAAABJRU5ErkJggg==" alt="upload--v1">
-          </div>
+          </div> 
           <span>Upload</span>
         </a>
         <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx" style="display: none;">
@@ -235,15 +235,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <script>
-{% comment %}
-FORMDATA APPROACH - Replaces base64 encoding to fix CAPTCHA loops
-Uses native browser FormData with multipart/form-data encoding
-Eliminates 33% base64 overhead and prevents large POST payloads
+{% comment %} 
+Rewritten to:
+- Convert files to base64 and store only base64 strings (no JSON, no file info) in the hidden field.
+- Only base64 data (comma-separated if multiple).
+- No JSON output in the hidden field.
+- Add console debugging for base64 conversion.
 {% endcomment %}
 document.addEventListener('DOMContentLoaded', function() {
-  // FEATURE FLAG: Toggle between FormData (new) and base64 (old) approach
-  const USE_FORMDATA = true; // Set to false to revert to base64 method
-
   const fileInput = document.getElementById('file-input');
   const fileUploadArea = document.getElementById('file-upload-area');
   const fileSelectBtn = document.getElementById('file-select-btn');
@@ -257,15 +256,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const itemsIssuesGroup = document.getElementById('items-issues-group');
   const itemsIssuesInput = document.getElementById('contact-items-issues');
   const form = document.getElementById('contact-form');
-
+  
   let selectedFiles = [];
   let selectedBase64s = [];
-  let compressedFiles = []; // Store compressed File objects for FormData
-  const maxFiles = 5;
-  const maxTotalSize = 50 * 1024 * 1024; // 50MB max total
-  const maxFileSize = 50 * 1024 * 1024; // 50MB per file max (before compression)
-  const maxCompressedSize = 150 * 1024; // 150KB target after compression
-  const maxBase64TotalSize = 500 * 1024; // 500KB max for all base64 data combined
+  const maxFiles = 10; // Reduced for base64
+  const maxTotalSize = 50 * 1024 * 1024; // 2MB max for base64 encoding
+const maxFileSize = 50 * 1024 * 1024; // 500KB per file max
   let dragCounter = 0;
 
   // Order-related reasons that should show the order number field
@@ -282,11 +278,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle contact reason change
   contactReason.addEventListener('change', function() {
     const selectedReason = this.value;
-
+    
     if (orderRelatedReasons.includes(selectedReason)) {
       orderNumberGroup.style.display = 'block';
       orderNumberInput.required = true;
-
+      
       if (selectedReason === 'Cancel or modify an order') {
         cancelModifyNotice.style.display = 'block';
       } else {
@@ -316,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (orderRelatedReasons.includes(contactReason.value)) {
     orderNumberGroup.style.display = 'block';
     orderNumberInput.required = true;
-
+    
     if (contactReason.value === 'Cancel or modify an order') {
       cancelModifyNotice.style.display = 'block';
     }
@@ -327,125 +323,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // NEW: FormData submission function (replaces base64 approach)
-  async function submitWithFormData(e) {
-    e.preventDefault();
-    console.log('[FormData Debug] Starting FormData submission...');
-
-    // Check required fields
-    const requiredFields = form.querySelectorAll('[required]');
-    let isValid = true;
-
-    requiredFields.forEach(field => {
-      if (!field.value.trim()) {
-        isValid = false;
-        field.style.borderColor = '#dc3545';
-        field.addEventListener('input', function() {
-          this.style.borderColor = '';
-        }, { once: true });
-      }
-    });
-
-    if (!isValid) {
-      alert('Please fill in all required fields.');
-      return false;
-    }
-
-    // Wait for files to be compressed
-    if (selectedFiles.length > 0 && compressedFiles.length !== selectedFiles.length) {
-      alert('Please wait for all files to finish uploading.');
-      return false;
-    }
-
-    // Build FormData from form
-    const formData = new FormData(form);
-
-    // Remove the hidden file_info field (we'll add files directly)
-    formData.delete('contact[file_info]');
-
-    // Add compressed files as File objects (NOT base64)
-    for (let i = 0; i < compressedFiles.length; i++) {
-      const file = compressedFiles[i];
-      formData.append(`contact[file_${i}]`, file, file.name);
-      console.log(`[FormData Debug] Added file: contact[file_${i}] = ${file.name} (${formatFileSize(file.size)})`);
-    }
-
-    // Debug: Log all form data
-    console.log('[FormData Debug] Total entries:', Array.from(formData.entries()).length);
-    console.log('[FormData Debug] ========== FORM DATA CONTENTS ==========');
-    for (let pair of formData.entries()) {
-      if (pair[1] instanceof File) {
-        console.log(`[FormData Debug] 📎 FILE: ${pair[0]} = ${pair[1].name} (${formatFileSize(pair[1].size)}, ${pair[1].type})`);
-      } else {
-        console.log(`[FormData Debug] 📝 FIELD: ${pair[0]} = ${pair[1]}`);
-      }
-    }
-    console.log('[FormData Debug] ==========================================');
-
-    // Submit via fetch
-    try {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-
-      console.log('[FormData Debug] Submitting to /contact...');
-      const response = await fetch('/contact', {
-        method: 'POST',
-        body: formData
-      });
-
-      console.log('[FormData Debug] Response status:', response.status);
-      const responseText = await response.text();
-
-      // Check for CAPTCHA indicators
-      if (responseText.includes('g-recaptcha') ||
-          responseText.includes('recaptcha') ||
-          response.status === 403) {
-        console.error('[CAPTCHA DETECTED]');
-        console.log('Response HTML length:', responseText.length);
-        console.log('Response contains reCAPTCHA:', responseText.includes('recaptcha'));
-        alert('CAPTCHA detected! File size may be too large. Try smaller files or fewer files.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'SUBMIT';
-        return;
-      }
-
-      // Check for success
-      if (response.ok || response.status === 302) {
-        console.log('[SUCCESS] Form submitted without CAPTCHA!');
-        console.log('[SUCCESS] Response status:', response.status);
-        alert('Form submitted successfully!');
-        // Reload page or redirect
-        window.location.href = window.location.pathname + '?success=1';
-        return;
-      }
-
-      // Other error
-      console.error('[FormData Debug] Unexpected response:', response.status);
-      console.log('Response preview:', responseText.substring(0, 200));
-      alert('Submission failed. Check console for details.');
-
-    } catch (error) {
-      console.error('[FormData Debug] Network error:', error);
-      alert('Network error. Check console for details.');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'SUBMIT';
-    }
-  }
-
   // Form validation before submit
   form.addEventListener('submit', function(e) {
-    // Use FormData approach if enabled, otherwise use base64
-    if (USE_FORMDATA) {
-      submitWithFormData(e);
-      return;
-    }
-
-    // ORIGINAL BASE64 APPROACH (fallback)
     // Check required fields
     const requiredFields = form.querySelectorAll('[required]');
     let isValid = true;
-
+    
     requiredFields.forEach(field => {
       if (!field.value.trim()) {
         isValid = false;
@@ -470,27 +353,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateFileInfo();
 
-    // Check total base64 size before submission
-    const totalBase64Size = selectedBase64s.reduce((sum, b64) => sum + b64.length, 0);
-    console.log(`[Submit Check] Total base64 size: ${formatFileSize(totalBase64Size)}`);
-
-    if (totalBase64Size > maxBase64TotalSize) {
-      e.preventDefault();
-      alert(`Files are too large (${formatFileSize(totalBase64Size)}). Please remove some files or use smaller images. Maximum allowed: ${formatFileSize(maxBase64TotalSize)}`);
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'SUBMIT';
-      return false;
-    }
-
     // Show loading state
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
-
+    
     // Re-enable button after a delay in case of errors
     setTimeout(() => {
       submitBtn.disabled = false;
       submitBtn.textContent = 'SUBMIT';
-    }, 10000);
+    }, 5000);
   });
 
   // File selection
@@ -499,13 +370,13 @@ document.addEventListener('DOMContentLoaded', function() {
     e.stopPropagation();
     fileInput.click();
   });
-
+  
   fileUploadArea.addEventListener('click', (e) => {
     if (e.target === fileUploadArea || e.target.closest('.file-upload-text')) {
       fileInput.click();
     }
   });
-
+  
   fileInput.addEventListener('change', handleFileSelect);
 
   // Drag and drop
@@ -545,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleDragLeave(e) {
     e.preventDefault();
     dragCounter--;
-
+    
     if (dragCounter === 0) {
       fileUploadArea.classList.remove('dragover');
       fileUploadArea.style.backgroundColor = '';
@@ -556,20 +427,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function handleDrop(e) {
     e.preventDefault();
-
+    
     dragCounter = 0;
     fileUploadArea.classList.remove('dragover');
     fileUploadArea.style.backgroundColor = '';
     fileUploadArea.style.borderColor = '';
     fileUploadArea.style.transform = '';
-
+    
     fileUploadArea.style.backgroundColor = '#d4edda';
     fileUploadArea.style.borderColor = '#28a745';
     setTimeout(() => {
       fileUploadArea.style.backgroundColor = '';
       fileUploadArea.style.borderColor = '';
     }, 500);
-
+    
     const files = Array.from(e.dataTransfer.files);
     addFiles(files);
   }
@@ -586,23 +457,23 @@ document.addEventListener('DOMContentLoaded', function() {
         fileUploadArea.style.backgroundColor = '';
         fileUploadArea.style.borderColor = '';
       }, 300);
-
+      
       addFiles(files);
     }
   }
 
   function addFiles(files) {
     if (selectedFiles.length + files.length > maxFiles) {
-      alert(`You can only upload up to ${maxFiles} files. Images will be compressed to reduce size.`);
+      alert(`You can only upload up to ${maxFiles} files.`);
       showErrorFeedback();
       return;
     }
 
     const currentSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
     const newSize = files.reduce((sum, file) => sum + file.size, 0);
-
+    
     if (currentSize + newSize > maxTotalSize) {
-      alert('Total file size must be less than 50MB. Images will be automatically compressed.');
+      alert('Total file size must be less than 50MB.');
       showErrorFeedback();
       return;
     }
@@ -610,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
     files.forEach(file => {
       if (file) {
         if (file.size > maxFileSize) {
-          alert(`File "${file.name}" is too large. Max size is 50MB per file. Images will be compressed automatically.`);
+          alert(`File "${file.name}" is too large. Max size is ${Math.round(maxFileSize/1024)}KB.`);
           showErrorFeedback();
         } else {
           selectedFiles.push(file);
@@ -662,138 +533,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Compress image file to reduce size
-  function compressImage(file) {
-    return new Promise((resolve, reject) => {
-      // If it's not an image, return as is
-      if (!file.type.startsWith('image/')) {
-        console.log(`[Compression] File "${file.name}" is not an image, skipping compression`);
-        resolve(file);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          // Calculate new dimensions to keep aspect ratio - more aggressive
-          const maxDimension = 1200; // Reduced from 1920 to 1200
-          if (width > maxDimension || height > maxDimension) {
-            if (width > height) {
-              height = (height / width) * maxDimension;
-              width = maxDimension;
-            } else {
-              width = (width / height) * maxDimension;
-              height = maxDimension;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          // Try different quality levels to get under target size - start more aggressive
-          let quality = 0.65; // Start at 65% instead of 80%
-          const tryCompress = (q) => {
-            canvas.toBlob((blob) => {
-              if (!blob) {
-                reject(new Error('Compression failed'));
-                return;
-              }
-
-              console.log(`[Compression] "${file.name}": ${formatFileSize(file.size)} -> ${formatFileSize(blob.size)} (quality: ${q})`);
-
-              // If still too large and we can reduce quality more, try again
-              if (blob.size > maxCompressedSize && q > 0.2) {
-                tryCompress(q - 0.1);
-              } else {
-                // Create a new File object from the blob
-                const compressedFile = new File([blob], file.name, {
-                  type: 'image/jpeg',
-                  lastModified: Date.now(),
-                });
-                resolve(compressedFile);
-              }
-            }, 'image/jpeg', q);
-          };
-
-          tryCompress(quality);
-        };
-
-        img.onerror = function() {
-          console.error(`[Compression] Failed to load image "${file.name}"`);
-          resolve(file); // Return original if compression fails
-        };
-
-        img.src = e.target.result;
-      };
-
-      reader.onerror = function() {
-        console.error(`[Compression] Failed to read file "${file.name}"`);
-        resolve(file); // Return original if reading fails
-      };
-
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function convertAllFilesToBase64() {
+  function convertAllFilesToBase64() {
     selectedBase64s = [];
-    compressedFiles = []; // Clear compressed files array
     if (selectedFiles.length === 0) {
       updateFileInfo();
       return;
     }
-
-    console.log('[File Processing] Starting file compression...');
-
-    for (let idx = 0; idx < selectedFiles.length; idx++) {
-      const file = selectedFiles[idx];
-
-      try {
-        // Compress the file first (if it's an image)
-        const compressedFile = await compressImage(file);
-
-        // Store compressed File object for FormData approach
-        compressedFiles[idx] = compressedFile;
-        console.log(`[File Processing] Compressed: "${file.name}" ${formatFileSize(file.size)} -> ${formatFileSize(compressedFile.size)}`);
-
-        // Also convert to base64 for backward compatibility (if using base64 mode)
-        if (!USE_FORMDATA) {
-          const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              let base64 = e.target.result;
-              if (base64.indexOf('base64,') !== -1) {
-                base64 = base64.split('base64,')[1];
-              }
-              resolve(base64);
-            };
-            reader.onerror = () => reject(new Error('Failed to read file'));
-            reader.readAsDataURL(compressedFile);
-          });
-
-          selectedBase64s[idx] = base64;
-          console.log(`[Base64 Debug] File "${file.name}" converted to base64`);
+    let filesProcessed = 0;
+    selectedFiles.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        let base64 = e.target.result;
+        if (base64.indexOf('base64,') !== -1) {
+          base64 = base64.split('base64,')[1];
         }
-
-      } catch (error) {
+        selectedBase64s[idx] = base64;
+        console.log(`[Base64 Debug] File "${file.name}" converted to base64:`, base64.substring(0, 60) + '...');
+        filesProcessed++;
+        if (filesProcessed === selectedFiles.length) {
+          console.log('[Base64 Debug] All files converted. Updating fileInfoData.');
+          updateFileInfo();
+        }
+      };
+      reader.onerror = function() {
         selectedBase64s[idx] = '';
-        compressedFiles[idx] = null;
-        console.error(`[File Processing] Error processing file "${file.name}":`, error);
-      }
-    }
-
-    console.log('[File Processing] All files processed.');
-    if (!USE_FORMDATA) {
-      updateFileInfo();
-    }
+        console.error(`[Base64 Debug] Error converting file "${file.name}" to base64.`);
+        filesProcessed++;
+        if (filesProcessed === selectedFiles.length) {
+          updateFileInfo();
+        }
+      };
+      console.log(`[Base64 Debug] Starting conversion for file "${file.name}"`);
+      reader.readAsDataURL(file);
+    });
   }
 
   function formatFileSize(bytes) {

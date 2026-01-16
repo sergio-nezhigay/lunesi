@@ -14,9 +14,7 @@
 
   .fc-slider-wrapper {
     display: flex;
-    position: relative;
-    left: 0;
-    transition: left 0.5s ease;
+    transition: transform 0.5s ease;
   }
 
   .fc-slide-item {
@@ -137,8 +135,8 @@
     opacity: 0 !important;
     content: none !important;
   }
-
-
+  
+ 
   body .swipe-used.product-grid.slider li:first-child::after {
     display: none !important;
     opacity: 0 !important;
@@ -156,7 +154,7 @@
       max-width: 300px;
       min-width: 250px;
     }
-
+    
 
     .swipe-used li:first-child::after,
     .swipe-used li:first-child:after {
@@ -367,8 +365,7 @@
                   button_style: section.settings.button_style,
                   custom_label_text: custom_label_text,
                   custom_label_bg: custom_label_bg,
-                  custom_label_color: custom_label_color,
-                  lazy_load: true
+                  custom_label_color: custom_label_color
                 %}
               </div>
             {%- endfor -%}
@@ -431,8 +428,7 @@
               button_style: section.settings.button_style,
               custom_label_text: custom_label_text,
               custom_label_bg: custom_label_bg,
-              custom_label_color: custom_label_color,
-              lazy_load: true
+              custom_label_color: custom_label_color
             %}
           </li>
           {%endunless %}
@@ -471,7 +467,7 @@
 
       function forceStyleRecalculation() {
         slideItems.forEach(function(item) {
-          // item.style.transform = 'translateZ(0)';
+          item.style.transform = 'translateZ(0)';
         });
       }
 
@@ -479,7 +475,7 @@
         var sliderContainer = slider.parentElement; // fc-slider-container
         var containerWidth = sliderContainer.offsetWidth;
         var slideWidth;
-
+        
         // На десктопі завжди 3 продукти в рядок
         if (window.innerWidth >= 750) {
           slideWidth = containerWidth / 3;
@@ -508,13 +504,13 @@
         var containerWidth = sliderContainer.offsetWidth;
         var slideWidth = updateSlideWidths();
         var visibleCount;
-
+        
         if (window.innerWidth >= 750) {
           visibleCount = 3; // На десктопі завжди 3
         } else {
           visibleCount = Math.floor(containerWidth / slideWidth);
         }
-
+        
         var maxIndex = Math.max(0, slideItems.length - visibleCount);
 
         if (currentIndex <= 0) {
@@ -550,7 +546,7 @@
         } else {
           visibleCount = Math.floor(containerWidth / slideWidth);
         }
-
+        
         var maxIndex = Math.max(0, slideItems.length - visibleCount);
 
         if (currentIndex > maxIndex) {
@@ -558,7 +554,7 @@
         }
 
         var translateValue = -currentIndex * slideWidth;
-        slider.style.left = translateValue + 'px';
+        slider.style.transform = 'translateX(' + translateValue + 'px)';
 
         updateButtonStates();
         setTimeout(forceStyleRecalculation, 50);
@@ -566,20 +562,20 @@
 
       nextBtn.addEventListener('click', function() {
         if (nextBtn.disabled) return;
-
+        
         var sliderContainer = slider.parentElement; // fc-slider-container
         var containerWidth = sliderContainer.offsetWidth;
         var slideWidth = updateSlideWidths();
         var visibleCount;
-
+        
         if (window.innerWidth >= 750) {
           visibleCount = 3;
         } else {
           visibleCount = Math.floor(containerWidth / slideWidth);
         }
-
+        
         var maxIndex = Math.max(0, slideItems.length - visibleCount);
-
+        
         if (currentIndex < maxIndex) {
           currentIndex++;
           updateSlider();
@@ -588,7 +584,7 @@
 
       prevBtn.addEventListener('click', function() {
         if (prevBtn.disabled) return;
-
+        
         if (currentIndex > 0) {
           currentIndex--;
           updateSlider();
@@ -605,32 +601,32 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   var sessionKey = 'swipe-used-global';
-
+  
   function findProductGridSliders() {
     var sliders = document.querySelectorAll('.product-grid.slider');
     return Array.from(sliders);
   }
-
+  
   function hideSwipeIndicator() {
     var sliders = findProductGridSliders();
-
+    
     sliders.forEach(function(slider) {
       slider.classList.add('swipe-used');
     });
-
+    
     document.body.classList.add('swipe-used-global');
     sessionStorage.setItem(sessionKey, 'true');
     addSwipeHideCSS();
   }
-
+  
   function addSwipeHideCSS() {
     var styleId = 'swipe-hide-css';
     var existingStyle = document.getElementById(styleId);
-
+    
     if (existingStyle) {
       existingStyle.remove();
     }
-
+    
     var css = `
       .product-grid.slider.swipe-used li:first-child::after,
       .product-grid.slider.swipe-used li:first-child:after {
@@ -639,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
         content: none !important;
         visibility: hidden !important;
       }
-
+      
       html body .product-grid.slider.swipe-used li:first-child::after,
       html body .product-grid.slider.swipe-used li:first-child:after {
         display: none !important;
@@ -647,7 +643,7 @@ document.addEventListener('DOMContentLoaded', function() {
         content: none !important;
         visibility: hidden !important;
       }
-
+      
       body.swipe-used-global .product-grid.slider li:first-child::after,
       body.swipe-used-global .product-grid.slider li:first-child:after {
         display: none !important;
@@ -655,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function() {
         content: none !important;
         visibility: hidden !important;
       }
-
+      
       .swipe-used.product-grid.slider li:first-child::after,
       .swipe-used.product-grid.slider li:first-child:after,
       ul.swipe-used.product-grid.slider li:first-child::after,
@@ -666,50 +662,50 @@ document.addEventListener('DOMContentLoaded', function() {
         visibility: hidden !important;
       }
     `;
-
+    
     var style = document.createElement('style');
     style.id = styleId;
     style.textContent = css;
     document.head.appendChild(style);
   }
-
+  
   function setupTouchTracking() {
     var sliders = findProductGridSliders();
-
+    
     if (sliders.length === 0) {
       setTimeout(setupTouchTracking, 1000);
       return;
     }
-
+    
     var startX, startY;
     var hasTriggered = false;
-
+    
     function handleTouchStart(e) {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
     }
-
+    
     function handleTouchMove(e) {
       if (hasTriggered) return;
-
+      
       var deltaX = Math.abs(e.touches[0].clientX - startX);
       var deltaY = Math.abs(e.touches[0].clientY - startY);
-
+      
       if (deltaX > 25 && deltaX > deltaY * 1.2) {
         hasTriggered = true;
         hideSwipeIndicator();
       }
     }
-
+    
     sliders.forEach(function(slider) {
       slider.addEventListener('touchstart', handleTouchStart, { passive: true });
       slider.addEventListener('touchmove', handleTouchMove, { passive: true });
     });
-
+    
     document.addEventListener('touchstart', handleTouchStart, { passive: true });
     document.addEventListener('touchmove', handleTouchMove, { passive: true });
   }
-
+  
   function init() {
     if (sessionStorage.getItem(sessionKey)) {
       hideSwipeIndicator();
@@ -717,30 +713,30 @@ document.addEventListener('DOMContentLoaded', function() {
       setupTouchTracking();
     }
   }
-
+  
   init();
 });
   </script>
         <style>
           @media screen and (min-width: 768px) and (max-width: 1000px) {
   .fc-slide-item {
-    width: calc(50% - 30px) !important;
+    width: calc(50% - 30px) !important; 
     max-width: none !important;
     min-width: none !important;
     flex-basis: calc(50% - 30px) !important;
   }
-
+  
 /
   @media screen and (min-width: 900px) and (max-width: 1100px) {
     .fc-slide-item {
-      width: calc(40% - 24px) !important;
+      width: calc(40% - 24px) !important; 
       flex-basis: calc(40% - 24px) !important;
     }
   }
 }
         </style>
         <script>
-
+          
         </script>
 {% endif %}
 

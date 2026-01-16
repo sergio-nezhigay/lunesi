@@ -215,11 +215,6 @@
   transform: translateY(-1.5rem);
   width: calc(100% - 3rem);
 }
-
-
-.recently-viewed-products .card-information__button {
-    overflow: visible !important;
-}
 .card-information__button .button--soldout {
   display: none !important;
 }
@@ -321,13 +316,9 @@
     text-indent: -9999px;
     flex: 0 0 auto;
     width: 3.6rem;
-    height: 3.6rem;
     min-width: auto;
-    min-height: auto;
     padding: 0;
     box-shadow: none;
-    border-radius: 50%;
-    aspect-ratio: 1 / 1;
   }
 }
 

@@ -64,13 +64,6 @@
     "color_swatches_max_items": 4,
     "disable_collection_portion": true,
     "tax_note": "Tax included. International duties may apply. \nShipping calculated at checkout.",
-    "cart_tax_gb_message": "Tax included. Shipping calculated at checkout.",
-    "cart_tax_eu_threshold": "EUR:150, GBP:132, CHF:140, DKK:1120, SEK:1633, NOK:1778, ISK:22260, PLN:633, CZK:3636, HUF:57665, RON:764, BGN:293, HRK:1125, RSD:17550, UAH:7350, MDL:2715, GEL:425, TRY:7490",
-    "cart_tax_eu_below_threshold_message": "Tax included. International duties may apply. Shipping calculated at checkout.",
-    "cart_tax_eu_above_threshold_message": "Tax excluded. International duties may apply. Shipping calculated at checkout.",
-    "cart_tax_non_eu_threshold": 50,
-    "cart_tax_default_message": "Tax excluded. International duties may apply. Shipping calculated at checkout.",
-    "cart_tax_custom_message": "Tax excluded. International duties may apply. Shipping calculated at checkout.",
     "cart_drawer_enabled": true,
     "show_cart_note": true,
     "show_shipping_calculator": true,
@@ -80,7 +73,6 @@
     "cart_recommendations_enabled": false,
     "cart_recommendations_heading": "You may also like",
     "cart_recommendations_show_vendor": true,
-    "empty_cart_redirect_url": "/collections/main-collection",
     "predictive_search_show_vendor": true,
     "social_instagram_link": "https://www.instagram.com/lunesibeauty",
     "social_tiktok_link": "",
@@ -214,19 +206,9 @@
           "with_photos": false
         }
       },
-      "9624546937244602370": {
-        "type": "shopify://apps/redirect-hero/blocks/app/303f77a4-ad21-4d11-82f8-47eb94136aff",
-        "disabled": false,
-        "settings": {}
-      },
       "1804893150726543839": {
         "type": "shopify://apps/nova-multi-currency-converter/blocks/app-embed/a5be3c35-cbd0-46a1-ac3a-1ace57a9c1ce",
         "disabled": true,
-        "settings": {}
-      },
-      "14060646107696862457": {
-        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-        "disabled": false,
         "settings": {}
       },
       "733389323033596483": {
@@ -265,6 +247,11 @@
           "style_colors_text": "#000"
         }
       },
+      "5043070786800498925": {
+        "type": "shopify://apps/ecomsend-restock/blocks/bis-switch/b190bced-3b7b-47da-a05f-6ea4821c3a77",
+        "disabled": true,
+        "settings": {}
+      },
       "5858961087409699889": {
         "type": "shopify://apps/geolocation-orbe/blocks/app-embed-footer-selector/7cb09287-cd2b-4646-837c-f1f9b6ea703e",
         "disabled": false,
@@ -301,9 +288,14 @@
         "disabled": false,
         "settings": {}
       },
-      "5043070786800498925": {
-        "type": "shopify://apps/sw-back-in-stock/blocks/bis-switch/b190bced-3b7b-47da-a05f-6ea4821c3a77",
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
         "disabled": false,
+        "settings": {}
+      },
+      "9624546937244602370": {
+        "type": "shopify://apps/redirect-hero/blocks/app/303f77a4-ad21-4d11-82f8-47eb94136aff",
+        "disabled": true,
         "settings": {}
       }
     }

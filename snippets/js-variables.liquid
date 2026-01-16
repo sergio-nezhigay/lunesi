@@ -1,6 +1,6 @@
 <script>
     document.documentElement.classList.replace('no-js', 'js');
-
+  
     window.theme = window.theme || {};
 
     theme.routes = {
@@ -52,8 +52,7 @@
       moneyFormat: {{ shop.money_format | json }},
       isoCode: {{ cart.currency.iso_code | json }},
       cartDrawer: {{ settings.cart_drawer_enabled }},
-      currencyCode: {{ settings.currency_code_enabled }},
-      emptyCartRedirectUrl: '{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}'
+      currencyCode: {{ settings.currency_code_enabled }}
     };
 
     theme.settings = {
@@ -62,3 +61,4 @@
       agencyId: ''
     };
   </script>
+  

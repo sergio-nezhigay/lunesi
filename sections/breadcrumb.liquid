@@ -1,5 +1,3 @@
-{{ 'section-breadcrumb.css' | asset_url | stylesheet_tag }}
-
 {%- style -%}
   :root  {
     --svg_fill: {{ section.settings.breadcrumb_text_color}}
@@ -13,7 +11,7 @@
   }
 
   .breadcrumbs {
-    padding: 1rem 2rem 1rem 0;
+    padding: 1rem 2rem;
     color: {{ section.settings.breadcrumb_text_color }}
     ;
     background-color: {{ section.settings.breadcrumb_bg_color }}
@@ -84,9 +82,8 @@
 {%- endstyle -%}
 
 
-<div class="page-width section--padding">
-  <div class="breadcrumbs" aria-label="breadcrumbs">
-    {%- unless template == 'index' or template == 'cart' -%}
+<div class="breadcrumbs" aria-label="breadcrumbs">
+  {%- unless template == 'index' or template == 'cart' -%}
     {%- if section.settings.breadcrumbs_home_icon_bool -%}
       <div class="home-icon-container">
         <svg
@@ -300,10 +297,8 @@
       <span class="breadcrumb-delimeter" aria-hidden="true"></span>
       <a href="{{ product.url }}">{{ product.title }}</a>
     {%- else -%}
-      {%- assign rendered_link = false -%}
       {% for link in linklists.main-menu.links %}
         {% if link.child_active or link.active %}
-          {%- assign rendered_link = true -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
           <!--Breadcrumb delimeter-->
           <a href="{{ link.url }}">
@@ -327,26 +322,8 @@
           {%- endfor -%}
         {% endif %}
       {%- endfor -%}
-
-      {%- if rendered_link == false -%}
-        {%- case template.name -%}
-          {%- when 'page' -%}
-          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ page.url }}">{{ page.title }}</a>
-          {%- when 'collection' -%}
-          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ collection.url }}">{{ collection.title }}</a>
-          {%- when 'blog' -%}
-          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ blog.url }}">{{ blog.title }}</a>
-          {%- when 'search' -%}
-          <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="/search">Search</a>
-        {%- endcase -%}
-      {%- endif -%}
     {%- endcase -%}
   {%- endunless -%}
-  </div>
 </div>
 
 <script defer>

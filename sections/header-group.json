@@ -47,52 +47,6 @@
     },
     "header": {
       "type": "header",
-      "blocks": {
-        "mega_menu_DWcemf": {
-          "type": "mega_menu",
-          "settings": {
-            "menu_title": "",
-            "narrow": true,
-            "show_menu_image": true,
-            "promo_image_ratio_1": "adapt",
-            "promo_image_position_1": "center center",
-            "promo_heading_1": "",
-            "promo_text_1": "",
-            "promo_overlay_content_1": false,
-            "promo_link_1": "",
-            "promo_image_ratio_2": "adapt",
-            "promo_image_position_2": "center center",
-            "promo_heading_2": "",
-            "promo_text_2": "",
-            "promo_overlay_content_2": false,
-            "promo_link_2": ""
-          }
-        },
-        "mega_menu_JEUhFW": {
-          "type": "mega_menu",
-          "settings": {
-            "menu_title": "",
-            "narrow": true,
-            "show_menu_image": true,
-            "promo_image_ratio_1": "adapt",
-            "promo_image_position_1": "center center",
-            "promo_heading_1": "",
-            "promo_text_1": "",
-            "promo_overlay_content_1": false,
-            "promo_link_1": "",
-            "promo_image_ratio_2": "adapt",
-            "promo_image_position_2": "center center",
-            "promo_heading_2": "",
-            "promo_text_2": "",
-            "promo_overlay_content_2": false,
-            "promo_link_2": ""
-          }
-        }
-      },
-      "block_order": [
-        "mega_menu_DWcemf",
-        "mega_menu_JEUhFW"
-      ],
       "custom_css": [
         "@media (min-width: 1024px) {header {padding-left: 70px; padding-right: 70px; }}",
         ".header-wrapper {padding-top: 16px;}"

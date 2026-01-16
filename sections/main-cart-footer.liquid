@@ -19,7 +19,7 @@
   assign gift_in_cart = false
   assign non_gift_items_count = 0
   assign customer_qualifies_for_gift = false
-
+  
   for item in cart.items
     if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
       assign gift_in_cart = true
@@ -27,11 +27,11 @@
       assign non_gift_items_count = non_gift_items_count | plus: item.quantity
     endif
   endfor
-
+  
   # Перевірити чи кастомер має право на подарунок
   assign gift_cookie_check = request.headers.cookie | split: 'beyours:gift-popup=true'
   assign gift_claimed_cookie = request.headers.cookie | split: 'beyours:gift-bundle-claimed=true'
-
+  
   if gift_cookie_check.size > 1 or gift_claimed_cookie.size > 1 or customer or gift_in_cart
     assign customer_qualifies_for_gift = true
   endif
@@ -137,7 +137,58 @@
                 {%- endif -%}
               </div>
 
-              {%- render 'tax-note' -%}
+              {%- liquid
+                assign cart_total_cents = cart.total_price
+                assign eu_threshold_cents = section.settings.eu_threshold | times: 100
+                assign non_eu_threshold_cents = section.settings.non_eu_threshold | times: 100
+                
+                assign eu_countries = 'AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,IE,IT,LT,LU,LV,MT,NL,PL,PT,RO,SE,SI,SK' | split: ','
+                assign is_eu_country = false
+                
+                if cart.attributes.shipping_country != blank
+                  assign shipping_country = cart.attributes.shipping_country | upcase
+                  if eu_countries contains shipping_country
+                    assign is_eu_country = true
+                  endif
+                else
+                  assign current_country = localization.country.iso_code | upcase
+                  if eu_countries contains current_country
+                    assign is_eu_country = true
+                  endif
+                endif
+                
+                assign show_custom_tax_message = false
+                
+                if is_eu_country and cart_total_cents >= eu_threshold_cents
+                  assign show_custom_tax_message = true
+                elsif is_eu_country == false and cart_total_cents >= non_eu_threshold_cents
+                  assign show_custom_tax_message = true
+                endif
+              -%}
+
+             {%- if localization.country.iso_code != 'GB' -%}
+  <small class="tax-note caption-large rte">
+    {%- if show_custom_tax_message -%}
+      {%- if section.settings.custom_tax_message != blank -%}
+        {{ section.settings.custom_tax_message }}
+      {%- else -%}
+        {{ 'sections.cart.custom_tax_message_default' | t }}
+      {%- endif -%}
+    {%- else -%}
+      {%- if section.settings.default_tax_message != blank -%}
+        {{ section.settings.default_tax_message }}
+      {%- elsif cart.taxes_included and shop.shipping_policy.body != blank -%}
+        {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+      {%- elsif cart.taxes_included -%}
+        {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+      {%- elsif shop.shipping_policy.body != blank -%}
+        {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+      {%- else -%}
+        {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+      {%- endif -%}
+    {%- endif -%}
+  </small>
+{%- endif -%}
 
             </div>
           {%- when 'buttons' -%}
@@ -185,7 +236,7 @@
               const productId = {{ product.variants.first.id }};
               const productHandle = "{{ product.handle }}";
             </script>
-
+            
           {%- when 'free_shipping' -%}
             {%- liquid
               if block.settings.minimum_amount != blank
@@ -209,7 +260,7 @@
                   endif
                   assign show_free_shipping_message = true
                 endif
-
+                
                 if show_free_shipping_message
                   render 'free-shipping', minimum_amount: free_shipping_minimum_amount, is_last: forloop.last
                 endif
@@ -240,7 +291,7 @@
 
       <!-- Gift section placeholder -->
       <div id="gift-section" class="cart__gift-section" style="display: none;"></div>
-
+      
       <div id="cart-errors" class="form__message errors"></div>
     </div>
   </div>
@@ -253,9 +304,9 @@
   }
 
   .cart__validation-section {
-    display: none !important;
+    display: none !important; 
   }
-
+  
   .cart__validation-section {
     margin:0 !important;
   }
@@ -269,35 +320,35 @@
     padding: 16px;
     margin-bottom: 16px;
   }
-
+  
   .gift-bundle-content {
     display: flex;
     align-items: center;
     flex: 1;
   }
-
+  
   .gift-bundle-icon {
     display: none;
   }
-
+  
   .gift-bundle-text {
     flex: 1;
   }
-
+  
   .gift-bundle-title {
     font-size: 16px;
     font-weight: 500;
     margin: 0 0 5px 0;
     color: #212529;
   }
-
+  
   .gift-bundle-description {
     font-size: 14px;
     margin: 0;
     color: #6c757d;
     line-height: 1.4;
   }
-
+  
   .gift-bundle-add,
   .gift-bundle-remove {
     flex-shrink: 0;
@@ -306,29 +357,29 @@
     font-size: 14px;
     margin-left: 15px;
   }
-
+  
   .gift-bundle-add {
     background: #e6cedf;
     border-color: #e6cedf;
     color: #212326;
   }
-
+  
   .gift-bundle-add:hover {
     background: #d4b5c7;
     border-color: #d4b5c7;
   }
-
+  
   .gift-bundle-remove {
     background: transparent;
     color: #dc3545;
     border-color: #dc3545;
   }
-
+  
   .gift-bundle-remove:hover {
     background: #dc3545;
     color: white;
   }
-
+  
   .gift-validation-message {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
@@ -336,13 +387,13 @@
     padding: 12px 16px;
     margin-top: 12px;
   }
-
+  
   .validation-content {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
+  
   .validation-text p {
     margin: 0;
     font-size: 14px;
@@ -350,53 +401,53 @@
     line-height: 1.4;
     text-align: center;
   }
-
+  
   .button--disabled {
     cursor: not-allowed !important;
     opacity: 1 !important;
   }
-
+  
   .button--disabled:hover {
     opacity: 1 !important;
   }
-
+  
   /* Колонковий layout для повідомлення і кнопки */
   .cart__ctas {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
-
+  
   /* Validation message має бути першим */
   .cart__validation-section {
     order: -1;
   }
-
+  
   @media screen and (max-width: 749px) {
     .gift-bundle-offer {
       padding: 15px;
     }
-
+    
     .gift-bundle-icon {
       font-size: 28px;
       margin-right: 12px;
     }
-
+    
     .gift-bundle-title {
       font-size: 15px;
     }
-
+    
     .gift-bundle-description {
       font-size: 13px;
     }
-
+    
     .gift-bundle-add,
     .gift-bundle-remove {
       padding: 10px 15px;
       font-size: 13px;
     }
   }
-
+  
   /* Gift bundle styles - MAIN CART */
   .gift-claim-container {
     background: linear-gradient(135deg, #f8f4ff 0%, #fff5f7 100%);
@@ -496,14 +547,14 @@
     color: rgb(var(--color-foreground));
     line-height: 1.3;
   }
-
+  
   .gift-claim-description {
     margin: 0;
     font-size: 14px;
     color: rgba(var(--color-foreground), 0.7);
     line-height: 1.4;
   }
-
+  
   .gift-added-container {
     background: rgba(var(--color-foreground), 0.05);
     border: 1px solid rgba(var(--color-foreground), 0.1);
@@ -515,12 +566,12 @@
     font-size: 14px;
     color: rgba(var(--color-foreground), 0.7);
   }
-
+  
   .gift-added-icon {
     font-size: 20px;
     margin-right: 12px;
   }
-
+  
   .gift-validation-message {
     background: #fff3cd;
     border: 1px solid #ffeaa7;
@@ -532,12 +583,12 @@
     justify-content: center;
     text-align: center;
   }
-
+  
   .gift-validation-icon {
     font-size: 18px;
     margin-right: 10px;
   }
-
+  
   .gift-validation-text {
     color: #856404;
     font-size: 15px;
@@ -557,6 +608,38 @@
       "id": "show_cart_note",
       "default": false,
       "label": "t:sections.main-cart-footer.settings.show_cart_note.label"
+    },
+    {
+      "type": "header",
+      "content": "Custom Tax Messages"
+    },
+    {
+      "type": "number",
+      "id": "eu_threshold",
+      "default": 150,
+      "label": "EU countries threshold (EUR)",
+      "info": "Show custom tax message for EU countries when cart total exceeds this amount"
+    },
+    {
+      "type": "number",
+      "id": "non_eu_threshold",
+      "default": 50,
+      "label": "Non-EU countries threshold (EUR)",
+      "info": "Show custom tax message for non-EU countries when cart total exceeds this amount"
+    },
+    {
+      "type": "textarea",
+      "id": "default_tax_message",
+      "default": "Please note: Taxes not included",
+      "label": "Default tax message (below threshold)",
+      "info": "Message to show when cart total is below threshold. Leave empty to use standard Shopify messages."
+    },
+    {
+      "type": "textarea",
+      "id": "custom_tax_message",
+      "default": "Please note: buyer pays taxes and duties",
+      "label": "Custom tax message (above threshold)",
+      "info": "Message to show when cart total exceeds threshold. Leave empty to use default translation."
     },
     {
       "type": "header",
