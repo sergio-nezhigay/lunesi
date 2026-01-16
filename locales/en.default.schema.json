@@ -2910,6 +2910,9 @@
       "settings": {
         "show_cart_note": {
           "label": "Enable cart note"
+        },
+        "show_discount_input": {
+          "label": "Show discount code input"
         }
       },
       "blocks": {

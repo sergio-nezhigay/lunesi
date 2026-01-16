@@ -3,21 +3,21 @@ class MiniCart extends HTMLElement {
     super();
     this.isLoading = false;
   }
-   
+
   connectedCallback() {
     this.header = document.querySelector('sticky-header');
     this.drawer = document.querySelector('cart-drawer');
     new IntersectionObserver(this.handleIntersection.bind(this)).observe(this);
   }
-  
+
   handleIntersection(entries, observer) {
     if (!entries[0].isIntersecting) return;
     if (this.isLoading) return; // Запобігаємо повторним викликам
-    
+
     console.log('MiniCart intersection triggered');
     observer.unobserve(this);
     this.isLoading = true;
-    
+
     fetch(this.dataset.url)
       .then(response => {
         if (!response.ok) {
@@ -28,10 +28,10 @@ class MiniCart extends HTMLElement {
       .then(html => {
         document.getElementById('mini-cart').innerHTML =
           this.getSectionInnerHTML(html, '.shopify-section');
-          
+
         // Додаємо клас що контент завантажено
         document.getElementById('mini-cart').classList.add('content-loaded');
-        
+
         document.dispatchEvent(new CustomEvent('cartdrawer:opened'));
         console.log('Cart content loaded successfully');
       })
@@ -44,7 +44,7 @@ class MiniCart extends HTMLElement {
         this.isLoading = false;
       });
   }
-  
+
   showFallbackContent() {
     // Простий fallback якщо fetch не працює
     const miniCart = document.getElementById('mini-cart');
@@ -62,7 +62,7 @@ class MiniCart extends HTMLElement {
             </div>
             <div class="mini-cart__empty center">
               <p class="mini-cart__empty-text h3">Your cart is empty</p>
-              <a href="/collections/all" class="button">Continue shopping</a>
+              <a href="${theme.shopSettings.emptyCartRedirectUrl}" class="button">Continue shopping</a>
             </div>
           </div>
         </div>
@@ -70,23 +70,23 @@ class MiniCart extends HTMLElement {
       miniCart.classList.add('content-loaded');
     }
   }
-  
+
   open() {
     const detailsElement = this.drawer.querySelector('details');
     if (detailsElement.hasAttribute('open')) {
       return;
     }
-    
+
     // Чекаємо трохи якщо контент ще завантажується
     if (this.isLoading) {
       console.log('Waiting for content to load...');
       setTimeout(() => this.open(), 100);
       return;
     }
-    
+
     this.drawer.openMenuDrawer();
   }
-  
+
   renderContents(parsedState) {
     this.productId = parsedState.id;
     this.getSectionsToRender().forEach((section => {
@@ -95,12 +95,12 @@ class MiniCart extends HTMLElement {
           this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
       }
     }));
-    
+
     // Додаємо клас що контент завантажено
     document.getElementById('mini-cart').classList.add('content-loaded');
     this.open();
   }
-  
+
   getSectionsToRender() {
     return [
       {
@@ -120,7 +120,7 @@ class MiniCart extends HTMLElement {
       }
     ];
   }
-  
+
   getSectionInnerHTML(html, selector = '.shopify-section') {
     return new DOMParser()
       .parseFromString(html, 'text/html')

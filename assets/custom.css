@@ -43,7 +43,7 @@ body {
   scrollbar-width: none;  /* Firefox */
 }
 
-.product-grid.slider::-webkit-scrollbar { 
+.product-grid.slider::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
 
@@ -97,7 +97,7 @@ display: none;
   .desktop-only {
     display: none;
   }
-  
+
   .mobile-only {
     display: block;
   }
@@ -113,7 +113,7 @@ display: none;
   .baDropdownStyle.baDropdownStyle.mobile_bottom_left:not(.hideOnMobile) {
     bottom:60px!important;
   }
-  
+
 }
 
 @media only screen and (min-width: 749px) {
@@ -157,5 +157,10 @@ p.list-menu__item  {
   margin: 0;
   cursor: pointer;
   width: fit-content;
+}
+
+/* Ensure header is always above announcement bar (z-index 30) */
+sticky-header, .header-wrapper {
+  z-index: 31 !important;
 }
 

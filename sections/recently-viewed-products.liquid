@@ -5,45 +5,45 @@
     --image-position: {{ section.settings.image_position }};
     --card-max-width: {{ section.settings.card_max_width }}px;
   }
-  
+
   /* Compact card styles */
   #shopify-section-{{ section.id }} .card-wrapper {
     max-width: var(--card-max-width);
     margin: 0 auto;
   }
-  
+
   #shopify-section-{{ section.id }} .card-product {
     font-size: 0.85rem;
   }
-  
+
   #shopify-section-{{ section.id }} .card__heading {
     font-size: 0.9rem;
     line-height: 1.2;
   }
-  
+
   #shopify-section-{{ section.id }} .price {
     font-size: 0.85rem;
   }
-  
+
   /* Reduce spacing */
   #shopify-section-{{ section.id }} .card__content {
     padding: 0.75rem 0.5rem;
   }
-  
+
   /* Reduce gaps between cards */
   #shopify-section-{{ section.id }} .product-grid {
     gap: 0.5rem;
   }
-  
+
   @media screen and (min-width: 750px) {
     #shopify-section-{{ section.id }} .product-grid {
       gap: 0.75rem;
     }
   }
-  
+
   @media screen and (min-width: 990px) {
     #shopify-section-{{ section.id }} .product-grid {
-      gap: 1rem;
+      gap: 30px;
     }
   }
 
@@ -151,12 +151,46 @@
     box-shadow: none !important;
   }
 }
- #shopify-section-{{ section.id }} .img-det{
+
+/* Enable hover popup for recently viewed cards */
+@media screen and (min-width: 990px) {
+  #shopify-section-{{ section.id }} .height-control {
+    height: 22rem !important;
+  }
+
+  #shopify-section-{{ section.id }} .height-control .img-det {
+    display: flex !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .card-wrapper:hover .card-information__button .button,
+  #shopify-section-{{ section.id }} .card-wrapper .card-information__button .button {
     display: none !important;
-  } 
-  
+  }
+
+  #shopify-section-{{ section.id }} .card-wrapper:hover .img-det {
+    opacity: 1;
+  }
+
+  #shopify-section-{{ section.id }} .card-information__wrapper,
+  #shopify-section-{{ section.id }} .control-arena {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  #shopify-section-{{ section.id }} .height-control .img-det {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .height-control {
+    height: 3.4rem !important;
+  }
+}
+
 {%- endstyle -%}
-    
+
 <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-product-grid.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -180,10 +214,10 @@
         <div class="title-wrapper{% if section.settings.heading == blank %} title-wrapper--no-heading{% endif %} {{ section.settings.heading_alignment }}">
           <{{ section.settings.heading_tag }} class="title {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</{{ section.settings.heading_tag }}>
         </div>
-        
+
         {%- assign parsed_terms = search.terms | split: ' OR ' -%}
         {%- assign max_products = section.settings.max_products | default: 8 -%}
-        
+
         <slider-component class="slider-mobile-gutter">
           <ul id="Slider-{{ section.id }}"
             class="product-grid grid{% if section.settings.columns_mobile == '1' %} grid--1-col-mobile{% endif %} grid--{{ section.settings.columns_mobile }}-col grid--{{ section.settings.columns_tablet }}-col-tablet grid--{{ section.settings.products_per_row }}-col-desktop{% if section.settings.swipe_on_mobile %} slider slider--tablet{% endif %} slider--tablet-up"
@@ -211,7 +245,8 @@
                         enable_color_swatches: section.settings.enable_color_swatches,
                         enable_countdown: section.settings.enable_countdown,
                         enable_image_fill: section.settings.enable_image_fill,
-                        button_style: section.settings.button_style
+                        button_style: section.settings.button_style,
+                        lazy_load: true
                       %}
                     </div>
                   </li>
@@ -399,11 +434,11 @@
       "type": "range",
       "id": "card_max_width",
       "min": 120,
-      "max": 300,
+      "max": 700,
       "step": 10,
       "unit": "px",
       "label": "Maximum card width",
-      "default": 200
+      "default": 600
     },
     {
       "type": "header",

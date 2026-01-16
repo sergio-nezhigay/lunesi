@@ -8,7 +8,7 @@
 {%- liquid
     if linklists.gift-wrapping.links != blank and linklists.gift-wrapping.links.first.type == 'product_link'
       assign gift_wrapping = linklists.gift-wrapping.links.first
-  
+
       assign gift_wrap_id = gift_wrapping.object.variants.first.id
       assign gift_wraps_in_cart = 0
       for item in cart.items
@@ -19,10 +19,10 @@
       endfor
       assign items_in_cart = cart.item_count | minus: gift_wraps_in_cart
     endif
-  
+
     assign animate_count = 1
   -%}
-  
+
   <form class="mini-cart{% if cart == empty %} is-empty{% endif %}" action="{{ routes.cart_url }}" method="post" id="cart">
     <div class="mini-cart__inner">
       <div class="mini-cart__header" data-animate data-animate-delay-{{ animate_count }}>
@@ -36,7 +36,7 @@
           if settings.show_free_shipping_message and settings.free_shipping_minimum_amount != blank
             assign free_shipping_minimum_amounts = settings.free_shipping_minimum_amount | remove: ' ' | split: ','
             assign show_free_shipping_message = false
-  
+
             if free_shipping_minimum_amounts.size > 1
               for minimum_amount in free_shipping_minimum_amounts
                 assign minimum_amount_parts = minimum_amount | split: ':'
@@ -54,7 +54,7 @@
               endif
               assign show_free_shipping_message = true
             endif
-            
+
             if show_free_shipping_message
               render 'free-shipping', minimum_amount: free_shipping_minimum_amount
             endif
@@ -114,7 +114,7 @@
       text-align: center;
       border: 1px solid rgba(198, 206, 223, 0.2);
     }
-  
+
     .item-count {
       font-size: 15px;
       font-weight: 500;
@@ -123,11 +123,11 @@
       letter-spacing: 0.2px;
       display: none;
     }
-  
+
     .progress-container {
       margin: 10px 0;
     }
-  
+
     .progress-track {
       height: 8px;
       background: linear-gradient(90deg, #EFEFEF 0%, #E8E8E8 100%);
@@ -136,7 +136,7 @@
       position: relative;
       box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-  
+
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, {{ settings.free_shipping_progress_color | default: '#D2D5D9' }} 0%, {{ settings.free_shipping_progress_color | default: '#D2D5D9' | color_modify: 'alpha', 0.8 }} 100%);
@@ -146,11 +146,11 @@
       overflow: hidden;
       display: block !important;
     }
-  
+
     .progress-fill.success {
       background: linear-gradient(90deg, {{ settings.free_shipping_progress_success_color | default: '#4CAF50' }} 0%, {{ settings.free_shipping_progress_success_color | default: '#4CAF50' | color_modify: 'alpha', 0.8 }} 100%) !important;
     }
-  
+
     .progress-fill::after {
       content: '';
       position: absolute;
@@ -162,52 +162,52 @@
       transform: translateX(-100%);
       animation: progressGlow 2s infinite;
     }
-  
+
     @keyframes progressGlow {
-      0% { 
-        transform: translateX(-100%); 
+      0% {
+        transform: translateX(-100%);
         opacity: 0;
       }
-      50% { 
+      50% {
         opacity: 1;
       }
-      100% { 
-        transform: translateX(100%); 
+      100% {
+        transform: translateX(100%);
         opacity: 0;
       }
     }
-  
+
     .shipping-message {
       font-size: 13px;
       color: {{ settings.free_shipping_message_color | default: '#282828' }};
       font-weight: 400;
       line-height: 1.3;
     }
-  
+
     .message-success {
       color: {{ settings.free_shipping_success_color | default: '#4A5568' }} !important;
       font-weight: 500;
     }
-  
+
     @media screen and (max-width: 420px) {
       .free-shipping-bar {
         padding: 10px 14px;
         margin: 10px 0 0;
       }
-      
+
       .item-count {
         font-size: 14px;
         margin-bottom: 8px;
       }
-      
+
       .progress-track {
         height: 6px;
       }
-      
+
       .progress-container {
         margin-bottom: 8px;
       }
-      
+
       .shipping-message {
         font-size: 12px;
       }
@@ -243,8 +243,8 @@
           <div class="progress-fill{% if current_items >= free_shipping_threshold %} success{% endif %}" style="width: {{ progress_percentage }}%"></div>
         </div>
       </div>
-      
-     
+
+
     </div> {% endcomment %}
        {%- endif -%}
 
@@ -293,7 +293,7 @@
         {% comment %} <p class="mini-cart__empty-text h3">{{ 'sections.cart.empty' | t }}</p> {% endcomment %}
         <div class="mini-cart__empty-message typeset">{{ settings.empty_cart_message }}</div>
         {%- if settings.empty_cart_collections == blank -%}
-          <a href="{{ routes.all_products_collection_url }}" class="button{% if settings.empty_cart_button_secondary %} button--tertiary{% endif %}">{{ 'general.continue_shopping' | t }}</a>
+          <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button{% if settings.empty_cart_button_secondary %} button--tertiary{% endif %}">{{ 'general.continue_shopping' | t }}</a>
         {%- else -%}
           <ul class="mini-cart__empty-collections list-unstyled">
             {%- for collection_card in settings.empty_cart_collections -%}
@@ -304,7 +304,7 @@
           </ul>
         {%- endif -%}
       </div>
-  
+
       {%- if cart == empty and settings.cart_recommendations_enabled and settings.cart_recommendations_products != blank -%}
         {%- assign animate_count = animate_count | plus: 1 -%}
         <div class="cart-recommendations" data-animate data-animate-delay-{{ animate_count }}>
@@ -332,7 +332,7 @@
                     </div>
                   {% endif %}
                   <div class="product-description">
-                    {%- if settings.cart_recommendations_show_vendor -%} 
+                    {%- if settings.cart_recommendations_show_vendor -%}
                       <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
                       <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                     {%- endif -%}
@@ -341,7 +341,7 @@
                     </div>
                     {%- if settings.cart_recommendations_show_price -%}
                       {% render 'price', product: recommendation %}
-  
+
                       <div class="product-button">
                         {%- if recommendation.available and recommendation.variants.size == 1 -%}
                           <add-to-cart class="button button--small button--cta" data-variant-id="{{ recommendation.selected_or_first_available_variant.id }}">
@@ -389,7 +389,7 @@
           </ul>
         </div>
       {%- endif -%}
-  
+
       <div class="mini-cart__main" id="main-cart-items">
         {%- if cart != empty and settings.cart_recommendations_enabled -%}
           {%- liquid
@@ -423,7 +423,7 @@
                       </div>
                     {% endif %}
                     <div class="product-description">
-                      {%- if settings.cart_recommendations_show_vendor -%} 
+                      {%- if settings.cart_recommendations_show_vendor -%}
                         <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
                         <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                       {%- endif -%}
@@ -432,7 +432,7 @@
                       </div>
                       {%- if settings.cart_recommendations_show_price -%}
                         {% render 'price', product: recommendation %}
-  
+
                         <div class="product-button">
                           {%- if recommendation.available and recommendation.variants.size == 1 -%}
                             <add-to-cart class="button button--small button--cta" data-variant-id="{{ recommendation.selected_or_first_available_variant.id }}">
@@ -480,12 +480,12 @@
             </ul>
           </cart-recommendations>
         {%- endif -%}
-  
+
         <cart-items>
           {%- assign animate_count = animate_count | plus: 1 -%}
           <ul class="mini-cart__navigation" data-animate data-animate-delay-{{ animate_count }}>
             {%- for item in cart.items -%}
-            <li data-variant-id="{{ item.variant_id }}" data-product-id="{{ item.product.id }}" data-handle="{{ item.product.handle }}" data-quantity="{{ item.quantity }}" data-price="{{ item.original_price }}">
+            <li class="cart-item" data-variant-id="{{ item.variant_id }}" data-product-id="{{ item.product.id }}" data-handle="{{ item.product.handle }}" data-quantity="{{ item.quantity }}" data-price="{{ item.original_price }}">
               <div class="loading-overlay hidden">
                 <div class="loading-overlay__spinner">
                   {% render 'icon', icon: 'spinner' %}
@@ -526,7 +526,7 @@
                   <div class="product-content">
                     <a href="{{ item.url }}" class="link product-title">{{ item.product.title }}</a>
                   </div>
-    
+
                   {%- if item.product.has_only_default_variant == false or item.properties.size != 0 or item.selling_plan_allocation != null -%}
                     {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
                       <dl>
@@ -538,7 +538,7 @@
                             </div>
                           {%- endfor -%}
                         {%- endif -%}
-    
+
                         {%- for property in item.properties -%}
                           {%- assign property_first_char = property.first | slice: 0 -%}
                           {%- if property.last != blank and property_first_char != '_' -%}
@@ -556,7 +556,7 @@
                             </div>
                           {%- endif -%}
                         {%- endfor -%}
-  
+
                         {%- if item.variant.available and item.unit_price_measurement -%}
                           <div class="unit-price">
                             <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
@@ -571,11 +571,11 @@
                         {%- endif -%}
                       </dl>
                     {%- endif -%}
-    
+
                     {%- if item.selling_plan_allocation != null -%}
                       <div class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</div>
                     {%- endif -%}
-  
+
                     <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
                       {%- for discount in item.discounts -%}
                         <li class="discounts__discount">
@@ -585,7 +585,7 @@
                       {%- endfor -%}
                     </ul>
                   {%- endif -%}
-                  
+
                   <div class="product-quantity">
                     <dt>
                       {%- liquid
@@ -611,7 +611,6 @@
                             max="{{item.variant.inventory_quantity }}"
                             aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                             id="Quantity-{{ item.index | plus: 1 }}"
-                            oninput="if(this.value > this.max) this.value = this.max;"
                             data-index="{{ item.index | plus: 1 }}"
                           />
                           <button class="quantity__button no-js-hidden test" name="plus" type="button">
@@ -619,6 +618,11 @@
                             {% render 'icon', icon: 'plus' %}
                           </button>
                         </quantity-input>
+
+                        {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
+                        <div class="cart-item-warning" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
+                          Last {{ item.variant.inventory_quantity }} available
+                        </div>
                       {%- else -%}
                         <gift-quantity class="quantity"
                           cart-items-size="{{ cart.items.size }}"
@@ -707,7 +711,7 @@
           </ul>
         </cart-items>
       </div>
-  
+
       {%- assign animate_count = animate_count | plus: 1 -%}
       <div class="mini-cart__footer" data-animate data-animate-delay-{{ animate_count }}>
         {%- if gift_wrapping != nil -%}
@@ -740,7 +744,7 @@
             </label>
           </gift-wrapping>
         {%- endif -%}
-  
+
   {%- liquid
     # Перевірити чи є гіфт-бандл в кошику
     assign gift_variant_id = 43694372257923
@@ -748,7 +752,7 @@
     assign gift_in_cart = false
     assign non_gift_items_count = 0
     assign customer_qualifies_for_gift = false
-    
+
     for item in cart.items
       if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
         assign gift_in_cart = true
@@ -756,15 +760,15 @@
         assign non_gift_items_count = non_gift_items_count | plus: item.quantity
       endif
     endfor
-    
+
     # Перевірити чи кастомер має право на подарунок (вже використовував раніше, підписаний, або мав подарунок в кошику)
     assign gift_cookie_check = request.headers.cookie | split: 'beyours:gift-popup=true'
     assign gift_claimed_cookie = request.headers.cookie | split: 'beyours:gift-bundle-claimed=true'
-    
+
     if gift_cookie_check.size > 1 or gift_claimed_cookie.size > 1 or customer or gift_in_cart
       assign customer_qualifies_for_gift = true
     endif
-    
+
     assign first_cart_item = cart.items.first
     if first_cart_item.product.metafields.custom.cart_upsell_products_ != blank
       assign upsell_products = first_cart_item.product.metafields.custom.cart_upsell_products_.value
@@ -829,7 +833,7 @@
     .gift-icon img {
       width: 200px;
       height: auto;
-    } 
+    }
 
     @keyframes giftBounce {
       0%, 100% { transform: translateY(0); }
@@ -932,7 +936,7 @@
         padding: 10px 18px;
       }
     }
-    
+
     .gift-bundle-offer {
       display: flex;
       align-items: center;
@@ -943,35 +947,35 @@
       padding: 12px 16px;
       margin-bottom: 12px;
     }
-    
+
     .gift-bundle-content {
       display: flex;
       align-items: center;
       flex: 1;
     }
-    
+
     .gift-bundle-icon {
       display: none;
     }
-    
+
     .gift-bundle-text {
       flex: 1;
     }
-    
+
     .gift-bundle-title {
       font-size: 14px;
       font-weight: 500;
       margin: 0 0 4px 0;
       color: #212529;
     }
-    
+
     .gift-bundle-description {
       font-size: 12px;
       margin: 0;
       color: #6c757d;
       line-height: 1.3;
     }
-    
+
     .gift-bundle-add,
     .gift-bundle-remove {
       flex-shrink: 0;
@@ -980,34 +984,34 @@
       font-size: 12px;
       margin-left: 12px;
     }
-    
+
     .gift-bundle-add {
       background: #28a745;
       border-color: #28a745;
     }
-    
+
     .gift-bundle-add:hover {
       background: #218838;
       border-color: #218838;
     }
-    
+
     .gift-bundle-add:disabled {
       background: #6c757d;
       border-color: #6c757d;
       cursor: not-allowed;
     }
-    
+
     .gift-bundle-remove {
       background: transparent;
       color: #dc3545;
       border-color: #dc3545;
     }
-    
+
     .gift-bundle-remove:hover {
       background: #dc3545;
       color: white;
     }
-    
+
     .gift-validation-message {
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -1015,13 +1019,13 @@
       padding: 12px 16px;
       margin-top: 12px;
     }
-    
+
     .validation-content {
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    
+
     .validation-text p {
       margin: 0;
       font-size: 12px;
@@ -1029,29 +1033,29 @@
       line-height: 1.3;
       text-align: center;
     }
-    
+
     @media screen and (max-width: 749px) {
       .mini-cart__gift-section {
         padding: 0 16px;
       }
-      
+
       .gift-bundle-offer {
         padding: 12px;
       }
-      
+
       .gift-bundle-icon {
         font-size: 24px;
         margin-right: 8px;
       }
-      
+
       .gift-bundle-title {
         font-size: 13px;
       }
-      
+
       .gift-bundle-description {
         font-size: 11px;
       }
-      
+
       .gift-bundle-add,
       .gift-bundle-remove {
         padding: 6px 8px;
@@ -1063,12 +1067,12 @@
       cursor: not-allowed !important;
       opacity: 1 !important;
     }
-    
+
     .button--disabled:hover {
       opacity: 1 !important;
     }
   </style>
-  
+
     {% assign available_upsell_products = 0 %}
     {% for product in collections.upsell-products.products %}
       {% assign in_cart = false %}
@@ -1086,7 +1090,7 @@
     {% if available_upsell_products > 0 %}
     <div class="mini-cart__upsell" data-animate data-animate-delay-{{ animate_count | plus: 1 }}>
       <h3 class="mini-cart__upsell-heading">{{ upsell_heading }}</h3>
-      {% render 'changable-upsell' cart: cart %} 
+      {% render 'changable-upsell' cart: cart %}
       <div class="custom-upsell-slider">
         <div class="slider-wrapper">
           {% for product in collections.upsell-products.products %}
@@ -1106,12 +1110,12 @@
                          alt="{{ product.featured_image.alt | escape }}"
                          width="40" height="40" loading="lazy">
                   </a>
-  
+
                   <div class="mini-cart__upsell-details">
                     <a href="{{ product.url }}" class="mini-cart__upsell-title">
                       {{ product.title | upcase }}
                     </a>
-  
+
                     {% unless product.has_only_default_variant %}
                       <div class="mini-cart__upsell-variants">
                         <div class="select mini-cart__upsell-select">
@@ -1132,7 +1136,7 @@
                              value="{{ product.variants.first.id }}">
                     {% endunless %}
                   </div>
-  
+
                   <add-to-cart class="mini-cart__upsell-add-button"
                                data-product-id="{{ product.id }}"
                                {% if product.has_only_default_variant %}
@@ -1146,10 +1150,10 @@
             {% endunless %}
           {% endfor %}
         </div>
-        
+
         <div class="slider-pagination"></div>
       </div>
-  
+
     </div>
     {% endif %}
     <style>
@@ -1160,7 +1164,7 @@
         touch-action: pan-x;
         user-select: none;
       }
-      
+
       .slider-wrapper {
         position: relative;
         width: 100%;
@@ -1170,11 +1174,11 @@
         cursor: grab;
         transition: height 0.5s cubic-bezier(0.23, 1, 0.32, 1);
       }
-      
+
       .slider-wrapper:active {
         cursor: grabbing;
       }
-      
+
       .slider-slide {
         position: absolute;
         top: 0;
@@ -1191,11 +1195,11 @@
         transform-style: preserve-3d;
 
       }
-      
+
       .slider-slide.slider-slide-initialized {
         display: block;
       }
-      
+
       .slider-pagination {
         position: relative;
         text-align: center;
@@ -1203,7 +1207,7 @@
         visibility: visible;
         z-index: 10;
       }
-      
+
       .slider-bullet {
         display: inline-block;
         width: 10px;
@@ -1217,53 +1221,53 @@
         outline: none;
         position: relative;
       }
-      
+
       .slider-bullet.active {
         background: #333;
         transform: scale(1.3);
       }
-      
+
       .slider-bullet:hover {
         background: #666;
         transform: scale(1.1);
       }
-      
+
       .mini-cart__upsell-item {
         width: 100%;
         height: 100%;
       }
-      
-      
+
+
       @media (max-width: 768px) {
         .custom-upsell-slider {
           margin: 0 -3px;
         }
-        
+
         .slider-slide {
           padding: 0 3px;
         }
-        
+
         .slider-bullet {
           width: 8px;
           height: 8px;
           margin: 0 4px;
         }
       }
-      
+
       .cart-drawer [data-animate-delay-3],
       .cart-drawer [data-animate-delay-2],
       .cart-drawer [data-animate-delay-4] {
-        transition-delay: 0s !important; 
+        transition-delay: 0s !important;
       }
       .mini-cart__footer {
         padding-top: 5px;
       }
-      
+
       .mini-cart__upsell {
         padding-top: 0 !important;
         border-radius: 4px;
       }
-      
+
       .mini-cart__upsell-heading {
         margin-top: 8px !important;
         font-size: 14px;
@@ -1272,20 +1276,20 @@
         text-align: center;
         color: #444;
       }
-      
-      
+
+
       .mini-cart__upsell-item {
         background: #fff;
         border-radius: 3px;
         padding: 6px 5px;
       }
-      
+
       .mini-cart__upsell-product {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
-      
+
       .mini-cart__upsell-image {
         width: 40px;
         height: 40px;
@@ -1294,19 +1298,19 @@
         overflow: hidden;
         border-radius: 3px;
       }
-      
+
       .mini-cart__upsell-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-      
+
       .mini-cart__upsell-details {
         flex: 1 1 0;
         min-width: 0;
         padding-right: 5px;
       }
-      
+
       .mini-cart__upsell-title {
         display: inline-block;
         max-width: 150px;
@@ -1320,21 +1324,21 @@
         color: inherit;
         text-decoration: none;
       }
-      
+
       .mini-cart__upsell-variants {
         margin-top: 2px;
       }
-      
+
       .mini-cart__upsell-select {
         margin-top: 2px;
       }
-      
+
       .mini-cart__upsell-select select {
         font-size: 10px;
         padding: 1px 5px;
         height: auto;
       }
-      
+
      .mini-cart__upsell-add-button {
     font-size: 10px;
     padding: 5px 10px;
@@ -1349,7 +1353,7 @@
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(108, 108, 108, 0.2);
   }
-  
+
   .mini-cart__upsell-add-button::before {
     content: '';
     position: absolute;
@@ -1360,63 +1364,63 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
     transition: left 0.4s ease-out;
   }
-  
+
   .mini-cart__upsell-add-button:hover {
     background: #555;
     box-shadow: 0 4px 12px rgba(85, 85, 85, 0.3);
     color: #fff;
   }
-  
+
   .mini-cart__upsell-add-button:hover::before {
     left: 100%;
   }
-      
+
       .mini-cart__upsell-add-button.added {
         background: #17bf17;
       }
-      
+
       /* Improved mobile responsiveness for screens below 420px */
       @media screen and (max-width: 420px) {
         .mini-cart__upsell-product {
           flex-wrap: wrap;
         }
-        
+
         .mini-cart__upsell-image {
           width: 35px;
           height: 35px;
         }
-        
+
         .mini-cart__upsell-details {
           width: calc(100% - 115px);
         }
-        
+
         .mini-cart__upsell-title {
           max-width: 100%;
           font-size: 10px;
         }
-        
+
         .mini-cart__upsell-add-button {
           font-size: 9px;
           padding: 4px 8px;
           margin-left: auto;
         }
-        
+
         .mini-cart__upsell-select select {
           font-size: 9px;
           padding: 0 3px;
         }
-        
+
         /* For very small screens */
         @media screen and (max-width: 340px) {
           .mini-cart__upsell-image {
             width: 30px;
             height: 30px;
           }
-          
+
           .mini-cart__upsell-details {
             width: calc(100% - 100px);
           }
-          
+
           .mini-cart__upsell-add-button {
             font-size: 8px;
             padding: 3px 6px;
@@ -1432,12 +1436,12 @@
   add-to-cart.mini-cart__upsell-add-button.clicked::after {
     opacity: 1;
   }
-  
+
      .button--secondary {
     position: relative;
     overflow: hidden;
   }
-  
+
   .button--secondary::before {
     content: '';
     position: absolute;
@@ -1454,12 +1458,12 @@
     opacity: 0;
     transition: none;
   }
-  
+
   .button--secondary:hover::before {
     opacity: 1;
     animation: shine 0.6s ease-out;
   }
-  
+
   @keyframes shine {
     0% { left: -100%; }
     100% { left: 100%; }
@@ -1475,9 +1479,9 @@
         border-top: 1px solid #D2D5D9;
       }
     </style>
-  
-  
-        
+
+
+
         {%- if settings.show_cart_note or settings.show_shipping_calculator or gift_wrapping != nil and cart.attributes.gift-wrapping -%}
           <div class="mini-cart__actions">
             {%- if gift_wrapping != nil and cart.attributes.gift-wrapping -%}
@@ -1504,7 +1508,7 @@
                 </div>
               </details>
             {%- endif -%}
-  
+
             {%- if settings.show_cart_note -%}
               <details class="mini-cart__action disclosure-has-popup">
                 <summary>
@@ -1529,7 +1533,7 @@
                 </div>
               </details>
             {%- endif -%}
-  
+
             {%- if settings.show_shipping_calculator -%}
               <details class="mini-cart__action disclosure-has-popup">
                 <summary>
@@ -1598,14 +1602,14 @@
             {%- endif -%}
           </div>
         {%- endif -%}
-  
+
         {%- unless settings.disable_view_cart -%}
           <div class="subtotal">
             <div class="label h3">{{ 'sections.cart.subtotal' | t }}</div>
             <div class="value price" id="mini-cart-subtotal">{{ cart.total_price | money_with_currency }}</div>
           </div>
         {%- endunless -%}
-  
+
         <div class="taxes-discounts">
           {%- if cart.cart_level_discount_applications.size > 0 -%}
             <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
@@ -1618,17 +1622,11 @@
               {%- endfor -%}
             </ul>
           {%- endif -%}
-  {% if settings.tax_note != blank 
-     and localization.country.iso_code != 'GB' 
-     and cart.total_price > 15000 %}
-    <small class="tax-note caption-large rte">
-      {{ settings.tax_note }}
-    </small>
-  {% endif %}
-  
-  
+          {%- render 'tax-note' -%}
+
+
         </div>
-  
+
         <div class="button-container">
           <button
             class="button"
@@ -1645,13 +1643,13 @@
             <a class="button button--secondary" href="{{ routes.cart_url }}">{{ 'general.cart.view' | t }}</a>
           {%- endunless -%}
         </div>
-        
+
         <style>
           .button--disabled {
             cursor: not-allowed !important;
             opacity: 1 !important;
           }
-          
+
           .button--disabled:hover {
             opacity: 1 !important;
           }
@@ -1681,7 +1679,7 @@
     }
   });
   </script>
-  
+
   <script>
     if (window.initAfterAjax) {
       window.initAfterAjax();
@@ -1695,5 +1693,4 @@
       });
     }
   </script>
-  
-  
+

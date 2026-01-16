@@ -31,12 +31,12 @@
 <cart-items class="page-width{% if cart == empty %} is-empty{% endif %} section--padding">
   <div class="title-wrapper">
     <h1 class="title">{{ 'sections.cart.title' | t }}</h1>
-    <a href="{{ routes.all_products_collection_url }}" class="link link--underline">{{ 'general.continue_shopping' | t }}</a>
+    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="link link--underline">{{ 'general.continue_shopping' | t }}</a>
   </div>
 
   <div class="cart__warnings">
     {% comment %} <p class="cart__empty-text h2">{{ 'sections.cart.empty' | t }}</p> {% endcomment %}
-    <a href="{{ routes.all_products_collection_url }}" class="button button--tertiary">{{ 'general.continue_shopping' | t }}</a>
+    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">{{ 'general.continue_shopping' | t }}</a>
   </div>
 
   <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
@@ -219,7 +219,7 @@
                     </div>
                   </td>
 
-                  <td class="cart-item__quantity">
+                  <td class="cart-item__quantity target">
                     {%- liquid
                       # Check if this is gift bundle (variant_id = 43694372257923)
                       assign is_gift_bundle = false
@@ -276,6 +276,11 @@
                         </button>
                       </gift-quantity>
                     {%- endif -%}
+
+                    {%- comment -%} Debug info inline - only shows when max reached {%- endcomment -%}
+                    <div class="cart-item-warning" data-line="{{ item.index | plus: 1 }}" data-max="{{ item.variant.inventory_quantity }}">
+                      Last {{ item.variant.inventory_quantity }} available
+                    </div>
                   </td>
 
                   <td class="cart-item__totals right">

@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "breadcrumbs_home_icon_bool": false,
+        "breadcrumb_delimeter": "angle_right",
+        "breadcrumb_bg_color": "rgba(0,0,0,0)",
+        "breadcrumb_text_color": "#474345",
+        "breadcrumb_accent_color_bool": false
+      }
+    },
     "main": {
       "type": "main-page",
       "disabled": true,
@@ -385,6 +395,7 @@
     }
   },
   "order": [
+    "breadcrumb",
     "main",
     "image-banner",
     "faq_tabs_3GXDxJ",

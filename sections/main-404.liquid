@@ -8,6 +8,126 @@
       margin-top: 2rem;
     }
   }
+
+  /* Description text */
+  .page-404__description {
+    margin-top: 1rem;
+    color: rgb(var(--color-foreground) / 0.75);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Navigation links styling */
+  .page-404__navigation {
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgb(var(--color-foreground) / 0.1);
+    border-bottom: 1px solid rgb(var(--color-foreground) / 0.1);
+  }
+
+  .page-404__nav-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .page-404__nav-section {
+    text-align: center;
+  }
+
+  .page-404__nav-heading {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: rgb(var(--color-foreground));
+  }
+
+  .page-404__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .page-404__nav-list li {
+    margin: 0;
+  }
+
+  .page-404__nav-link {
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+    padding: 0.4rem 0.75rem;
+    display: inline-block;
+    font-size: 1.4rem;
+    background-color: transparent;
+    background-image: linear-gradient(to top, rgb(var(--color-foreground)) 0px, rgb(var(--color-foreground)) 0px), linear-gradient(to top, transparent 0px, transparent 0px);
+    background-repeat: no-repeat;
+    background-position: right bottom, right bottom;
+    background-size: 0% 0.1rem, 100% 0.1rem;
+    transition-property: background-size;
+    transition-timing-function: ease;
+    transition-duration: var(--duration-default);
+  }
+
+  .page-404__nav-link:hover {
+    background-position: left bottom, left bottom;
+    background-size: 100% 0.1rem, 100% 0.1rem;
+  }
+
+  #shopify-section-template--20613706055811__you-may-also-like .view-all {
+    display: none;
+  }
+
+  .page-404__cta {
+    margin-top: 2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .page-404__navigation {
+      padding: 1.25rem 0;
+    }
+
+    .page-404__nav-container {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .page-404__navigation {
+      margin-top: 1.5rem;
+      padding: 1.25rem 0;
+    }
+
+    .page-404__nav-container {
+      gap: 1.25rem;
+    }
+
+    .page-404__nav-heading {
+      font-size: 1.3rem;
+    }
+
+    .page-404__nav-link {
+      font-size: 1.2rem;
+      padding: 0.35rem 0.65rem;
+      background-image: linear-gradient(to top, rgb(var(--color-foreground)) 0px, rgb(var(--color-foreground)) 0px), linear-gradient(to top, transparent 0px, transparent 0px);
+      background-repeat: no-repeat;
+      background-position: right bottom, right bottom;
+      background-size: 0% 0.1rem, 100% 0.1rem;
+      transition-property: background-size;
+      transition-timing-function: ease;
+      transition-duration: var(--duration-default);
+    }
+
+    .page-404__nav-link:active {
+      background-position: left bottom, left bottom;
+      background-size: 100% 0.1rem, 100% 0.1rem;
+    }
+  }
 </style>
 
 <div class="page-404 page-width page-margin center">
@@ -17,7 +137,66 @@
   <h1 class="title">
     {{ 'templates.404.title' | t }}
   </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button button--tertiary">
-    {{ 'general.continue_shopping' | t }}
-  </a>
+  <p class="page-404__description">
+    The page you're looking for might have been moved or doesn't exist. Here are some helpful links to get you back on track:
+  </p>
+
+  {%- comment -%} Navigation Links Section {%- endcomment -%}
+  <div class="page-404__navigation">
+    <div class="page-404__nav-container">
+      {%- comment -%} Featured Product {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Featured Product</h2>
+        <ul class="page-404__nav-list">
+          <li>
+            <a href="/products/illuminating-leave" class="page-404__nav-link">
+              Illuminating Leave-In
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {%- comment -%} Popular Collections {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Popular Collections</h2>
+        <ul class="page-404__nav-list">
+          <li>
+            <a href="{{ routes.collections_url }}/main-collection" class="page-404__nav-link">
+              All Products
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.collections_url }}/bundles" class="page-404__nav-link">
+              Bundles
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {%- comment -%} Help & Support {%- endcomment -%}
+      <div class="page-404__nav-section">
+        <h2 class="page-404__nav-heading">Need Help?</h2>
+        <ul class="page-404__nav-list">
+          {%- if pages['contact'] -%}
+            <li>
+              <a href="{{ pages['contact'].url }}" class="page-404__nav-link">
+                Contact Us
+              </a>
+            </li>
+          {%- endif -%}
+          <li>
+            <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="page-404__nav-link">
+              Browse All Products
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-404__cta">
+    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+  </div>
 </div>
