@@ -1603,6 +1603,22 @@
           </div>
         {%- endif -%}
 
+        {%- if settings.show_discount_input -%}
+            <discount-code class="cart__discount cart__discount--prominent field" style="margin-bottom: 1.5rem;">
+
+              <div class="cart__discount-wrapper">
+                <input
+                  type="text"
+                  name="discount"
+                  form="cart"
+                  class="field__input"
+                  placeholder="{{ 'sections.cart.discount_placeholder' | t }}"
+                  id="discount-code-input-drawer"
+                >
+              </div>
+            </discount-code>
+          {%- endif -%}
+
         {%- unless settings.disable_view_cart -%}
           <div class="subtotal">
             <div class="label h3">{{ 'sections.cart.subtotal' | t }}</div>

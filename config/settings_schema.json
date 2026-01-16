@@ -804,6 +804,12 @@
         "label": "t:settings_schema.cart-drawer.settings.show_shipping_calculator.label"
       },
       {
+        "type": "checkbox",
+        "id": "show_discount_input",
+        "default": true,
+        "label": "Show discount codes"
+      },
+      {
         "type": "text",
         "id": "shipping_calculator_default_country",
         "default": "United States",
