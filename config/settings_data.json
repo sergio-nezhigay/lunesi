@@ -81,6 +81,7 @@
     "cart_recommendations_heading": "You may also like",
     "cart_recommendations_show_vendor": true,
     "empty_cart_redirect_url": "/collections/main-collection",
+    "search_results": "product",
     "predictive_search_show_vendor": true,
     "social_instagram_link": "https://www.instagram.com/lunesibeauty",
     "social_tiktok_link": "",
