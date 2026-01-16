@@ -3,6 +3,9 @@
     width: 50px !important;
     height: auto;
   }
+  .mini-cart .cart__discount{
+    justify-content: end !important;
+  }
 </style>
 {% comment %}theme-check-disable TemplateLength{% endcomment %}
 {%- liquid
@@ -1260,7 +1263,7 @@
         transition-delay: 0s !important;
       }
       .mini-cart__footer {
-        padding-top: 5px;
+        padding-top: 0;
       }
 
       .mini-cart__upsell {
@@ -1604,7 +1607,7 @@
         {%- endif -%}
 
         {%- if settings.show_discount_input -%}
-            <discount-code class="cart__discount cart__discount--prominent field" style="margin-bottom: 1.5rem;">
+            <discount-code class="cart__discount cart__discount--prominent field" style="margin-top: 15px; margin-bottom: 15px;">
 
               <div class="cart__discount-wrapper">
                 <input
