@@ -112,8 +112,11 @@
         </cart-note>
       {%- endif -%}
 
+    </div>
+
+    <div>
       {%- if section.settings.show_discount_input -%}
-        <discount-code class="cart__discount field">
+        <discount-code class="cart__discount cart__discount--prominent field">
           <label for="discount-code-input">{{ 'sections.cart.discount_code' | t }}</label>
           <div class="cart__discount-wrapper">
             <input
@@ -127,9 +130,7 @@
           </div>
         </discount-code>
       {%- endif -%}
-    </div>
 
-    <div>
       {% for block in section.blocks %}
         {%- case block.type -%}
           {%- when 'subtotal' -%}

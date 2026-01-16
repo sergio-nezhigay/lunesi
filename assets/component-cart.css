@@ -108,6 +108,30 @@ cart-items {
   padding: 1rem;
 }
 
+.cart__discount--prominent {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.cart__discount--prominent label {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .cart__discount--prominent {
+    margin-bottom: 1rem;
+    text-align: end;
+  }
+
+  .cart__discount-wrapper input {
+    text-align: end;
+  }
+
+  .cart__discount--prominent label {
+    margin-bottom: 0.6rem;
+  }
+}
+
 @media screen and (min-width: 750px) {
   .cart__items {
     grid-column-start: 1;
@@ -241,7 +265,11 @@ cart-items {
 
   .js-contents + .cart__ctas,
   .cart__ctas + .js-contents {
-    margin-top: 2.2rem;
+    margin-top: 1rem;
+  }
+
+  .tax-note {
+    margin-top: 1rem;
   }
 }
 .wallet-cart-grid{
