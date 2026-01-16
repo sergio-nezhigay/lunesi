@@ -184,9 +184,57 @@ opacity: 0.5;
   margin-top: 8px;
 }
 
-.file-upload-button, .file-upload-text {
+.file-upload-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  line-height: normal;
+  gap: 5px;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.file-upload-button:hover {
+  background: #e8e8e8;
+  border-color: #bbb;
+}
+
+.file-upload-button:active {
+  background: #d8d8d8;
+}
+
+.file-upload-button .file-upload-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.file-upload-button .file-upload-icon path {
+  fill: currentColor;
+}
+
+.file-upload-button span {
+  line-height: 1;
+}
+
+.file-upload-text .file-upload-icon {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
- line-height: normal;
-  gap: 5px;
+  justify-content: center;
 }
