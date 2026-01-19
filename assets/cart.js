@@ -335,17 +335,12 @@ class BuyXGetYHandler {
     this.settings = theme.shopSettings?.buyXGetY || {};
     this.isProcessing = false;
 
-    console.log('🎁 BuyXGetY: Constructor called, settings:', this.settings);
-
     if (this.settings.enabled && this.settings.discountCode) {
       this.init();
-    } else {
-      console.log('🎁 BuyXGetY: NOT initialized - enabled:', this.settings.enabled, 'code:', this.settings.discountCode);
     }
   }
 
   init() {
-    console.log('🎁 BuyXGetY: Initializing event listeners');
     // Listen for form submissions on cart forms
     document.addEventListener('submit', this.handleFormSubmit.bind(this), true);
 
@@ -357,8 +352,6 @@ class BuyXGetYHandler {
     const checkoutButton = event.target.closest('button[name="checkout"], [data-checkout-button]');
     if (!checkoutButton) return;
 
-    console.log('🎁 BuyXGetY: Checkout button clicked:', checkoutButton);
-
     // Try to find form: first via closest(), then via form attribute
     let form = checkoutButton.closest('form');
 
@@ -366,18 +359,11 @@ class BuyXGetYHandler {
     if (!form && checkoutButton.hasAttribute('form')) {
       const formId = checkoutButton.getAttribute('form');
       form = document.getElementById(formId);
-      console.log('🎁 BuyXGetY: Button has form attribute, looking up form by id:', formId);
     }
 
-    console.log('🎁 BuyXGetY: Found form:', form, 'form.id:', form?.id);
     if (!form) return;
 
-    // Let the form submit handler deal with this
-    // But prevent default if we need to add gifts first
-    const shouldAdd = this.shouldAddGifts(form);
-    console.log('🎁 BuyXGetY: shouldAddGifts result:', shouldAdd);
-
-    if (shouldAdd) {
+    if (this.shouldAddGifts(form)) {
       event.preventDefault();
       event.stopPropagation();
       this.processCheckout(form);
@@ -388,20 +374,13 @@ class BuyXGetYHandler {
     const form = event.target;
     if (form.tagName !== 'FORM') return;
 
-    console.log('🎁 BuyXGetY: Form submit detected, form.id:', form.id, 'form.action:', form.action);
-
     // Check if this is a cart form going to checkout
     const isCheckout = form.action?.includes('/cart') || form.id === 'cart';
     const hasCheckoutButton = form.querySelector('button[name="checkout"]');
 
-    console.log('🎁 BuyXGetY: isCheckout:', isCheckout, 'hasCheckoutButton:', hasCheckoutButton);
-
     if (!isCheckout || !hasCheckoutButton) return;
 
-    const shouldAdd = this.shouldAddGifts(form);
-    console.log('🎁 BuyXGetY: shouldAddGifts result:', shouldAdd);
-
-    if (shouldAdd) {
+    if (this.shouldAddGifts(form)) {
       event.preventDefault();
       event.stopPropagation();
       this.processCheckout(form);
@@ -409,8 +388,6 @@ class BuyXGetYHandler {
   }
 
   shouldAddGifts(form) {
-    console.log('🎁 BuyXGetY: shouldAddGifts called, isProcessing:', this.isProcessing, 'enabled:', this.settings.enabled);
-
     if (this.isProcessing) return false;
     if (!this.settings.enabled) return false;
 
@@ -420,28 +397,15 @@ class BuyXGetYHandler {
     // 3. By specific IDs
     const formId = form.id;
 
-    const insideForm = form.querySelector('input[name="discount"]');
-    const linkedToForm = formId ? document.querySelector(`input[name="discount"][form="${formId}"]`) : null;
-    const byId1 = document.querySelector('#discount-code-input');
-    const byId2 = document.querySelector('#discount-code-input-drawer');
+    const discountInput = form.querySelector('input[name="discount"]') ||
+                          (formId ? document.querySelector(`input[name="discount"][form="${formId}"]`) : null) ||
+                          document.querySelector('#discount-code-input') ||
+                          document.querySelector('#discount-code-input-drawer');
 
-    console.log('🎁 BuyXGetY: Looking for discount input:');
-    console.log('  - Inside form:', insideForm);
-    console.log('  - Linked via form attr:', linkedToForm);
-    console.log('  - By ID #discount-code-input:', byId1);
-    console.log('  - By ID #discount-code-input-drawer:', byId2);
-
-    const discountInput = insideForm || linkedToForm || byId1 || byId2;
-
-    if (!discountInput) {
-      console.log('🎁 BuyXGetY: No discount input found!');
-      return false;
-    }
+    if (!discountInput) return false;
 
     const enteredCode = discountInput.value.trim().toUpperCase();
     const triggerCode = this.settings.discountCode.trim().toUpperCase();
-
-    console.log('🎁 BuyXGetY: enteredCode:', enteredCode, 'triggerCode:', triggerCode, 'match:', enteredCode === triggerCode);
 
     return enteredCode === triggerCode;
   }
