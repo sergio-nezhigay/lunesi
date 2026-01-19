@@ -1,6 +1,6 @@
 {% comment %}
-Shopify Contact Form with File Upload and Base64 Encoding
-Place this in your contact page template or as a section
+  Shopify Contact Form with File Upload and Base64 Encoding
+  Place this in your contact page template or as a section
 {% endcomment %}
 {{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
 {{ 'custom-form.css' | asset_url | stylesheet_tag }}
@@ -42,15 +42,18 @@ Place this in your contact page template or as a section
 }
 {% endschema %}
 
-<div class="contact-form-wrapper page-width" style="padding-top: {{ section.settings.padding_top | default: 16 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 16 }}px;">
+<div
+  class="contact-form-wrapper page-width"
+  style="padding-top: {{ section.settings.padding_top | default: 16 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 16 }}px;"
+>
   <div class="rich-text">
-      <div class="rich-text__blocks left mobile-left">
-        <use-animate animate="">
-          <div class="rich-text__text typeset2 rte">
-            {{ section.settings.rich_text }}
-          </div>
-        </use-animate>
-      </div>
+    <div class="rich-text__blocks left mobile-left">
+      <use-animate animate="">
+        <div class="rich-text__text typeset2 rte">
+          {{ section.settings.rich_text }}
+        </div>
+      </use-animate>
+    </div>
   </div>
   {% form 'contact', id: 'contact-form', class: 'contact-form' %}
     {% if form.errors %}
@@ -91,18 +94,88 @@ Place this in your contact page template or as a section
     <div class="form-group">
       <select id="contact-reason" name="contact[reason]" class="form-select" required>
         <option value="">Contact Reason*</option>
-        <option value="Order status" {% if form.reason == 'Order status' %}selected{% endif %}>Order status</option>
-        <option value="Cancel or modify an order" {% if form.reason == 'Cancel or modify an order' %}selected{% endif %}>Cancel or modify an order</option>
-        <option value="My order is missing" {% if form.reason == 'My order is missing' %}selected{% endif %}>My order is missing</option>
-        <option value="My order arrived damaged" {% if form.reason == 'My order arrived damaged' %}selected{% endif %}>My order arrived damaged</option>
-        <option value="Issue with my product" {% if form.reason == 'Issue with my product' %}selected{% endif %}>Issue with my product</option>
-        <option value="Shipping questions" {% if form.reason == 'Shipping questions' %}selected{% endif %}>Shipping questions</option>
-        <option value="Product questions" {% if form.reason == 'Product questions' %}selected{% endif %}>Product questions</option>
-        <option value="Partnerships / collaboration" {% if form.reason == 'Partnerships / collaboration' %}selected{% endif %}>Partnerships / collaboration</option>
-        <option value="Other / general inquiry" {% if form.reason == 'Other / general inquiry' %}selected{% endif %}>Other / general inquiry</option>
+        <option
+          value="Order status"
+          {% if form.reason == 'Order status' %}
+            selected
+          {% endif %}
+        >
+          Order status
+        </option>
+        <option
+          value="Cancel or modify an order"
+          {% if form.reason == 'Cancel or modify an order' %}
+            selected
+          {% endif %}
+        >
+          Cancel or modify an order
+        </option>
+        <option
+          value="My order is missing"
+          {% if form.reason == 'My order is missing' %}
+            selected
+          {% endif %}
+        >
+          My order is missing
+        </option>
+        <option
+          value="My order arrived damaged"
+          {% if form.reason == 'My order arrived damaged' %}
+            selected
+          {% endif %}
+        >
+          My order arrived damaged
+        </option>
+        <option
+          value="Issue with my product"
+          {% if form.reason == 'Issue with my product' %}
+            selected
+          {% endif %}
+        >
+          Issue with my product
+        </option>
+        <option
+          value="Shipping questions"
+          {% if form.reason == 'Shipping questions' %}
+            selected
+          {% endif %}
+        >
+          Shipping questions
+        </option>
+        <option
+          value="Product questions"
+          {% if form.reason == 'Product questions' %}
+            selected
+          {% endif %}
+        >
+          Product questions
+        </option>
+        <option
+          value="Partnerships / collaboration"
+          {% if form.reason == 'Partnerships / collaboration' %}
+            selected
+          {% endif %}
+        >
+          Partnerships / collaboration
+        </option>
+        <option
+          value="Other / general inquiry"
+          {% if form.reason == 'Other / general inquiry' %}
+            selected
+          {% endif %}
+        >
+          Other / general inquiry
+        </option>
       </select>
       <span class="form-select-arrow">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 20 20"
+          fill="none"
+          style="display:block;"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path d="M6 8L10 12L14 8" stroke="#757575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
@@ -119,7 +192,8 @@ Place this in your contact page template or as a section
         placeholder="Order Number*"
       >
       <div id="cancel-modify-notice" class="order-notice" style="display: none;">
-        We'll make every effort to accommodate your request during business hours, but please note that once an order is placed, we cannot guarantee any changes can be made.
+        We'll make every effort to accommodate your request during business hours, but please note that once an order is
+        placed, we cannot guarantee any changes can be made.
       </div>
     </div>
 
@@ -158,9 +232,7 @@ Place this in your contact page template or as a section
     </div>
 
     <div class="form-group file-upload-group">
-      <div class="file-size-info">
-        (Optional: 5 files max, images will be automatically compressed)
-      </div>
+      <div class="file-size-info">(Optional: 5 files max, images will be automatically compressed)</div>
       <div class="file-upload-area" id="file-upload-area">
         <div class="file-upload-text">
           <div class="file-upload-icon">
@@ -176,63 +248,63 @@ Place this in your contact page template or as a section
           </svg>
           <span>Upload</span>
         </button>
-        <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx" style="display: none;">
+        <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx" class="visually-hidden">
       </div>
       <div class="file-list" id="file-list"></div>
     </div>
 
-   <!-- Hidden field to store file information as text -->
+    <!-- Hidden field to store file information as text -->
     <input type="hidden" name="contact[file_info]" id="file-info-data">
 
-    <button type="submit" class="submit-button" id="submit-btn">
-      SUBMIT
-    </button>
+    <button type="submit" class="submit-button" id="submit-btn">SUBMIT</button>
   {% endform %}
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector('#contact-form');
-  if (!form) return;
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('#contact-form');
+    if (!form) return;
 
-  const email = form.querySelector('input[name="contact[email]"]');
-  const errorIcon = '<span style="color:red;">⚠</span>';
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const email = form.querySelector('input[name="contact[email]"]');
+    const errorIcon = '<span style="color:red;">⚠</span>';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    form.addEventListener(
+      'submit',
+      function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-    form.querySelectorAll(".js-error").forEach(el => el.remove());
-    email.classList.remove("invalid");
-    email.removeAttribute("aria-invalid");
+        form.querySelectorAll('.js-error').forEach((el) => el.remove());
+        email.classList.remove('invalid');
+        email.removeAttribute('aria-invalid');
 
-    let hasError = false;
+        let hasError = false;
 
-    if (!email.value.trim() || !emailRegex.test(email.value)) {
-      showError(email, `${errorIcon} Email is invalid.`);
-      hasError = true;
+        if (!email.value.trim() || !emailRegex.test(email.value)) {
+          showError(email, `${errorIcon} Email is invalid.`);
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        form.submit();
+      },
+      true
+    );
+
+    function showError(input, message) {
+      const span = document.createElement('span');
+      span.className = 'form__message errors js-error';
+      span.innerHTML = message;
+
+      input.classList.add('invalid');
+      input.setAttribute('aria-invalid', 'true');
+
+      input.closest('.form-group').insertAdjacentElement('beforeend', span);
     }
-
-    if (hasError) return;
-
-    form.submit();
-  }, true);
-
-  function showError(input, message) {
-    const span = document.createElement("span");
-    span.className = "form__message errors js-error";
-    span.innerHTML = message;
-
-    input.classList.add("invalid");
-    input.setAttribute("aria-invalid", "true");
-
-    input.closest('.form-group')
-      .insertAdjacentElement("beforeend", span);
-  }
-});
+  });
 </script>
-
 
 <script>
 {% comment %}
@@ -495,9 +567,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // File selection
   fileSelectBtn.addEventListener('click', (e) => {
+    console.log('[Debug] Upload button clicked');
     e.preventDefault();
     e.stopPropagation();
+
+    // Fix: Clear value to allow selecting the same file again and reset state
+    fileInput.value = '';
+
+    console.log('[Debug] Triggering fileInput.click()');
     fileInput.click();
+  });
+
+  fileInput.addEventListener('click', (e) => {
+    console.log('[Debug] File input received click event');
+    // Note: The file dialog should open now.
+    // If it doesn't, the browser might be blocking it or the element is disabled/hidden in a way that prevents it.
+    console.log('[Debug] fileInput disabled?', fileInput.disabled);
+    console.log('[Debug] fileInput style display?', fileInput.style.display);
   });
 
   fileUploadArea.addEventListener('click', (e) => {
@@ -506,7 +592,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  fileInput.addEventListener('change', handleFileSelect);
+  fileInput.addEventListener('change', (e) => {
+    console.log('[Debug] File input change event fired', e.target.files);
+    handleFileSelect(e);
+    // Optional: Clear the value so the same file can be selected again if needed,
+    // or just so the change event fires if the user selects the same file.
+    // this.value = '';
+  });
 
   // Drag and drop
   fileUploadArea.addEventListener('dragenter', handleDragEnter);
