@@ -906,6 +906,42 @@
     ]
   },
   {
+    "name": "Buy X Get Y Promotion",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "When customer enters a specific discount code and clicks Checkout, automatically add gift products to their cart."
+      },
+      {
+        "type": "checkbox",
+        "id": "buy_x_get_y_enabled",
+        "label": "Enable Buy X Get Y",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "buy_x_get_y_discount_code",
+        "label": "Discount code trigger",
+        "default": "WELCOME-26",
+        "info": "When this code is entered, the gift products will be added to cart (case-insensitive)."
+      },
+      {
+        "type": "text",
+        "id": "buy_x_get_y_gift_variant_1",
+        "label": "Gift Product 1 - Variant ID",
+        "default": "45802203807875",
+        "info": "Enter the numeric variant ID (e.g. 45802203807875)"
+      },
+      {
+        "type": "text",
+        "id": "buy_x_get_y_gift_variant_2",
+        "label": "Gift Product 2 - Variant ID",
+        "default": "45802204823683",
+        "info": "Enter the numeric variant ID (e.g. 45802204823683)"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.search-behavior.name",
     "settings": [
       {

@@ -53,7 +53,13 @@
       isoCode: {{ cart.currency.iso_code | json }},
       cartDrawer: {{ settings.cart_drawer_enabled }},
       currencyCode: {{ settings.currency_code_enabled }},
-      emptyCartRedirectUrl: '{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}'
+      emptyCartRedirectUrl: '{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}',
+      buyXGetY: {
+        enabled: {{ settings.buy_x_get_y_enabled | default: false }},
+        discountCode: {{ settings.buy_x_get_y_discount_code | default: '' | json }},
+        giftVariant1: {{ settings.buy_x_get_y_gift_variant_1 | default: '' | json }},
+        giftVariant2: {{ settings.buy_x_get_y_gift_variant_2 | default: '' | json }}
+      }
     };
 
     theme.settings = {
@@ -61,4 +67,4 @@
       themeVersion: '7.1.1',
       agencyId: ''
     };
-  </script>
+</script>
