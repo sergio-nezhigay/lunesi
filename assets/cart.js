@@ -328,7 +328,7 @@ customElements.define('shipping-calculator', ShippingCalculator);
 
 /**
  * Buy X Get Y Promotion Handler
- * Automatically adds gift products to cart when a specific discount code is entered
+ * Automatically adds gift products to cart in real-time when the correct discount code is typed
  */
 class BuyXGetYHandler {
   constructor() {
@@ -343,13 +343,7 @@ class BuyXGetYHandler {
   }
 
   init() {
-    // Listen for form submissions on cart forms
-    document.addEventListener('submit', this.handleFormSubmit.bind(this), true);
-
-    // Also listen for checkout button clicks (mini-cart uses button click)
-    document.addEventListener('click', this.handleCheckoutClick.bind(this), true);
-
-    // NEW: Listen for real-time input changes on discount code fields
+    // Listen for real-time input changes on discount code fields
     this.setupRealtimeMonitoring();
   }
 
@@ -545,156 +539,6 @@ class BuyXGetYHandler {
       .catch(error => {
         console.error('Buy X Get Y: Error refreshing cart UI:', error);
       });
-  }
-
-  handleCheckoutClick(event) {
-    const checkoutButton = event.target.closest('button[name="checkout"], [data-checkout-button]');
-    if (!checkoutButton) return;
-
-    // Try to find form: first via closest(), then via form attribute
-    let form = checkoutButton.closest('form');
-
-    // If button is outside form, check if it has a form="id" attribute
-    if (!form && checkoutButton.hasAttribute('form')) {
-      const formId = checkoutButton.getAttribute('form');
-      form = document.getElementById(formId);
-    }
-
-    if (!form) return;
-
-    if (this.shouldAddGifts(form)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.processCheckout(form);
-    }
-  }
-
-  handleFormSubmit(event) {
-    const form = event.target;
-    if (form.tagName !== 'FORM') return;
-
-    // Check if this is a cart form going to checkout
-    const isCheckout = form.action?.includes('/cart') || form.id === 'cart';
-    const hasCheckoutButton = form.querySelector('button[name="checkout"]');
-
-    if (!isCheckout || !hasCheckoutButton) return;
-
-    if (this.shouldAddGifts(form)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.processCheckout(form);
-    }
-  }
-
-  shouldAddGifts(form) {
-    if (this.isProcessing) return false;
-    if (!this.settings.enabled) return false;
-
-    // Get discount code from form - check multiple locations:
-    // 1. Inside the form directly
-    // 2. Linked via form="cart" attribute (used on /cart page)
-    // 3. By specific IDs
-    const formId = form.id;
-
-    const discountInput = form.querySelector('input[name="discount"]') ||
-                          (formId ? document.querySelector(`input[name="discount"][form="${formId}"]`) : null) ||
-                          document.querySelector('#discount-code-input') ||
-                          document.querySelector('#discount-code-input-drawer');
-
-    if (!discountInput) return false;
-
-    const enteredCode = discountInput.value.trim().toUpperCase();
-    const triggerCode = this.settings.discountCode.trim().toUpperCase();
-
-    return enteredCode === triggerCode;
-  }
-
-  async processCheckout(form) {
-    if (this.isProcessing) return;
-    this.isProcessing = true;
-
-    const checkoutButton = form.querySelector('button[name="checkout"], [data-checkout-button]');
-    const originalText = checkoutButton?.textContent;
-
-    try {
-      // Show loading state
-      if (checkoutButton) {
-        checkoutButton.disabled = true;
-        checkoutButton.textContent = 'Adding gifts...';
-      }
-
-      // Get current cart to check if gifts already added
-      const cartResponse = await fetch('/cart.js');
-      const cartData = await cartResponse.json();
-
-      const gift1Id = this.settings.giftVariant1;
-      const gift2Id = this.settings.giftVariant2;
-
-      const giftsToAdd = [];
-
-      // Check if gift 1 is already in cart
-      if (gift1Id && !cartData.items.some(item => item.variant_id.toString() === gift1Id)) {
-        giftsToAdd.push({ id: parseInt(gift1Id), quantity: 1 });
-      }
-
-      // Check if gift 2 is already in cart
-      if (gift2Id && !cartData.items.some(item => item.variant_id.toString() === gift2Id)) {
-        giftsToAdd.push({ id: parseInt(gift2Id), quantity: 1 });
-      }
-
-      // Add gifts to cart
-      if (giftsToAdd.length > 0) {
-        for (const gift of giftsToAdd) {
-          await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify(gift)
-          });
-        }
-        console.log('Buy X Get Y: Added', giftsToAdd.length, 'gift(s) to cart');
-      }
-
-      // Now submit the form to proceed to checkout
-      // We need to add a hidden input with name="checkout" because form.submit()
-      // doesn't include the button's name, and Shopify needs this to redirect to checkout
-      this.isProcessing = false;
-
-      // Add hidden checkout input if it doesn't exist
-      let checkoutInput = form.querySelector('input[name="checkout"]');
-      if (!checkoutInput) {
-        checkoutInput = document.createElement('input');
-        checkoutInput.type = 'hidden';
-        checkoutInput.name = 'checkout';
-        checkoutInput.value = '';
-        form.appendChild(checkoutInput);
-      }
-
-      form.submit();
-
-    } catch (error) {
-      console.error('Buy X Get Y: Error adding gifts:', error);
-      this.isProcessing = false;
-
-      // Restore button and submit anyway
-      if (checkoutButton) {
-        checkoutButton.disabled = false;
-        checkoutButton.textContent = originalText;
-      }
-
-      // Still proceed to checkout even if adding gifts failed - also add hidden input
-      let checkoutInput = form.querySelector('input[name="checkout"]');
-      if (!checkoutInput) {
-        checkoutInput = document.createElement('input');
-        checkoutInput.type = 'hidden';
-        checkoutInput.name = 'checkout';
-        checkoutInput.value = '';
-        form.appendChild(checkoutInput);
-      }
-      form.submit();
-    }
   }
 }
 
