@@ -117,6 +117,10 @@ cart-items {
   display: none;
 }
 
+.cart__discount-wrapper {
+  width: 100%;
+}
+
 @media screen and (min-width: 750px) {
   .cart__discount--prominent {
     margin-bottom: 1rem;
@@ -272,10 +276,10 @@ cart-items {
     margin-top: 1rem;
   }
 }
-.wallet-cart-grid{
+.wallet-cart-grid {
   justify-content: center !important;
 }
-.quantity__button:hover{
+.quantity__button:hover {
   color: white !important;
 }
 
