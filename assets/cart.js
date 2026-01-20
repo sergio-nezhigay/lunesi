@@ -334,6 +334,8 @@ class BuyXGetYHandler {
   constructor() {
     this.settings = theme.shopSettings?.buyXGetY || {};
     this.isProcessing = false;
+    this.giftsAddedForCode = null; // Track which code we've added gifts for
+    this.debounceTimer = null;
 
     if (this.settings.enabled && this.settings.discountCode) {
       this.init();
@@ -346,6 +348,203 @@ class BuyXGetYHandler {
 
     // Also listen for checkout button clicks (mini-cart uses button click)
     document.addEventListener('click', this.handleCheckoutClick.bind(this), true);
+
+    // NEW: Listen for real-time input changes on discount code fields
+    this.setupRealtimeMonitoring();
+  }
+
+  /**
+   * Setup real-time monitoring of discount code inputs
+   */
+  setupRealtimeMonitoring() {
+    // Function to attach listeners to discount inputs
+    const attachListeners = () => {
+      const discountInputs = document.querySelectorAll(
+        'input[name="discount"]#discount-code-input, input[name="discount"]#discount-code-input-drawer'
+      );
+
+      discountInputs.forEach(input => {
+        // Remove existing listener if any
+        input.removeEventListener('input', this.handleDiscountInput.bind(this));
+        // Add new listener
+        input.addEventListener('input', this.handleDiscountInput.bind(this));
+      });
+    };
+
+    // Attach listeners initially
+    attachListeners();
+
+    // Re-attach when cart drawer opens (mini-cart might not be in DOM initially)
+    document.addEventListener('cartdrawer:opened', () => {
+      setTimeout(attachListeners, 100);
+    });
+
+    // Re-attach when cart updates
+    document.addEventListener('cart:updated', () => {
+      setTimeout(attachListeners, 100);
+    });
+  }
+
+  /**
+   * Handle discount code input changes (real-time)
+   */
+  handleDiscountInput(event) {
+    clearTimeout(this.debounceTimer);
+
+    this.debounceTimer = setTimeout(() => {
+      const input = event.target;
+      const enteredCode = input.value.trim().toUpperCase();
+      const triggerCode = this.settings.discountCode.trim().toUpperCase();
+
+      // Check if entered code matches trigger code
+      if (enteredCode === triggerCode) {
+        // Only add gifts if we haven't already added them for this code
+        if (this.giftsAddedForCode !== enteredCode) {
+          this.addGiftsToCart();
+        }
+      } else {
+        // Code changed or cleared - reset tracking
+        this.giftsAddedForCode = null;
+      }
+    }, 300); // 300ms debounce
+  }
+
+  /**
+   * Add gift products to cart WITHOUT redirecting to checkout
+   */
+  async addGiftsToCart() {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+
+    try {
+      // Get current cart to check if gifts already added
+      const cartResponse = await fetch('/cart.js');
+      const cartData = await cartResponse.json();
+
+      const gift1Id = this.settings.giftVariant1;
+      const gift2Id = this.settings.giftVariant2;
+
+      const giftsToAdd = [];
+
+      // Check if gift 1 is already in cart
+      if (gift1Id && !cartData.items.some(item => item.variant_id.toString() === gift1Id)) {
+        giftsToAdd.push({ id: parseInt(gift1Id), quantity: 1 });
+      }
+
+      // Check if gift 2 is already in cart
+      if (gift2Id && !cartData.items.some(item => item.variant_id.toString() === gift2Id)) {
+        giftsToAdd.push({ id: parseInt(gift2Id), quantity: 1 });
+      }
+
+      // Add gifts to cart
+      if (giftsToAdd.length > 0) {
+        for (const gift of giftsToAdd) {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(gift)
+          });
+        }
+
+        console.log('Buy X Get Y: Added', giftsToAdd.length, 'gift(s) to cart');
+
+        // Mark that we've added gifts for this code
+        const triggerCode = this.settings.discountCode.trim().toUpperCase();
+        this.giftsAddedForCode = triggerCode;
+
+        // Refresh cart UI
+        this.refreshCartUI();
+      } else {
+        console.log('Buy X Get Y: Gifts already in cart');
+        // Mark as added even if already in cart
+        const triggerCode = this.settings.discountCode.trim().toUpperCase();
+        this.giftsAddedForCode = triggerCode;
+      }
+
+    } catch (error) {
+      console.error('Buy X Get Y: Error adding gifts:', error);
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+
+  /**
+   * Refresh cart UI after adding gifts
+   */
+  refreshCartUI() {
+    // Define sections to refresh (same as CartItems.getSectionsToRender)
+    const sectionsToRender = [
+      {
+        id: 'mini-cart',
+        section: document.getElementById('mini-cart')?.dataset.id || 'mini-cart',
+        selector: '.shopify-section',
+      },
+      {
+        id: 'main-cart-items',
+        section: document.getElementById('main-cart-items')?.dataset.id,
+        selector: '.js-contents',
+      },
+      {
+        id: 'cart-icon-bubble',
+        section: 'cart-icon-bubble',
+        selector: '.shopify-section'
+      },
+      {
+        id: 'mobile-cart-icon-bubble',
+        section: 'mobile-cart-icon-bubble',
+        selector: '.shopify-section'
+      },
+      {
+        id: 'main-cart-footer',
+        section: document.getElementById('main-cart-footer')?.dataset.id,
+        selector: '.js-contents',
+      }
+    ].filter(section => section.section); // Only include sections that exist
+
+    // Build sections query string
+    const sections = sectionsToRender.map(section => section.section).join(',');
+
+    // Fetch updated cart sections
+    fetch(`${window.location.pathname}?sections=${sections}`)
+      .then(response => response.json())
+      .then(data => {
+        // Update each section with new HTML
+        sectionsToRender.forEach(section => {
+          const element = document.getElementById(section.id);
+          if (element && data[section.section]) {
+            const elementToReplace = element.querySelector(section.selector) || element;
+
+            if (elementToReplace) {
+              // Parse the HTML and extract the relevant section
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(data[section.section], 'text/html');
+              const newContent = doc.querySelector(section.selector);
+
+              if (newContent) {
+                elementToReplace.innerHTML = newContent.innerHTML;
+              }
+            }
+          }
+        });
+
+        // Trigger cart update event
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          detail: { source: 'buy-x-get-y' }
+        }));
+
+        // Publish cart update for components that use pub/sub
+        if (typeof publish !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
+          publish(PUB_SUB_EVENTS.cartUpdate, { source: 'buy-x-get-y' });
+        }
+
+        console.log('Buy X Get Y: Cart UI refreshed');
+      })
+      .catch(error => {
+        console.error('Buy X Get Y: Error refreshing cart UI:', error);
+      });
   }
 
   handleCheckoutClick(event) {
