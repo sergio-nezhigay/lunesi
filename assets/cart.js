@@ -542,6 +542,13 @@ class BuyXGetYHandler {
         const triggerCode = this.settings.discountCode.trim().toUpperCase();
         this.giftsAddedForCode = triggerCode;
 
+        // Force apply discount to session (workaround for pricing delay)
+        try {
+          await fetch('/discount/' + triggerCode);
+        } catch (e) {
+          console.warn('Failed to apply discount to session:', e);
+        }
+
         // Show success message briefly
         this.showLoadingMessage("Free gifts added!", "success");
 
