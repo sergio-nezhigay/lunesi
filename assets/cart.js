@@ -375,7 +375,9 @@ class BuyXGetYHandler {
     this.settings = theme.shopSettings?.buyXGetY || {};
     this.isProcessing = false;
     this.giftsAddedForCode = null; // Track which code we've added gifts for
-    this.debounceTimer = null;
+    this.debounceTimer = null; // For typing debounce
+    this.pasteTimer = null; // For paste event
+    this.changeTimer = null; // For change event
     this.debugMode = true; // Set to false in production
 
     if (this.settings.enabled && this.settings.discountCode) {
@@ -399,10 +401,20 @@ class BuyXGetYHandler {
       );
 
       discountInputs.forEach((input) => {
-        // Remove existing listener if any
+        // Remove existing listeners if any
         input.removeEventListener("input", this.handleDiscountInput.bind(this));
-        // Add new listener
+        input.removeEventListener("paste", this.handleDiscountPaste.bind(this));
+        input.removeEventListener("change", this.handleDiscountChange.bind(this));
+
+        // Add event listeners
+        // 1. Input event: for character-by-character typing (300ms debounce)
         input.addEventListener("input", this.handleDiscountInput.bind(this));
+
+        // 2. Paste event: for copy/paste operations (immediate, no debounce)
+        input.addEventListener("paste", this.handleDiscountPaste.bind(this));
+
+        // 3. Change event: for autofill/autocomplete (100ms debounce)
+        input.addEventListener("change", this.handleDiscountChange.bind(this));
       });
     };
 
@@ -421,27 +433,58 @@ class BuyXGetYHandler {
   }
 
   /**
-   * Handle discount code input changes (real-time)
+   * Handle discount code input changes (real-time typing)
    */
   handleDiscountInput(event) {
     clearTimeout(this.debounceTimer);
 
     this.debounceTimer = setTimeout(() => {
-      const input = event.target;
-      const enteredCode = input.value.trim().toUpperCase();
-      const triggerCode = this.settings.discountCode.trim().toUpperCase();
+      this.checkAndAddGifts(event.target);
+    }, 300); // 300ms debounce for typing
+  }
 
-      // Check if entered code matches trigger code
-      if (enteredCode === triggerCode) {
-        // Only add gifts if we haven't already added them for this code
-        if (this.giftsAddedForCode !== enteredCode) {
-          this.addGiftsToCart();
-        }
-      } else {
-        // Code changed or cleared - reset tracking
-        this.giftsAddedForCode = null;
+  /**
+   * Handle discount code paste (immediate)
+   */
+  handleDiscountPaste(event) {
+    // Clear any pending debounced check
+    clearTimeout(this.debounceTimer);
+    clearTimeout(this.pasteTimer);
+
+    // Check shortly after paste completes (allow paste to populate input)
+    this.pasteTimer = setTimeout(() => {
+      this.checkAndAddGifts(event.target);
+    }, 50); // 50ms delay to let paste complete
+  }
+
+  /**
+   * Handle discount code change (autofill/autocomplete)
+   */
+  handleDiscountChange(event) {
+    clearTimeout(this.changeTimer);
+
+    this.changeTimer = setTimeout(() => {
+      this.checkAndAddGifts(event.target);
+    }, 100); // 100ms debounce for autofill
+  }
+
+  /**
+   * Check discount code and add gifts if it matches
+   */
+  checkAndAddGifts(input) {
+    const enteredCode = input.value.trim().toUpperCase();
+    const triggerCode = this.settings.discountCode.trim().toUpperCase();
+
+    // Check if entered code matches trigger code
+    if (enteredCode === triggerCode) {
+      // Only add gifts if we haven't already added them for this code
+      if (this.giftsAddedForCode !== enteredCode) {
+        this.addGiftsToCart();
       }
-    }, 300); // 300ms debounce
+    } else {
+      // Code changed or cleared - reset tracking
+      this.giftsAddedForCode = null;
+    }
   }
 
   /**
