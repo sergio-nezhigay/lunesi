@@ -86,6 +86,23 @@ class CartItems extends HTMLElement {
   }
 
   updateQuantity(line, quantity, name) {
+    // Protect Buy X Get Y gift items from quantity changes
+    const giftVariants = [
+      theme.shopSettings?.buyXGetY?.giftVariant1,
+      theme.shopSettings?.buyXGetY?.giftVariant2
+    ].filter(Boolean);
+
+    // Check if the line item is a BXGY gift
+    const cartItemRow = document.querySelector(`#CartItem-${line}, [data-index="${line}"]`)?.closest('[data-variant-id]');
+    const variantId = cartItemRow?.dataset?.variantId;
+
+    // Allow deletion (quantity = 0) but block other quantity changes for gift items
+    if (giftVariants.length > 0 && variantId && giftVariants.includes(variantId) && parseInt(quantity) !== 0) {
+      console.log('🎁 BXGY Gift Protection: Cannot change quantity of gift items (variant:', variantId, ')');
+      this.disableLoading();
+      return; // Block the quantity change (but allow deletion)
+    }
+
     this.enableLoading(line);
     const sections = this.getSectionsToRender().map(
       (section) => section.section,
@@ -133,6 +150,9 @@ class CartItems extends HTMLElement {
         if (lineItem && name)
           lineItem.querySelector(`[name="${name}"]`).focus();
         this.disableLoading();
+
+        // Auto-remove gifts if only gifts remain in cart
+        this.removeGiftsIfOnlyGiftsInCart(parsedState);
 
         document.dispatchEvent(
           new CustomEvent("cart:updated", {
@@ -221,6 +241,63 @@ class CartItems extends HTMLElement {
   disableLoading() {
     const cartItems = document.getElementById("main-cart-items");
     if (cartItems) cartItems.classList.remove("cart__items--disabled");
+  }
+
+  /**
+   * Auto-remove Buy X Get Y gift items when only gifts remain in cart
+   */
+  async removeGiftsIfOnlyGiftsInCart(parsedState) {
+    const giftVariants = [
+      theme.shopSettings?.buyXGetY?.giftVariant1,
+      theme.shopSettings?.buyXGetY?.giftVariant2
+    ].filter(Boolean);
+
+    if (giftVariants.length === 0 || !parsedState?.items) {
+      return;
+    }
+
+    // Count regular (non-gift) items
+    const regularItems = parsedState.items.filter(item =>
+      !giftVariants.includes(item.variant_id.toString())
+    );
+
+    // If cart has only gift items (no regular products), remove all gifts
+    if (regularItems.length === 0 && parsedState.items.length > 0) {
+      console.log('🎁 BXGY Gift Protection: Removing gifts (no regular products in cart)');
+
+      // Get all gift items that need to be removed
+      const giftItemsToRemove = parsedState.items.filter(item =>
+        giftVariants.includes(item.variant_id.toString())
+      );
+
+      // Remove each gift item
+      for (const giftItem of giftItemsToRemove) {
+        try {
+          const lineIndex = parsedState.items.indexOf(giftItem) + 1;
+
+          // Call cart API to remove item
+          await fetch(`${theme.routes.cart_change_url}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              line: lineIndex,
+              quantity: 0
+            })
+          });
+
+          console.log('🎁 BXGY Gift Protection: Removed gift variant', giftItem.variant_id);
+        } catch (error) {
+          console.error('🎁 BXGY Gift Protection: Error removing gift:', error);
+        }
+      }
+
+      // Refresh cart UI after removal
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }
   }
 
   renderContents(parsedState) {
@@ -791,3 +868,71 @@ if (document.readyState === "loading") {
 } else {
   new BuyXGetYHandler();
 }
+
+/**
+ * Global cart:updated event listener for BXGY gift protection
+ * Validates cart and removes gifts if only gifts remain
+ */
+document.addEventListener("cart:updated", async () => {
+  // Get gift variant IDs
+  const giftVariants = [
+    theme.shopSettings?.buyXGetY?.giftVariant1,
+    theme.shopSettings?.buyXGetY?.giftVariant2
+  ].filter(Boolean);
+
+  if (giftVariants.length === 0) {
+    return;
+  }
+
+  try {
+    // Fetch current cart state
+    const response = await fetch('/cart.js');
+    const cartData = await response.json();
+
+    if (!cartData || !cartData.items) {
+      return;
+    }
+
+    // Count regular (non-gift) items
+    const regularItems = cartData.items.filter(item =>
+      !giftVariants.includes(item.variant_id.toString())
+    );
+
+    // If cart has only gift items (no regular products), remove all gifts
+    if (regularItems.length === 0 && cartData.items.length > 0) {
+      console.log('🎁 BXGY Gift Protection: Cart has only gifts, removing them...');
+
+      // Get all gift items that need to be removed
+      const giftItemsToRemove = cartData.items.filter(item =>
+        giftVariants.includes(item.variant_id.toString())
+      );
+
+      // Remove each gift item
+      for (const giftItem of giftItemsToRemove) {
+        try {
+          await fetch(`${theme.routes.cart_change_url}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: giftItem.key,
+              quantity: 0
+            })
+          });
+
+          console.log('🎁 BXGY Gift Protection: Removed gift variant', giftItem.variant_id);
+        } catch (error) {
+          console.error('🎁 BXGY Gift Protection: Error removing gift:', error);
+        }
+      }
+
+      // Refresh cart UI after removal
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+    }
+  } catch (error) {
+    console.error('🎁 BXGY Gift Protection: Error validating cart:', error);
+  }
+});
