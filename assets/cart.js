@@ -404,7 +404,10 @@ class BuyXGetYHandler {
         // Remove existing listeners if any
         input.removeEventListener("input", this.handleDiscountInput.bind(this));
         input.removeEventListener("paste", this.handleDiscountPaste.bind(this));
-        input.removeEventListener("change", this.handleDiscountChange.bind(this));
+        input.removeEventListener(
+          "change",
+          this.handleDiscountChange.bind(this),
+        );
 
         // Add event listeners
         // 1. Input event: for character-by-character typing (300ms debounce)
@@ -541,6 +544,13 @@ class BuyXGetYHandler {
         // Mark that we've added gifts for this code
         const triggerCode = this.settings.discountCode.trim().toUpperCase();
         this.giftsAddedForCode = triggerCode;
+
+        // Force apply discount to session (workaround for pricing delay)
+        try {
+          await fetch("/discount/" + triggerCode);
+        } catch (e) {
+          console.warn("Failed to apply discount to session:", e);
+        }
 
         // Show success message briefly
         this.showLoadingMessage("Free gifts added!", "success");
