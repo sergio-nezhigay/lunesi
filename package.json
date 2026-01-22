@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "shopify theme dev --store=spain-test-store-shampoo.myshopify.com --theme 155196752003",
-    "push": "shopify theme push --store=spain-test-store-shampoo.myshopify.com --theme 155196752003",
-    "pull": "shopify theme pull --store=spain-test-store-shampoo.myshopify.com --theme 155196752003"
+    "dev": "shopify theme dev --store=spain-test-store-shampoo.myshopify.com --theme 155442872451",
+    "push": "shopify theme push --store=spain-test-store-shampoo.myshopify.com --theme 155442872451",
+    "pull": "shopify theme pull --store=spain-test-store-shampoo.myshopify.com --theme 155442872451"
   },
   "keywords": [],
   "author": "",

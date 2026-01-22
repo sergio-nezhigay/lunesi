@@ -118,7 +118,7 @@
       {%- if section.settings.show_discount_input -%}
         <discount-code class="cart__discount cart__discount--prominent field">
           <label for="discount-code-input">{{ 'sections.cart.discount_code' | t }}</label>
-          <div class="cart__discount-wrapper">
+          <div class="cart__discount-wrapper" style="display: flex; gap: 10px;">
             <input
               type="text"
               name="discount"
@@ -126,7 +126,15 @@
               class="field__input"
               placeholder="{{ 'sections.cart.discount_placeholder' | t }}"
               id="discount-code-input"
+              style="flex: 1;"
             >
+            <button
+              type="button"
+              class="button button--small discount-apply-btn"
+              id="discount-apply-btn"
+            >
+              {{ 'sections.cart.apply' | t | default: 'Apply' }}
+            </button>
           </div>
         </discount-code>
       {%- endif -%}

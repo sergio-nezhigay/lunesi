@@ -121,6 +121,32 @@ cart-items {
   width: 100%;
 }
 
+/* Mini-cart discount input - rounded corners */
+#mini-cart .cart__discount .field__input,
+.mini-cart .cart__discount .field__input,
+#discount-code-input-drawer {
+  border-radius: 4px 0 0 4px !important;
+}
+
+#mini-cart .cart__discount .discount-apply-btn,
+.mini-cart .cart__discount .discount-apply-btn,
+#discount-apply-btn-drawer {
+  border-radius: 0 4px 4px 0 !important;
+  background-color: rgb(var(--color-button)) !important;
+  color: rgb(var(--color-button-text)) !important;
+  border: none !important;
+  padding: 1rem 1.5rem !important;
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+#discount-apply-btn-drawer:hover,
+#discount-apply-btn:hover {
+  opacity: 0.85;
+}
+
 @media screen and (min-width: 750px) {
   .cart__discount--prominent {
     margin-bottom: 1rem;

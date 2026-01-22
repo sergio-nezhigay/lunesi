@@ -86,6 +86,23 @@ class CartItems extends HTMLElement {
   }
 
   updateQuantity(line, quantity, name) {
+    // Protect Buy X Get Y gift items from quantity changes
+    const giftVariants = [
+      theme.shopSettings?.buyXGetY?.giftVariant1,
+      theme.shopSettings?.buyXGetY?.giftVariant2
+    ].filter(Boolean).map(v => String(v));
+
+    // Check if the line item is a BXGY gift
+    const cartItemRow = document.querySelector(`#CartItem-${line}, [data-index="${line}"]`)?.closest('[data-variant-id]');
+    const variantId = cartItemRow?.dataset?.variantId;
+
+    // Allow deletion (quantity = 0) but block other quantity changes for gift items
+    if (giftVariants.length > 0 && variantId && giftVariants.includes(String(variantId)) && parseInt(quantity) !== 0) {
+      console.log('🎁 BXGY Gift Protection: Cannot change quantity of gift items (variant:', variantId, ')');
+      this.disableLoading();
+      return; // Block the quantity change (but allow deletion)
+    }
+
     this.enableLoading(line);
     const sections = this.getSectionsToRender().map(
       (section) => section.section,
@@ -133,6 +150,9 @@ class CartItems extends HTMLElement {
         if (lineItem && name)
           lineItem.querySelector(`[name="${name}"]`).focus();
         this.disableLoading();
+
+        // Auto-remove gifts if only gifts remain in cart
+        this.removeGiftsIfOnlyGiftsInCart(parsedState);
 
         document.dispatchEvent(
           new CustomEvent("cart:updated", {
@@ -221,6 +241,118 @@ class CartItems extends HTMLElement {
   disableLoading() {
     const cartItems = document.getElementById("main-cart-items");
     if (cartItems) cartItems.classList.remove("cart__items--disabled");
+  }
+
+  /**
+   * Auto-remove Buy X Get Y gift items when only gifts remain in cart
+   */
+  async removeGiftsIfOnlyGiftsInCart(parsedState) {
+    // Prevent duplicate removal attempts
+    if (window.isRemovingGifts) {
+      console.log('🎁 BXGY Gift Protection: Already removing gifts, skipping...');
+      return;
+    }
+
+    const giftVariants = [
+      theme.shopSettings?.buyXGetY?.giftVariant1,
+      theme.shopSettings?.buyXGetY?.giftVariant2
+    ].filter(Boolean).map(v => String(v));
+
+    if (giftVariants.length === 0 || !parsedState?.items) {
+      return;
+    }
+
+    console.log('🎁 BXGY Gift Protection: Checking cart...', { giftVariants, items: parsedState.items.map(i => i.variant_id) });
+
+    // Count regular (non-gift) items
+    const regularItems = parsedState.items.filter(item =>
+      !giftVariants.includes(String(item.variant_id))
+    );
+
+    // If cart has only gift items (no regular products), remove all gifts
+    if (regularItems.length === 0 && parsedState.items.length > 0) {
+      // Set flag to prevent duplicate attempts
+      window.isRemovingGifts = true;
+
+      console.log('🎁 BXGY Gift Protection: Removing gifts (no regular products in cart)');
+
+      // Get all gift items that need to be removed
+      const giftItemsToRemove = parsedState.items.filter(item =>
+        giftVariants.includes(String(item.variant_id))
+      );
+
+      console.log('🎁 BXGY Gift Protection: Found', giftItemsToRemove.length, 'gift(s) to remove:', giftItemsToRemove.map(g => g.variant_id));
+
+      // Disable checkout buttons while removing gifts
+      disableCheckoutButtonsGlobal();
+
+      try {
+        // Remove all gifts in ONE request using /cart/update.js
+        const updates = {};
+        giftItemsToRemove.forEach(item => {
+          updates[item.key] = 0;
+        });
+
+        console.log('🎁 BXGY Gift Protection: Removing all gifts in one request...', updates);
+
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ updates })
+        });
+
+        console.log('🎁 BXGY Gift Protection: All gifts removed!');
+
+        // Refresh cart UI instantly without page reload
+        await this.refreshCartSections();
+        window.isRemovingGifts = false;
+        enableCheckoutButtonsGlobal();
+      } catch (error) {
+        console.error('🎁 BXGY Gift Protection: Error during gift removal:', error);
+        window.isRemovingGifts = false;
+        enableCheckoutButtonsGlobal();
+      }
+    }
+  }
+
+  async refreshCartSections() {
+    try {
+      const sections = this.getSectionsToRender().map(s => s.section).filter(Boolean);
+      const response = await fetch(`${window.location.pathname}?sections=${sections.join(',')}`);
+      const data = await response.json();
+
+      this.getSectionsToRender().forEach((section) => {
+        const element = document.getElementById(section.id);
+        if (element && data[section.section]) {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = data[section.section];
+          const newContent = tempDiv.querySelector(section.selector) || tempDiv;
+          const targetElement = element.querySelector(section.selector) || element;
+          if (targetElement && newContent) {
+            targetElement.innerHTML = newContent.innerHTML;
+          }
+        }
+      });
+
+      // Update cart count in header
+      const cartCountElements = document.querySelectorAll('.cart-count-bubble, [data-cart-count]');
+      const cartResponse = await fetch('/cart.js');
+      const cartData = await cartResponse.json();
+      cartCountElements.forEach(el => {
+        if (cartData.item_count === 0) {
+          el.style.display = 'none';
+        } else {
+          el.textContent = cartData.item_count;
+          el.style.display = '';
+        }
+      });
+
+      console.log('🎁 BXGY: Cart sections refreshed instantly');
+    } catch (error) {
+      console.error('🎁 BXGY: Error refreshing cart sections:', error);
+    }
   }
 
   renderContents(parsedState) {
@@ -391,30 +523,22 @@ class BuyXGetYHandler {
   }
 
   /**
-   * Setup real-time monitoring of discount code inputs
+   * Setup Apply button click listeners for discount code
    */
   setupRealtimeMonitoring() {
-    // Function to attach listeners to discount inputs
+    // Function to attach listeners to Apply buttons
     const attachListeners = () => {
-      const discountInputs = document.querySelectorAll(
-        'input[name="discount"]#discount-code-input, input[name="discount"]#discount-code-input-drawer',
+      const applyButtons = document.querySelectorAll(
+        '#discount-apply-btn, #discount-apply-btn-drawer',
       );
 
-      discountInputs.forEach((input) => {
-        // Remove existing listeners if any
-        input.removeEventListener("input", this.handleDiscountInput.bind(this));
-        input.removeEventListener("paste", this.handleDiscountPaste.bind(this));
-        input.removeEventListener("change", this.handleDiscountChange.bind(this));
+      applyButtons.forEach((button) => {
+        // Remove existing listener to avoid duplicates
+        button.removeEventListener("click", this.handleApplyClick);
 
-        // Add event listeners
-        // 1. Input event: for character-by-character typing (300ms debounce)
-        input.addEventListener("input", this.handleDiscountInput.bind(this));
-
-        // 2. Paste event: for copy/paste operations (immediate, no debounce)
-        input.addEventListener("paste", this.handleDiscountPaste.bind(this));
-
-        // 3. Change event: for autofill/autocomplete (100ms debounce)
-        input.addEventListener("change", this.handleDiscountChange.bind(this));
+        // Create bound handler and store reference
+        this.handleApplyClick = this.handleApplyButtonClick.bind(this);
+        button.addEventListener("click", this.handleApplyClick);
       });
     };
 
@@ -433,39 +557,17 @@ class BuyXGetYHandler {
   }
 
   /**
-   * Handle discount code input changes (real-time typing)
+   * Handle Apply button click
    */
-  handleDiscountInput(event) {
-    clearTimeout(this.debounceTimer);
+  handleApplyButtonClick(event) {
+    const button = event.target.closest('button');
+    const wrapper = button.closest('.cart__discount-wrapper');
+    const input = wrapper ? wrapper.querySelector('input[name="discount"]') :
+      document.querySelector('#discount-code-input, #discount-code-input-drawer');
 
-    this.debounceTimer = setTimeout(() => {
-      this.checkAndAddGifts(event.target);
-    }, 300); // 300ms debounce for typing
-  }
-
-  /**
-   * Handle discount code paste (immediate)
-   */
-  handleDiscountPaste(event) {
-    // Clear any pending debounced check
-    clearTimeout(this.debounceTimer);
-    clearTimeout(this.pasteTimer);
-
-    // Check shortly after paste completes (allow paste to populate input)
-    this.pasteTimer = setTimeout(() => {
-      this.checkAndAddGifts(event.target);
-    }, 50); // 50ms delay to let paste complete
-  }
-
-  /**
-   * Handle discount code change (autofill/autocomplete)
-   */
-  handleDiscountChange(event) {
-    clearTimeout(this.changeTimer);
-
-    this.changeTimer = setTimeout(() => {
-      this.checkAndAddGifts(event.target);
-    }, 100); // 100ms debounce for autofill
+    if (input) {
+      this.checkAndAddGifts(input);
+    }
   }
 
   /**
@@ -494,8 +596,9 @@ class BuyXGetYHandler {
     if (this.isProcessing) return;
     this.isProcessing = true;
 
-    // Show loading message
+    // Show loading message and disable buttons
     this.showLoadingMessage("Adding your free gifts...");
+    this.disableCheckoutButtons();
 
     try {
       // Get current cart to check if gifts already added
@@ -572,6 +675,7 @@ class BuyXGetYHandler {
       setTimeout(() => this.hideLoadingMessage(), errorDelay);
     } finally {
       this.isProcessing = false;
+      this.enableCheckoutButtons();
     }
   }
 
@@ -697,6 +801,62 @@ class BuyXGetYHandler {
   }
 
   /**
+   * Disable checkout and view cart buttons during processing (mini-cart + cart page)
+   */
+  disableCheckoutButtons() {
+    // Mini-cart buttons
+    const miniCartCheckoutBtn = document.querySelector('.button-container button[name="checkout"]');
+    const viewCartBtn = document.querySelector('.button-container a[href="/cart"]');
+    // Cart page button
+    const cartPageCheckoutBtn = document.querySelector('.cart__checkout-button[name="checkout"]');
+
+    if (miniCartCheckoutBtn) {
+      miniCartCheckoutBtn.disabled = true;
+      miniCartCheckoutBtn.style.opacity = '0.5';
+      miniCartCheckoutBtn.style.pointerEvents = 'none';
+    }
+
+    if (viewCartBtn) {
+      viewCartBtn.style.opacity = '0.5';
+      viewCartBtn.style.pointerEvents = 'none';
+    }
+
+    if (cartPageCheckoutBtn) {
+      cartPageCheckoutBtn.disabled = true;
+      cartPageCheckoutBtn.style.opacity = '0.5';
+      cartPageCheckoutBtn.style.pointerEvents = 'none';
+    }
+  }
+
+  /**
+   * Enable checkout and view cart buttons after processing (mini-cart + cart page)
+   */
+  enableCheckoutButtons() {
+    // Mini-cart buttons
+    const miniCartCheckoutBtn = document.querySelector('.button-container button[name="checkout"]');
+    const viewCartBtn = document.querySelector('.button-container a[href="/cart"]');
+    // Cart page button
+    const cartPageCheckoutBtn = document.querySelector('.cart__checkout-button[name="checkout"]');
+
+    if (miniCartCheckoutBtn) {
+      miniCartCheckoutBtn.disabled = false;
+      miniCartCheckoutBtn.style.opacity = '';
+      miniCartCheckoutBtn.style.pointerEvents = '';
+    }
+
+    if (viewCartBtn) {
+      viewCartBtn.style.opacity = '';
+      viewCartBtn.style.pointerEvents = '';
+    }
+
+    if (cartPageCheckoutBtn) {
+      cartPageCheckoutBtn.disabled = false;
+      cartPageCheckoutBtn.style.opacity = '';
+      cartPageCheckoutBtn.style.pointerEvents = '';
+    }
+  }
+
+  /**
    * Refresh cart UI after adding gifts
    */
   refreshCartUI() {
@@ -785,9 +945,197 @@ class BuyXGetYHandler {
   }
 }
 
+// Global flag to prevent duplicate gift removal attempts
+let isRemovingGifts = false;
+
 // Initialize when DOM is ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => new BuyXGetYHandler());
 } else {
   new BuyXGetYHandler();
+}
+
+/**
+ * Global cart:updated event listener for BXGY gift protection
+ * Validates cart and removes gifts if only gifts remain
+ * (Catches external cart modifications not handled by updateQuantity)
+ */
+document.addEventListener("cart:updated", async () => {
+  // Prevent duplicate removal attempts
+  if (window.isRemovingGifts) {
+    console.log('🎁 BXGY Gift Protection (cart:updated): Already removing gifts, skipping...');
+    return;
+  }
+
+  // Get gift variant IDs (convert to strings for consistent comparison)
+  const giftVariants = [
+    theme.shopSettings?.buyXGetY?.giftVariant1,
+    theme.shopSettings?.buyXGetY?.giftVariant2
+  ].filter(Boolean).map(v => String(v));
+
+  if (giftVariants.length === 0) {
+    return;
+  }
+
+  try {
+    // Fetch current cart state
+    const response = await fetch('/cart.js');
+    const cartData = await response.json();
+
+    if (!cartData || !cartData.items) {
+      return;
+    }
+
+    console.log('🎁 BXGY Gift Protection (cart:updated): Checking cart...', { giftVariants, items: cartData.items.map(i => i.variant_id) });
+
+    // Count regular (non-gift) items
+    const regularItems = cartData.items.filter(item =>
+      !giftVariants.includes(String(item.variant_id))
+    );
+
+    // If cart has only gift items (no regular products), remove all gifts
+    if (regularItems.length === 0 && cartData.items.length > 0) {
+      // Set flag to prevent duplicate attempts
+      window.isRemovingGifts = true;
+
+      console.log('🎁 BXGY Gift Protection (cart:updated): Cart has only gifts, removing them...');
+
+      // Get all gift items that need to be removed
+      const giftItemsToRemove = cartData.items.filter(item =>
+        giftVariants.includes(String(item.variant_id))
+      );
+
+      console.log('🎁 BXGY Gift Protection (cart:updated): Found', giftItemsToRemove.length, 'gift(s) to remove');
+
+      // Disable checkout buttons while removing gifts
+      disableCheckoutButtonsGlobal();
+
+      try {
+        // Remove all gifts in ONE request using /cart/update.js
+        const updates = {};
+        giftItemsToRemove.forEach(item => {
+          updates[item.key] = 0;
+        });
+
+        console.log('🎁 BXGY Gift Protection (cart:updated): Removing all gifts in one request...', updates);
+
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ updates })
+        });
+
+        console.log('🎁 BXGY Gift Protection (cart:updated): All gifts removed!');
+
+        // Refresh cart UI instantly without page reload
+        await refreshCartSectionsGlobal();
+        window.isRemovingGifts = false;
+        enableCheckoutButtonsGlobal();
+      } catch (error) {
+        console.error('🎁 BXGY Gift Protection (cart:updated): Error during gift removal:', error);
+        window.isRemovingGifts = false;
+        enableCheckoutButtonsGlobal();
+      }
+    }
+  } catch (error) {
+    console.error('🎁 BXGY Gift Protection (cart:updated): Error validating cart:', error);
+  }
+});
+
+/**
+ * Global function to refresh cart sections without page reload
+ */
+async function refreshCartSectionsGlobal() {
+  try {
+    const sections = ['mini-cart', 'cart-icon-bubble', 'mobile-cart-icon-bubble', 'cart-live-region-text'];
+    const response = await fetch(`${window.location.pathname}?sections=${sections.join(',')}`);
+    const data = await response.json();
+
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId);
+      if (element && data[sectionId]) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = data[sectionId];
+        const newContent = tempDiv.querySelector('.shopify-section') || tempDiv;
+        element.innerHTML = newContent.innerHTML;
+      }
+    });
+
+    // Update cart count
+    const cartResponse = await fetch('/cart.js');
+    const cartData = await cartResponse.json();
+    const cartCountElements = document.querySelectorAll('.cart-count-bubble, [data-cart-count]');
+    cartCountElements.forEach(el => {
+      if (cartData.item_count === 0) {
+        el.style.display = 'none';
+      } else {
+        el.textContent = cartData.item_count;
+        el.style.display = '';
+      }
+    });
+
+    console.log('🎁 BXGY: Cart sections refreshed');
+  } catch (error) {
+    console.error('🎁 BXGY: Error refreshing cart sections:', error);
+  }
+}
+
+/**
+ * Global function to disable checkout buttons (mini-cart + cart page)
+ */
+function disableCheckoutButtonsGlobal() {
+  // Mini-cart buttons
+  const miniCartCheckoutBtn = document.querySelector('.button-container button[name="checkout"]');
+  const viewCartBtn = document.querySelector('.button-container a[href="/cart"]');
+
+  // Cart page button
+  const cartPageCheckoutBtn = document.querySelector('.cart__checkout-button[name="checkout"]');
+
+  if (miniCartCheckoutBtn) {
+    miniCartCheckoutBtn.disabled = true;
+    miniCartCheckoutBtn.style.opacity = '0.5';
+    miniCartCheckoutBtn.style.pointerEvents = 'none';
+  }
+
+  if (viewCartBtn) {
+    viewCartBtn.style.opacity = '0.5';
+    viewCartBtn.style.pointerEvents = 'none';
+  }
+
+  if (cartPageCheckoutBtn) {
+    cartPageCheckoutBtn.disabled = true;
+    cartPageCheckoutBtn.style.opacity = '0.5';
+    cartPageCheckoutBtn.style.pointerEvents = 'none';
+  }
+}
+
+/**
+ * Global function to enable checkout buttons (mini-cart + cart page)
+ */
+function enableCheckoutButtonsGlobal() {
+  // Mini-cart buttons
+  const miniCartCheckoutBtn = document.querySelector('.button-container button[name="checkout"]');
+  const viewCartBtn = document.querySelector('.button-container a[href="/cart"]');
+
+  // Cart page button
+  const cartPageCheckoutBtn = document.querySelector('.cart__checkout-button[name="checkout"]');
+
+  if (miniCartCheckoutBtn) {
+    miniCartCheckoutBtn.disabled = false;
+    miniCartCheckoutBtn.style.opacity = '';
+    miniCartCheckoutBtn.style.pointerEvents = '';
+  }
+
+  if (viewCartBtn) {
+    viewCartBtn.style.opacity = '';
+    viewCartBtn.style.pointerEvents = '';
+  }
+
+  if (cartPageCheckoutBtn) {
+    cartPageCheckoutBtn.disabled = false;
+    cartPageCheckoutBtn.style.opacity = '';
+    cartPageCheckoutBtn.style.pointerEvents = '';
+  }
 }

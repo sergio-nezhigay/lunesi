@@ -4,7 +4,6 @@
     height: auto;
   }
   .mini-cart .cart__discount {
-    justify-content: end !important;
     align-items: center !important;
     gap: 8px;
   }
@@ -673,37 +672,77 @@
                         if item.variant_id == 43694372257923
                           assign is_gift_bundle = true
                         endif
+
+                        # Check if this is a Buy X Get Y gift item
+                        assign is_bxgy_gift = false
+                        assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
+                        assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
+                        if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
+                          assign is_bxgy_gift = true
+                        endif
                       -%}
 
                       {%- if gift_wrap_id == null or item.id != gift_wrap_id -%}
                         <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
                           {{- 'products.product.quantity.label' | t -}}
                         </label>
-                        <quantity-input class="quantity">
-                          <button class="quantity__button no-js-hidden test" name="minus" type="button">
-                            <span class="visually-hidden">
-                              {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
-                            </span>
-                            {% render 'icon', icon: 'minus' %}
-                          </button>
-                          <input
-                            class="quantity__input d"
-                            type="number"
-                            name="updates[]"
-                            value="{{ item.quantity }}"
-                            min="0"
-                            max="{{item.variant.inventory_quantity }}"
-                            aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                            id="Quantity-{{ item.index | plus: 1 }}"
-                            data-index="{{ item.index | plus: 1 }}"
-                          >
-                          <button class="quantity__button no-js-hidden test" name="plus" type="button">
-                            <span class="visually-hidden">
-                              {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
-                            </span>
-                            {% render 'icon', icon: 'plus' %}
-                          </button>
-                        </quantity-input>
+                        {%- if is_bxgy_gift -%}
+                          {%- comment -%} Buy X Get Y gift - hide quantity controls {%- endcomment -%}
+                          <quantity-input class="quantity">
+                            <button class="quantity__button no-js-hidden visually-hidden" name="minus" type="button" disabled="disabled" style="display: none !important;">
+                              <span class="visually-hidden">
+                                {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                              </span>
+                              {% render 'icon', icon: 'minus' %}
+                            </button>
+                            <input
+                              class="quantity__input"
+                              type="number"
+                              name="updates[]"
+                              value="{{ item.quantity }}"
+                              min="0"
+                              max="{{item.variant.inventory_quantity }}"
+                              aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                              id="Quantity-{{ item.index | plus: 1 }}"
+                              data-index="{{ item.index | plus: 1 }}"
+                              readonly
+                              disabled="disabled"
+                            >
+                            <button class="quantity__button no-js-hidden visually-hidden" name="plus" type="button" disabled="disabled" style="display: none !important;">
+                              <span class="visually-hidden">
+                                {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                              </span>
+                              {% render 'icon', icon: 'plus' %}
+                            </button>
+                          </quantity-input>
+                        {%- else -%}
+                          {%- comment -%} Regular item - normal quantity controls {%- endcomment -%}
+                          <quantity-input class="quantity">
+                            <button class="quantity__button no-js-hidden test" name="minus" type="button">
+                              <span class="visually-hidden">
+                                {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                              </span>
+                              {% render 'icon', icon: 'minus' %}
+                            </button>
+                            <input
+                              class="quantity__input d"
+                              type="number"
+                              name="updates[]"
+                              value="{{ item.quantity }}"
+                              min="0"
+                              max="{{item.variant.inventory_quantity }}"
+                              aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                              id="Quantity-{{ item.index | plus: 1 }}"
+                              data-index="{{ item.index | plus: 1 }}"
+                            >
+                            <button class="quantity__button no-js-hidden test" name="plus" type="button">
+                              <span class="visually-hidden">
+                                {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                              </span>
+                              {% render 'icon', icon: 'plus' %}
+                            </button>
+                          </quantity-input>
+                        {%- endif -%}
 
                         {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
                         <div
@@ -1789,7 +1828,7 @@
           class="cart__discount cart__discount--prominent field"
           style="margin-top: 15px; margin-bottom: 15px;"
         >
-          <div class="cart__discount-wrapper">
+          <div class="cart__discount-wrapper" style="display: flex; gap: 10px;">
             <input
               type="text"
               name="discount"
@@ -1797,7 +1836,15 @@
               class="field__input"
               placeholder="{{ 'sections.cart.discount_placeholder' | t }}"
               id="discount-code-input-drawer"
+              style="flex: 1;"
             >
+            <button
+              type="button"
+              class="button button--small discount-apply-btn"
+              id="discount-apply-btn-drawer"
+            >
+              {{ 'sections.cart.apply' | t | default: 'Apply' }}
+            </button>
           </div>
         </discount-code>
       {%- endif -%}
