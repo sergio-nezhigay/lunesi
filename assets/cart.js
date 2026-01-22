@@ -247,6 +247,12 @@ class CartItems extends HTMLElement {
    * Auto-remove Buy X Get Y gift items when only gifts remain in cart
    */
   async removeGiftsIfOnlyGiftsInCart(parsedState) {
+    // Prevent duplicate removal attempts
+    if (window.isRemovingGifts) {
+      console.log('🎁 BXGY Gift Protection: Already removing gifts, skipping...');
+      return;
+    }
+
     const giftVariants = [
       theme.shopSettings?.buyXGetY?.giftVariant1,
       theme.shopSettings?.buyXGetY?.giftVariant2
@@ -263,6 +269,9 @@ class CartItems extends HTMLElement {
 
     // If cart has only gift items (no regular products), remove all gifts
     if (regularItems.length === 0 && parsedState.items.length > 0) {
+      // Set flag to prevent duplicate attempts
+      window.isRemovingGifts = true;
+
       console.log('🎁 BXGY Gift Protection: Removing gifts (no regular products in cart)');
 
       // Get all gift items that need to be removed
@@ -270,33 +279,38 @@ class CartItems extends HTMLElement {
         giftVariants.includes(item.variant_id.toString())
       );
 
-      // Remove each gift item
-      for (const giftItem of giftItemsToRemove) {
-        try {
-          const lineIndex = parsedState.items.indexOf(giftItem) + 1;
+      console.log('🎁 BXGY Gift Protection: Found', giftItemsToRemove.length, 'gift(s) to remove');
 
-          // Call cart API to remove item
-          await fetch(`${theme.routes.cart_change_url}`, {
+      try {
+        // Remove all gifts in parallel using Promise.all
+        const removalPromises = giftItemsToRemove.map(giftItem => {
+          return fetch(`${theme.routes.cart_change_url}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              line: lineIndex,
+              id: giftItem.key,
               quantity: 0
             })
+          }).then(() => {
+            console.log('🎁 BXGY Gift Protection: Removed gift variant', giftItem.variant_id);
+          }).catch(error => {
+            console.error('🎁 BXGY Gift Protection: Error removing gift:', error);
           });
+        });
 
-          console.log('🎁 BXGY Gift Protection: Removed gift variant', giftItem.variant_id);
-        } catch (error) {
-          console.error('🎁 BXGY Gift Protection: Error removing gift:', error);
-        }
+        // Wait for all removals to complete
+        await Promise.all(removalPromises);
+
+        // Refresh cart UI after all removals complete
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      } catch (error) {
+        console.error('🎁 BXGY Gift Protection: Error during gift removal:', error);
+        window.isRemovingGifts = false; // Reset flag on error
       }
-
-      // Refresh cart UI after removal
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     }
   }
 
@@ -862,6 +876,9 @@ class BuyXGetYHandler {
   }
 }
 
+// Global flag to prevent duplicate gift removal attempts
+let isRemovingGifts = false;
+
 // Initialize when DOM is ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => new BuyXGetYHandler());
@@ -872,8 +889,15 @@ if (document.readyState === "loading") {
 /**
  * Global cart:updated event listener for BXGY gift protection
  * Validates cart and removes gifts if only gifts remain
+ * (Catches external cart modifications not handled by updateQuantity)
  */
 document.addEventListener("cart:updated", async () => {
+  // Prevent duplicate removal attempts
+  if (window.isRemovingGifts) {
+    console.log('🎁 BXGY Gift Protection (cart:updated): Already removing gifts, skipping...');
+    return;
+  }
+
   // Get gift variant IDs
   const giftVariants = [
     theme.shopSettings?.buyXGetY?.giftVariant1,
@@ -900,17 +924,22 @@ document.addEventListener("cart:updated", async () => {
 
     // If cart has only gift items (no regular products), remove all gifts
     if (regularItems.length === 0 && cartData.items.length > 0) {
-      console.log('🎁 BXGY Gift Protection: Cart has only gifts, removing them...');
+      // Set flag to prevent duplicate attempts
+      window.isRemovingGifts = true;
+
+      console.log('🎁 BXGY Gift Protection (cart:updated): Cart has only gifts, removing them...');
 
       // Get all gift items that need to be removed
       const giftItemsToRemove = cartData.items.filter(item =>
         giftVariants.includes(item.variant_id.toString())
       );
 
-      // Remove each gift item
-      for (const giftItem of giftItemsToRemove) {
-        try {
-          await fetch(`${theme.routes.cart_change_url}`, {
+      console.log('🎁 BXGY Gift Protection (cart:updated): Found', giftItemsToRemove.length, 'gift(s) to remove');
+
+      try {
+        // Remove all gifts in parallel using Promise.all
+        const removalPromises = giftItemsToRemove.map(giftItem => {
+          return fetch(`${theme.routes.cart_change_url}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -919,20 +948,26 @@ document.addEventListener("cart:updated", async () => {
               id: giftItem.key,
               quantity: 0
             })
+          }).then(() => {
+            console.log('🎁 BXGY Gift Protection (cart:updated): Removed gift variant', giftItem.variant_id);
+          }).catch(error => {
+            console.error('🎁 BXGY Gift Protection (cart:updated): Error removing gift:', error);
           });
+        });
 
-          console.log('🎁 BXGY Gift Protection: Removed gift variant', giftItem.variant_id);
-        } catch (error) {
-          console.error('🎁 BXGY Gift Protection: Error removing gift:', error);
-        }
+        // Wait for all removals to complete
+        await Promise.all(removalPromises);
+
+        // Refresh cart UI after all removals complete
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      } catch (error) {
+        console.error('🎁 BXGY Gift Protection (cart:updated): Error during gift removal:', error);
+        window.isRemovingGifts = false; // Reset flag on error
       }
-
-      // Refresh cart UI after removal
-      setTimeout(() => {
-        window.location.reload();
-      }, 300);
     }
   } catch (error) {
-    console.error('🎁 BXGY Gift Protection: Error validating cart:', error);
+    console.error('🎁 BXGY Gift Protection (cart:updated): Error validating cart:', error);
   }
 });
