@@ -144,6 +144,8 @@ class CartItems extends HTMLElement {
           }
         });
 
+        this.refreshVariantMaxValues();
+
         this.updateQuantityLiveRegions(line, parsedState.item_count);
 
         const lineItem = document.getElementById(`CartItem-${line}`);
@@ -218,6 +220,23 @@ class CartItems extends HTMLElement {
         cartStatus.setAttribute("aria-hidden", true);
       }, 1e3);
     }
+  }
+
+  refreshVariantMaxValues() {
+    const variantIds = new Set();
+    document.querySelectorAll('[data-variant-id]').forEach(item => {
+      if (item.dataset.variantId) variantIds.add(item.dataset.variantId);
+    });
+
+    variantIds.forEach(variantId => {
+      const items = document.querySelectorAll(`[data-variant-id="${variantId}"]`);
+      items.forEach(item => {
+        const quantityInput = item.querySelector('quantity-input');
+        if (quantityInput) {
+          quantityInput.updateMaxAttribute();
+        }
+      });
+    });
   }
 
   getSectionInnerHTML(html, selector) {

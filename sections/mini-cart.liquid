@@ -754,6 +754,7 @@
                               value="{{ item.quantity }}"
                               min="0"
                               max="{{item.variant.inventory_quantity }}"
+                              data-inventory-quantity="{{ item.variant.inventory_quantity }}"
                               aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                               id="Quantity-{{ item.index | plus: 1 }}"
                               data-index="{{ item.index | plus: 1 }}"
@@ -783,6 +784,7 @@
                               value="{{ item.quantity }}"
                               min="0"
                               max="{{item.variant.inventory_quantity }}"
+                              data-inventory-quantity="{{ item.variant.inventory_quantity }}"
                               aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                               id="Quantity-{{ item.index | plus: 1 }}"
                               data-index="{{ item.index | plus: 1 }}"
@@ -797,12 +799,21 @@
                         {%- endif -%}
 
                         {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
+                        {%- assign variant_total = 0 -%}
+                        {%- for cart_item in cart.items -%}
+                          {%- if cart_item.variant_id == item.variant_id -%}
+                            {%- assign variant_total = variant_total | plus: cart_item.quantity -%}
+                          {%- endif -%}
+                        {%- endfor -%}
                         <div
                           class="cart-item-warning"
                           data-line="{{ item.index | plus: 1 }}"
                           data-max="{{ item.variant.inventory_quantity }}"
                         >
                           Last {{ item.variant.inventory_quantity }} available
+                          {%- if variant_total > item.quantity -%}
+                            ({{ variant_total }} total in cart across multiple lines)
+                          {%- endif -%}
                         </div>
                       {%- else -%}
                         <gift-quantity

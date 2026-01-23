@@ -621,6 +621,30 @@ class QuantityInput extends HTMLElement {
     this.input.addEventListener('keydown', this.onKeyDown.bind(this));
   }
 
+  getTotalQuantityForVariant(variantId) {
+    const allItems = document.querySelectorAll(`[data-variant-id="${variantId}"]`);
+    let total = 0;
+    allItems.forEach(item => {
+      const input = item.querySelector('quantity-input input');
+      if (input) {
+        total += parseInt(input.value) || 0;
+      }
+    });
+    return total;
+  }
+
+  getAvailableQuantityForLine() {
+    const cartItem = this.closest('[data-variant-id]');
+    const variantId = cartItem?.dataset?.variantId;
+    const maxInventory = parseInt(this.input.dataset.inventoryQuantity || this.input.getAttribute('max'));
+
+    if (!variantId || !maxInventory) return maxInventory;
+
+    const totalOtherLines = this.getTotalQuantityForVariant(variantId) - parseInt(this.input.value);
+
+    return Math.max(0, maxInventory - totalOtherLines);
+  }
+
   onKeyDown(event) {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -630,13 +654,13 @@ class QuantityInput extends HTMLElement {
   }
 
   onInputChange(event) {
-    const max = parseInt(this.input.getAttribute('max'));
+    const availableQty = this.getAvailableQuantityForLine();
     const value = parseInt(this.input.value);
 
-    // Check if manually entered value exceeds max
-    if (max && value > max) {
-      // Cap at max
-      this.input.value = max;
+    // Check if manually entered value exceeds available quantity
+    if (availableQty !== null && value > availableQty) {
+      // Cap at available quantity
+      this.input.value = availableQty;
 
       // Show feedback
       this.showMaxReachedFeedback();
@@ -646,11 +670,11 @@ class QuantityInput extends HTMLElement {
   onButtonClick(event) {
     event.preventDefault();
     const previousValue = this.input.value;
-    const max = parseInt(this.input.getAttribute('max')) || Infinity;
+    const availableQty = this.getAvailableQuantityForLine();
     const isPlus = event.target.name === 'plus';
 
-    // Check if trying to go over max
-    if (isPlus && parseInt(previousValue) >= max) {
+    // Check if trying to go over available quantity
+    if (isPlus && parseInt(previousValue) >= availableQty) {
       this.showMaxReachedFeedback();
       return;
     }
@@ -681,6 +705,17 @@ class QuantityInput extends HTMLElement {
       this.input.style.borderColor = '';
       this.input.style.backgroundColor = '';
     }, 1500);
+  }
+
+  updateMaxAttribute() {
+    const availableQty = this.getAvailableQuantityForLine();
+    if (availableQty !== null) {
+      this.input.setAttribute('max', availableQty);
+      this.querySelector('.quantity__button[name="plus"]')?.classList.toggle(
+        'disabled',
+        parseInt(this.input.value) >= availableQty
+      );
+    }
   }
 
   onInputFocus() {
