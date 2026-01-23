@@ -128,23 +128,52 @@ cart-items {
   border-radius: 4px 0 0 4px !important;
 }
 
-#mini-cart .cart__discount .discount-apply-btn,
-.mini-cart .cart__discount .discount-apply-btn,
-#discount-apply-btn-drawer {
-  border-radius: 0 4px 4px 0 !important;
-  background-color: rgb(var(--color-button)) !important;
-  color: rgb(var(--color-button-text)) !important;
-  border: none !important;
-  padding: 1rem 1.5rem !important;
-  cursor: pointer;
-  font-weight: 500;
+/* Promo code Apply button - unique class to avoid cart-drawer overrides */
+.promo-code-apply {
+  background: none;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--font-button-family);
+  box-shadow: inset 0 0 0 .1rem rgb(var(--color-border));
+  color: rgb(var(--color-foreground));
+  padding: 1rem 1.5rem;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  cursor: pointer;
+  min-width: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
 }
 
-#discount-apply-btn-drawer:hover,
-#discount-apply-btn:hover {
-  opacity: 0.85;
+#discount-code-input {
+  border-radius: 10px;
+}
+
+.promo-code-apply:hover {
+  opacity: 0.85 !important;
+}
+
+.promo-code-apply:disabled {
+  opacity: 0.7 !important;
+  cursor: wait !important;
+}
+
+/* Apply button spinner */
+.promo-code-apply .btn-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 @media screen and (min-width: 750px) {

@@ -618,6 +618,15 @@ class QuantityInput extends HTMLElement {
 
     this.input.addEventListener('focus', this.onInputFocus.bind(this));
     this.input.addEventListener('input', this.onInputChange.bind(this));
+    this.input.addEventListener('keydown', this.onKeyDown.bind(this));
+  }
+
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.input.dispatchEvent(this.changeEvent);
+      this.input.blur();
+    }
   }
 
   onInputChange(event) {
@@ -884,6 +893,14 @@ class CartDrawer extends MenuDrawer {
       opening: 'mini-cart--opening',
       closing: 'mini-cart--closing'
     });
+  }
+
+  openMenuDrawer(summaryElement = false) {
+    super.openMenuDrawer(summaryElement);
+    // Dispatch event when cart drawer opens so listeners can attach
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent('cartdrawer:opened'));
+    }, 150);
   }
 }
 customElements.define('cart-drawer', CartDrawer);

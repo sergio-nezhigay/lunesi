@@ -350,13 +350,27 @@
                       {%- endif -%}
                     </div>
 
-                    {%- if gift_wrap_id == nil or item.id != gift_wrap_id -%}
+                    {%- liquid
+                      # Check if this item should have remove button hidden
+                      assign hide_remove_for_gift = false
+                      if gift_wrap_id and item.id == gift_wrap_id
+                        assign hide_remove_for_gift = true
+                      endif
+
+                      # Check if this is a Buy X Get Y gift item
+                      assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
+                      assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
+                      if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
+                        assign hide_remove_for_gift = true
+                      endif
+                    -%}
+                    {%- unless hide_remove_for_gift -%}
                       <cart-remove-button id="Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
                         <a href="{{ item.url_to_remove }}" class="button button--tertiary" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
                           {% render 'icon', icon: 'remove' %}
                         </a>
                       </cart-remove-button>
-                    {%- endif -%}
+                    {%- endunless -%}
                   </td>
                 </tr>
               {%- endfor -%}

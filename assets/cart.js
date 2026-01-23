@@ -526,7 +526,7 @@ class BuyXGetYHandler {
    * Setup Apply button click listeners for discount code
    */
   setupRealtimeMonitoring() {
-    // Function to attach listeners to Apply buttons
+    // Function to attach listeners to Apply buttons and inputs
     const attachListeners = () => {
       const applyButtons = document.querySelectorAll(
         '#discount-apply-btn, #discount-apply-btn-drawer',
@@ -540,6 +540,30 @@ class BuyXGetYHandler {
         this.handleApplyClick = this.handleApplyButtonClick.bind(this);
         button.addEventListener("click", this.handleApplyClick);
       });
+
+      // Attach Enter key handler to discount inputs
+      const discountInputs = document.querySelectorAll(
+        '#discount-code-input, #discount-code-input-drawer',
+      );
+
+      discountInputs.forEach((input) => {
+        // Remove existing listener to avoid duplicates
+        input.removeEventListener("keydown", this.handleInputKeydown);
+
+        // Create bound handler and store reference
+        this.handleInputKeydown = (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            // Find the Apply button in the same wrapper and click it
+            const wrapper = input.closest('.cart__discount-wrapper, .cart__discount');
+            const applyBtn = wrapper?.querySelector('#discount-apply-btn, #discount-apply-btn-drawer, .promo-code-apply');
+            if (applyBtn) {
+              applyBtn.click();
+            }
+          }
+        };
+        input.addEventListener("keydown", this.handleInputKeydown);
+      });
     };
 
     // Attach listeners initially
@@ -547,7 +571,7 @@ class BuyXGetYHandler {
 
     // Re-attach when cart drawer opens (mini-cart might not be in DOM initially)
     document.addEventListener("cartdrawer:opened", () => {
-      setTimeout(attachListeners, 100);
+      setTimeout(attachListeners, 200);
     });
 
     // Re-attach when cart updates
@@ -560,32 +584,119 @@ class BuyXGetYHandler {
    * Handle Apply button click
    */
   handleApplyButtonClick(event) {
+    event.preventDefault();
     const button = event.target.closest('button');
     const wrapper = button.closest('.cart__discount-wrapper');
     const input = wrapper ? wrapper.querySelector('input[name="discount"]') :
       document.querySelector('#discount-code-input, #discount-code-input-drawer');
 
     if (input) {
+      this.activeApplyButton = button;
       this.checkAndAddGifts(input);
+    }
+  }
+
+  /**
+   * Set Apply button to loading state
+   */
+  setButtonLoading(loading) {
+    const button = this.activeApplyButton;
+    if (!button) return;
+
+    if (loading) {
+      button.dataset.originalText = button.textContent.trim();
+      button.disabled = true;
+      button.innerHTML = `<span class="btn-spinner"></span>`;
+    } else {
+      button.disabled = false;
+      button.textContent = button.dataset.originalText || 'Apply';
     }
   }
 
   /**
    * Check discount code and add gifts if it matches
    */
-  checkAndAddGifts(input) {
+  async checkAndAddGifts(input) {
     const enteredCode = input.value.trim().toUpperCase();
     const triggerCode = this.settings.discountCode.trim().toUpperCase();
 
-    // Check if entered code matches trigger code
-    if (enteredCode === triggerCode) {
-      // Only add gifts if we haven't already added them for this code
-      if (this.giftsAddedForCode !== enteredCode) {
-        this.addGiftsToCart();
+    // Clear any previous error messages
+    this.hideErrorMessage(input);
+
+    // Show loading state
+    this.setButtonLoading(true);
+
+    try {
+      // Check if cart has at least 1 non-gift product
+      const cartResponse = await fetch("/cart.js");
+      const cartData = await cartResponse.json();
+
+      const gift1Id = this.settings.giftVariant1;
+      const gift2Id = this.settings.giftVariant2;
+
+      // Count non-gift items in cart
+      const nonGiftItems = cartData.items.filter(item => {
+        const variantId = item.variant_id.toString();
+        return variantId !== gift1Id && variantId !== gift2Id;
+      });
+
+      if (nonGiftItems.length === 0) {
+        // No products in cart - show error
+        await new Promise(resolve => setTimeout(resolve, 500)); // Brief delay for UX
+        this.setButtonLoading(false);
+        this.showErrorMessage(input, 'Add at least 1 product to apply discount code');
+        return;
       }
-    } else {
-      // Code changed or cleared - reset tracking
-      this.giftsAddedForCode = null;
+
+      // Check if entered code matches trigger code
+      if (enteredCode === triggerCode) {
+        // Always try to add gifts - addGiftsToCart() will check if they're already in cart
+        this.setButtonLoading(false);
+        this.addGiftsToCart();
+      } else {
+        this.setButtonLoading(false);
+      }
+    } catch (error) {
+      console.error("Error checking cart:", error);
+      this.setButtonLoading(false);
+    }
+  }
+
+  /**
+   * Show error message under discount input
+   */
+  showErrorMessage(input, message) {
+    const wrapper = input.closest('.cart__discount-wrapper, .cart__discount');
+    if (!wrapper) return;
+
+    // Remove existing error if any
+    this.hideErrorMessage(input);
+
+    // Create error element
+    const errorEl = document.createElement('div');
+    errorEl.className = 'discount-error-message';
+    errorEl.style.cssText = 'color: #dc3545; font-size: 12px; margin-top: 8px; padding: 0 4px;';
+    errorEl.textContent = message;
+
+    // Insert after wrapper
+    wrapper.parentNode.insertBefore(errorEl, wrapper.nextSibling);
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      this.hideErrorMessage(input);
+    }, 5000);
+  }
+
+  /**
+   * Hide error message
+   */
+  hideErrorMessage(input) {
+    const wrapper = input.closest('.cart__discount-wrapper, .cart__discount');
+    if (!wrapper) return;
+
+    const existingError = wrapper.parentNode.querySelector('.discount-error-message');
+    if (existingError) {
+      existingError.remove();
     }
   }
 
@@ -596,8 +707,8 @@ class BuyXGetYHandler {
     if (this.isProcessing) return;
     this.isProcessing = true;
 
-    // Show loading message and disable buttons
-    this.showLoadingMessage("Adding your free gifts...");
+    // Show loading on Apply button and disable checkout buttons
+    this.setButtonLoading(true);
     this.disableCheckoutButtons();
 
     try {
@@ -641,10 +752,6 @@ class BuyXGetYHandler {
 
         console.log("Buy X Get Y: Added", giftsToAdd.length, "gift(s) to cart");
 
-        // Mark that we've added gifts for this code
-        const triggerCode = this.settings.discountCode.trim().toUpperCase();
-        this.giftsAddedForCode = triggerCode;
-
         // Force apply discount to session (workaround for pricing delay)
         try {
           await fetch('/discount/' + triggerCode);
@@ -652,29 +759,16 @@ class BuyXGetYHandler {
           console.warn('Failed to apply discount to session:', e);
         }
 
-        // Show success message briefly
-        this.showLoadingMessage("Free gifts added!", "success");
-
         // Refresh cart UI
         this.refreshCartUI();
-
-        // Hide message after cart refreshes
-        const hideDelay = this.debugMode ? 120000 : 1500; // 30s in debug, 1.5s in production
-        setTimeout(() => this.hideLoadingMessage(), hideDelay);
       } else {
         console.log("Buy X Get Y: Gifts already in cart");
-        // Mark as added even if already in cart
-        const triggerCode = this.settings.discountCode.trim().toUpperCase();
-        this.giftsAddedForCode = triggerCode;
-        this.hideLoadingMessage();
       }
     } catch (error) {
       console.error("Buy X Get Y: Error adding gifts:", error);
-      this.showLoadingMessage("Error adding gifts. Please try again.", "error");
-      const errorDelay = this.debugMode ? 120000 : 3000; // 30s in debug, 3s in production
-      setTimeout(() => this.hideLoadingMessage(), errorDelay);
     } finally {
       this.isProcessing = false;
+      this.setButtonLoading(false);
       this.enableCheckoutButtons();
     }
   }

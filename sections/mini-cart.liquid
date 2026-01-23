@@ -7,6 +7,51 @@
     align-items: center !important;
     gap: 8px;
   }
+
+  #discount-apply-btn-drawer {
+    background: none;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--font-button-family);
+    box-shadow: inset 0 0 0 .1rem rgb(var(--color-border));
+    color: rgb(var(--color-foreground));
+    padding: 1rem 1.5rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    min-width: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  #discount-apply-btn-drawer:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  #discount-apply-btn-drawer .btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top-color: rgb(var(--color-foreground));
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+  }
+
+  @keyframes btn-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .cart__discount-wrapper {
+    width: 100%;
+  }
+
+  #discount-code-input-drawer {
+    border-radius: 10px;
+  }
 </style>
 {% comment %}theme-check-disable TemplateLength{% endcomment %}
 {%- liquid
@@ -544,9 +589,16 @@
                 </div>
               </div>
               {%- liquid
-                # Hide remove button ONLY for gift wrapping (NOT for gift bundle)
+                # Hide remove button for gift wrapping and Buy X Get Y gift items
                 assign hide_remove_button = false
                 if gift_wrap_id and item.id == gift_wrap_id
+                  assign hide_remove_button = true
+                endif
+
+                # Check if this is a Buy X Get Y gift item
+                assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
+                assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
+                if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
                   assign hide_remove_button = true
                 endif
               -%}
@@ -1838,13 +1890,7 @@
               id="discount-code-input-drawer"
               style="flex: 1;"
             >
-            <button
-              type="button"
-              class="button button--small discount-apply-btn"
-              id="discount-apply-btn-drawer"
-            >
-              {{ 'sections.cart.apply' | t | default: 'Apply' }}
-            </button>
+            <button type="button" class="promo-code-apply" id="discount-apply-btn-drawer">{{ 'sections.cart.apply' | t | default: 'Apply' }}</button>
           </div>
         </discount-code>
       {%- endif -%}

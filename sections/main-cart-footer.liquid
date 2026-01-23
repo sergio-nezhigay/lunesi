@@ -50,6 +50,48 @@
 {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {{ 'gift-bundle.js' | asset_url | script_tag }}
 
+<style>
+  #discount-apply-btn {
+    background: none;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--font-button-family);
+    box-shadow: inset 0 0 0 .1rem rgb(var(--color-border));
+    color: rgb(var(--color-foreground));
+    padding: 1rem 1.5rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    min-width: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #discount-apply-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  #discount-apply-btn .btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top-color: rgb(var(--color-foreground));
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+  }
+
+  @keyframes btn-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  #discount-code-input {
+    text-align: left;
+  }
+</style>
+
 <script>
   // Передати інформацію про кошик в JavaScript
   window.cartHasGift = {{ gift_in_cart | json }};
@@ -128,13 +170,7 @@
               id="discount-code-input"
               style="flex: 1;"
             >
-            <button
-              type="button"
-              class="button button--small discount-apply-btn"
-              id="discount-apply-btn"
-            >
-              {{ 'sections.cart.apply' | t | default: 'Apply' }}
-            </button>
+            <button type="button" class="promo-code-apply" id="discount-apply-btn">{{ 'sections.cart.apply' | t | default: 'Apply' }}</button>
           </div>
         </discount-code>
       {%- endif -%}
