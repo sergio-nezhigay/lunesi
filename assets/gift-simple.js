@@ -60,11 +60,22 @@ let cartCacheTime = 0;
 async function updateCartCache() {
   try {
     const response = await fetch('/cart.js');
-    const cartData = await response.json();
-    cartCache = cartData;
-    cartCacheTime = Date.now();
-    return cartData;
+    if (!response.ok) {
+      console.error('🎁 Failed to fetch cart:', response.status, response.statusText);
+      return null;
+    }
+    const text = await response.text();
+    try {
+      const cartData = JSON.parse(text);
+      cartCache = cartData;
+      cartCacheTime = Date.now();
+      return cartData;
+    } catch (parseError) {
+      console.error('🎁 Cart response is not JSON:', text.substring(0, 200));
+      return null;
+    }
   } catch (e) {
+    console.error('🎁 Error fetching cart:', e);
     return null;
   }
 }
@@ -531,7 +542,15 @@ async function addGiftToCart(clickedButton = null) {
     });
 
     if (response.ok) {
-  const parsedState = await response.json();
+      const text = await response.text();
+      let parsedState;
+      try {
+        parsedState = JSON.parse(text);
+      } catch (parseError) {
+        console.error('🎁 Add to cart response is not JSON:', text.substring(0, 200));
+        giftAddInProgress = false;
+        return;
+      }
   console.log('🎁 Gift added successfully');
 
   // Update cart WITHOUT reload - support both mini-cart and main cart
@@ -706,7 +725,31 @@ async function autoRemoveGiftIfNotQualified() {
 
   try {
     const cartResponse = await fetch('/cart.js');
-    const cartData = await cartResponse.json();
+
+    if (!cartResponse.ok) {
+      console.error('🎁 Failed to fetch cart:', cartResponse.status, cartResponse.statusText);
+      autoRemoveInProgress = false;
+      if (checkoutButton) {
+        checkoutButton.removeAttribute('disabled');
+        checkoutButton.disabled = false;
+      }
+      return;
+    }
+
+    const cartText = await cartResponse.text();
+    let cartData;
+    try {
+      cartData = JSON.parse(cartText);
+    } catch (parseError) {
+      console.error('🎁 Cart response is not JSON:', cartText.substring(0, 200));
+      autoRemoveInProgress = false;
+      if (checkoutButton) {
+        checkoutButton.removeAttribute('disabled');
+        checkoutButton.disabled = false;
+      }
+      return;
+    }
+
     console.log('🎁 Cart data:', cartData.items.length, 'items');
 
     // шукаємо подарунок з ID 43694372257923
@@ -900,6 +943,11 @@ async function updateClaimButtons() {
     let cartData = await updateCartCache();
     if (!cartData) {
       cartData = getCartData();
+    }
+
+    if (!cartData) {
+      console.error('🎁 updateClaimButtons: Failed to get cart data');
+      return;
     }
 
     let nonGiftItemsCount = 0;
