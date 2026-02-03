@@ -98,7 +98,6 @@ class CartItems extends HTMLElement {
 
     // Allow deletion (quantity = 0) but block other quantity changes for gift items
     if (giftVariants.length > 0 && variantId && giftVariants.includes(String(variantId)) && parseInt(quantity) !== 0) {
-      console.log('🎁 BXGY Gift Protection: Cannot change quantity of gift items (variant:', variantId, ')');
       this.disableLoading();
       return; // Block the quantity change (but allow deletion)
     }
@@ -268,7 +267,6 @@ class CartItems extends HTMLElement {
   async removeGiftsIfOnlyGiftsInCart(parsedState) {
     // Prevent duplicate removal attempts
     if (window.isRemovingGifts) {
-      console.log('🎁 BXGY Gift Protection: Already removing gifts, skipping...');
       return;
     }
 
@@ -281,8 +279,6 @@ class CartItems extends HTMLElement {
       return;
     }
 
-    console.log('🎁 BXGY Gift Protection: Checking cart...', { giftVariants, items: parsedState.items.map(i => i.variant_id) });
-
     // Count regular (non-gift) items
     const regularItems = parsedState.items.filter(item =>
       !giftVariants.includes(String(item.variant_id))
@@ -293,14 +289,10 @@ class CartItems extends HTMLElement {
       // Set flag to prevent duplicate attempts
       window.isRemovingGifts = true;
 
-      console.log('🎁 BXGY Gift Protection: Removing gifts (no regular products in cart)');
-
       // Get all gift items that need to be removed
       const giftItemsToRemove = parsedState.items.filter(item =>
         giftVariants.includes(String(item.variant_id))
       );
-
-      console.log('🎁 BXGY Gift Protection: Found', giftItemsToRemove.length, 'gift(s) to remove:', giftItemsToRemove.map(g => g.variant_id));
 
       // Disable checkout buttons while removing gifts
       disableCheckoutButtonsGlobal();
@@ -312,8 +304,6 @@ class CartItems extends HTMLElement {
           updates[item.key] = 0;
         });
 
-        console.log('🎁 BXGY Gift Protection: Removing all gifts in one request...', updates);
-
         await fetch('/cart/update.js', {
           method: 'POST',
           headers: {
@@ -322,14 +312,12 @@ class CartItems extends HTMLElement {
           body: JSON.stringify({ updates })
         });
 
-        console.log('🎁 BXGY Gift Protection: All gifts removed!');
-
         // Refresh cart UI instantly without page reload
         await this.refreshCartSections();
         window.isRemovingGifts = false;
         enableCheckoutButtonsGlobal();
       } catch (error) {
-        console.error('🎁 BXGY Gift Protection: Error during gift removal:', error);
+        console.error('Error during gift removal:', error);
         window.isRemovingGifts = false;
         enableCheckoutButtonsGlobal();
       }
@@ -367,10 +355,8 @@ class CartItems extends HTMLElement {
           el.style.display = '';
         }
       });
-
-      console.log('🎁 BXGY: Cart sections refreshed instantly');
     } catch (error) {
-      console.error('🎁 BXGY: Error refreshing cart sections:', error);
+      console.error('Error refreshing cart sections:', error);
     }
   }
 
@@ -529,7 +515,7 @@ class BuyXGetYHandler {
     this.debounceTimer = null; // For typing debounce
     this.pasteTimer = null; // For paste event
     this.changeTimer = null; // For change event
-    this.debugMode = true; // Set to false in production
+    this.debugMode = false; // Set to false in production
 
     if (this.settings.enabled && this.settings.discountCode) {
       this.init();
@@ -547,8 +533,9 @@ class BuyXGetYHandler {
   setupRealtimeMonitoring() {
     // Function to attach listeners to Apply buttons and inputs
     const attachListeners = () => {
+      // Try broader selectors to catch all discount apply buttons
       const applyButtons = document.querySelectorAll(
-        '#discount-apply-btn, #discount-apply-btn-drawer',
+        '#discount-apply-btn, #discount-apply-btn-drawer, .promo-code-apply, button[type="button"].promo-code-apply',
       );
 
       applyButtons.forEach((button) => {
@@ -562,7 +549,7 @@ class BuyXGetYHandler {
 
       // Attach Enter key handler to discount inputs
       const discountInputs = document.querySelectorAll(
-        '#discount-code-input, #discount-code-input-drawer',
+        '#discount-code-input, #discount-code-input-drawer, input[name="discount"]',
       );
 
       discountInputs.forEach((input) => {
@@ -583,6 +570,9 @@ class BuyXGetYHandler {
         };
         input.addEventListener("keydown", this.handleInputKeydown);
       });
+
+      // Return whether we found elements
+      return applyButtons.length > 0 || discountInputs.length > 0;
     };
 
     // Attach listeners initially
@@ -597,6 +587,21 @@ class BuyXGetYHandler {
     document.addEventListener("cart:updated", () => {
       setTimeout(attachListeners, 100);
     });
+
+    // Also try when mini-cart element is added to DOM (fallback)
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.addedNodes.length > 0) {
+          const miniCart = document.getElementById('mini-cart');
+          if (miniCart) {
+            setTimeout(attachListeners, 300);
+            observer.disconnect(); // Stop observing once we found it
+            break;
+          }
+        }
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   /**
@@ -648,7 +653,22 @@ class BuyXGetYHandler {
     try {
       // Check if cart has at least 1 non-gift product
       const cartResponse = await fetch("/cart.js");
-      const cartData = await cartResponse.json();
+
+      if (!cartResponse.ok) {
+        console.error('Failed to fetch cart:', cartResponse.status, cartResponse.statusText);
+        this.setButtonLoading(false);
+        return;
+      }
+
+      const cartText = await cartResponse.text();
+      let cartData;
+      try {
+        cartData = JSON.parse(cartText);
+      } catch (parseError) {
+        console.error('Cart response is not JSON:', cartText.substring(0, 200));
+        this.setButtonLoading(false);
+        return;
+      }
 
       const gift1Id = this.settings.giftVariant1;
       const gift2Id = this.settings.giftVariant2;
@@ -676,7 +696,7 @@ class BuyXGetYHandler {
         this.setButtonLoading(false);
       }
     } catch (error) {
-      console.error("Error checking cart:", error);
+      console.error("Error in checkAndAddGifts:", error);
       this.setButtonLoading(false);
     }
   }
@@ -723,7 +743,9 @@ class BuyXGetYHandler {
    * Add gift products to cart WITHOUT redirecting to checkout
    */
   async addGiftsToCart() {
-    if (this.isProcessing) return;
+    if (this.isProcessing) {
+      return;
+    }
     this.isProcessing = true;
 
     // Show loading on Apply button and disable checkout buttons
@@ -733,7 +755,20 @@ class BuyXGetYHandler {
     try {
       // Get current cart to check if gifts already added
       const cartResponse = await fetch("/cart.js");
-      const cartData = await cartResponse.json();
+
+      if (!cartResponse.ok) {
+        console.error('Failed to fetch cart:', cartResponse.status, cartResponse.statusText);
+        return;
+      }
+
+      const cartText = await cartResponse.text();
+      let cartData;
+      try {
+        cartData = JSON.parse(cartText);
+      } catch (parseError) {
+        console.error('Cart response is not JSON:', cartText.substring(0, 200));
+        return;
+      }
 
       const gift1Id = this.settings.giftVariant1;
       const gift2Id = this.settings.giftVariant2;
@@ -741,25 +776,23 @@ class BuyXGetYHandler {
       const giftsToAdd = [];
 
       // Check if gift 1 is already in cart
-      if (
-        gift1Id &&
-        !cartData.items.some((item) => item.variant_id.toString() === gift1Id)
-      ) {
+      const gift1InCart = cartData.items.some((item) => item.variant_id.toString() === gift1Id);
+
+      if (gift1Id && !gift1InCart) {
         giftsToAdd.push({ id: parseInt(gift1Id), quantity: 1 });
       }
 
       // Check if gift 2 is already in cart
-      if (
-        gift2Id &&
-        !cartData.items.some((item) => item.variant_id.toString() === gift2Id)
-      ) {
+      const gift2InCart = cartData.items.some((item) => item.variant_id.toString() === gift2Id);
+
+      if (gift2Id && !gift2InCart) {
         giftsToAdd.push({ id: parseInt(gift2Id), quantity: 1 });
       }
 
       // Add gifts to cart
       if (giftsToAdd.length > 0) {
         for (const gift of giftsToAdd) {
-          await fetch("/cart/add.js", {
+          const addResponse = await fetch("/cart/add.js", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -767,12 +800,28 @@ class BuyXGetYHandler {
             },
             body: JSON.stringify(gift),
           });
-        }
 
-        console.log("Buy X Get Y: Added", giftsToAdd.length, "gift(s) to cart");
+          if (addResponse.ok) {
+            const addText = await addResponse.text();
+            try {
+              JSON.parse(addText);
+            } catch (parseError) {
+              console.error('Add response is not JSON:', addText.substring(0, 200));
+            }
+          } else {
+            const errorText = await addResponse.text();
+            try {
+              const errorData = JSON.parse(errorText);
+              console.error('Failed to add gift:', errorData);
+            } catch (parseError) {
+              console.error('Failed to add gift (non-JSON response):', errorText.substring(0, 200));
+            }
+          }
+        }
 
         // Force apply discount to session (workaround for pricing delay)
         try {
+          const triggerCode = this.settings.discountCode.trim().toUpperCase();
           await fetch('/discount/' + triggerCode);
         } catch (e) {
           console.warn('Failed to apply discount to session:', e);
@@ -780,11 +829,9 @@ class BuyXGetYHandler {
 
         // Refresh cart UI
         this.refreshCartUI();
-      } else {
-        console.log("Buy X Get Y: Gifts already in cart");
       }
     } catch (error) {
-      console.error("Buy X Get Y: Error adding gifts:", error);
+      console.error("Error in addGiftsToCart:", error);
     } finally {
       this.isProcessing = false;
       this.setButtonLoading(false);
@@ -1049,11 +1096,9 @@ class BuyXGetYHandler {
         ) {
           publish(PUB_SUB_EVENTS.cartUpdate, { source: "buy-x-get-y" });
         }
-
-        console.log("Buy X Get Y: Cart UI refreshed");
       })
       .catch((error) => {
-        console.error("Buy X Get Y: Error refreshing cart UI:", error);
+        console.error("Error refreshing cart UI:", error);
       });
   }
 }
@@ -1076,7 +1121,6 @@ if (document.readyState === "loading") {
 document.addEventListener("cart:updated", async () => {
   // Prevent duplicate removal attempts
   if (window.isRemovingGifts) {
-    console.log('🎁 BXGY Gift Protection (cart:updated): Already removing gifts, skipping...');
     return;
   }
 
@@ -1093,13 +1137,22 @@ document.addEventListener("cart:updated", async () => {
   try {
     // Fetch current cart state
     const response = await fetch('/cart.js');
-    const cartData = await response.json();
+
+    if (!response.ok) {
+      return;
+    }
+
+    const cartText = await response.text();
+    let cartData;
+    try {
+      cartData = JSON.parse(cartText);
+    } catch (parseError) {
+      return;
+    }
 
     if (!cartData || !cartData.items) {
       return;
     }
-
-    console.log('🎁 BXGY Gift Protection (cart:updated): Checking cart...', { giftVariants, items: cartData.items.map(i => i.variant_id) });
 
     // Count regular (non-gift) items
     const regularItems = cartData.items.filter(item =>
@@ -1111,14 +1164,10 @@ document.addEventListener("cart:updated", async () => {
       // Set flag to prevent duplicate attempts
       window.isRemovingGifts = true;
 
-      console.log('🎁 BXGY Gift Protection (cart:updated): Cart has only gifts, removing them...');
-
       // Get all gift items that need to be removed
       const giftItemsToRemove = cartData.items.filter(item =>
         giftVariants.includes(String(item.variant_id))
       );
-
-      console.log('🎁 BXGY Gift Protection (cart:updated): Found', giftItemsToRemove.length, 'gift(s) to remove');
 
       // Disable checkout buttons while removing gifts
       disableCheckoutButtonsGlobal();
@@ -1130,8 +1179,6 @@ document.addEventListener("cart:updated", async () => {
           updates[item.key] = 0;
         });
 
-        console.log('🎁 BXGY Gift Protection (cart:updated): Removing all gifts in one request...', updates);
-
         await fetch('/cart/update.js', {
           method: 'POST',
           headers: {
@@ -1140,20 +1187,18 @@ document.addEventListener("cart:updated", async () => {
           body: JSON.stringify({ updates })
         });
 
-        console.log('🎁 BXGY Gift Protection (cart:updated): All gifts removed!');
-
         // Refresh cart UI instantly without page reload
         await refreshCartSectionsGlobal();
         window.isRemovingGifts = false;
         enableCheckoutButtonsGlobal();
       } catch (error) {
-        console.error('🎁 BXGY Gift Protection (cart:updated): Error during gift removal:', error);
+        console.error('Error during gift removal:', error);
         window.isRemovingGifts = false;
         enableCheckoutButtonsGlobal();
       }
     }
   } catch (error) {
-    console.error('🎁 BXGY Gift Protection (cart:updated): Error validating cart:', error);
+    console.error('Error validating cart:', error);
   }
 });
 
@@ -1188,10 +1233,8 @@ async function refreshCartSectionsGlobal() {
         el.style.display = '';
       }
     });
-
-    console.log('🎁 BXGY: Cart sections refreshed');
   } catch (error) {
-    console.error('🎁 BXGY: Error refreshing cart sections:', error);
+    console.error('Error refreshing cart sections:', error);
   }
 }
 

@@ -60,11 +60,22 @@ let cartCacheTime = 0;
 async function updateCartCache() {
   try {
     const response = await fetch('/cart.js');
-    const cartData = await response.json();
-    cartCache = cartData;
-    cartCacheTime = Date.now();
-    return cartData;
+    if (!response.ok) {
+      console.error('🎁 Failed to fetch cart:', response.status, response.statusText);
+      return null;
+    }
+    const text = await response.text();
+    try {
+      const cartData = JSON.parse(text);
+      cartCache = cartData;
+      cartCacheTime = Date.now();
+      return cartData;
+    } catch (parseError) {
+      console.error('🎁 Cart response is not JSON:', text.substring(0, 200));
+      return null;
+    }
   } catch (e) {
+    console.error('🎁 Error fetching cart:', e);
     return null;
   }
 }
@@ -531,8 +542,16 @@ async function addGiftToCart(clickedButton = null) {
     });
 
     if (response.ok) {
-  const parsedState = await response.json();
-  console.log('🎁 Gift added successfully');
+      const text = await response.text();
+      let parsedState;
+      try {
+        parsedState = JSON.parse(text);
+      } catch (parseError) {
+        console.error('🎁 Add to cart response is not JSON:', text.substring(0, 200));
+        giftAddInProgress = false;
+        return;
+      }
+  // console.log('🎁 Gift added successfully');
 
   // Update cart WITHOUT reload - support both mini-cart and main cart
   if (miniCart && typeof miniCart.renderContents === 'function') {
@@ -691,12 +710,12 @@ let autoRemoveInProgress = false;
 
 async function autoRemoveGiftIfNotQualified() {
   if (autoRemoveInProgress) {
-    console.log('🎁 Auto-remove already in progress, skipping');
+    // console.log('🎁 Auto-remove already in progress, skipping');
     return;
   }
 
   autoRemoveInProgress = true;
-  console.log('🎁 Checking if gift should be removed...');
+  // console.log('🎁 Checking if gift should be removed...');
 
   const checkoutButton = document.querySelector('[data-checkout-button]');
   if (checkoutButton) {
@@ -706,8 +725,32 @@ async function autoRemoveGiftIfNotQualified() {
 
   try {
     const cartResponse = await fetch('/cart.js');
-    const cartData = await cartResponse.json();
-    console.log('🎁 Cart data:', cartData.items.length, 'items');
+
+    if (!cartResponse.ok) {
+      console.error('🎁 Failed to fetch cart:', cartResponse.status, cartResponse.statusText);
+      autoRemoveInProgress = false;
+      if (checkoutButton) {
+        checkoutButton.removeAttribute('disabled');
+        checkoutButton.disabled = false;
+      }
+      return;
+    }
+
+    const cartText = await cartResponse.text();
+    let cartData;
+    try {
+      cartData = JSON.parse(cartText);
+    } catch (parseError) {
+      console.error('🎁 Cart response is not JSON:', cartText.substring(0, 200));
+      autoRemoveInProgress = false;
+      if (checkoutButton) {
+        checkoutButton.removeAttribute('disabled');
+        checkoutButton.disabled = false;
+      }
+      return;
+    }
+
+    // console.log('🎁 Cart data:', cartData.items.length, 'items');
 
     // шукаємо подарунок з ID 43694372257923
     const giftItem = cartData.items.find(
@@ -715,7 +758,7 @@ async function autoRemoveGiftIfNotQualified() {
     );
 
     if (!giftItem) {
-      console.log('🎁 Gift product 43694372257923 not found in cart');
+      // console.log('🎁 Gift product 43694372257923 not found in cart');
       localStorage.setItem('giftHidden', 'false'); // 👉 немає подарунка
 
       autoRemoveInProgress = false;
@@ -726,7 +769,7 @@ async function autoRemoveGiftIfNotQualified() {
       return;
     }
 
-    console.log('🎁 Gift found in cart');
+    // console.log('🎁 Gift found in cart');
     localStorage.setItem('giftHidden', 'true'); // 👉 подарунок є
 
     // рахуємо інші товари
@@ -734,10 +777,10 @@ async function autoRemoveGiftIfNotQualified() {
       .filter(item => item.variant_id.toString() !== "43694372257923")
       .reduce((total, item) => total + item.quantity, 0);
 
-    console.log('🎁 Other items count:', otherItemsCount);
+    // console.log('🎁 Other items count:', otherItemsCount);
 
     if (otherItemsCount < 2) {
-      console.log('🎁 Removing gift - not enough items (need 2, have', otherItemsCount, ')');
+      // console.log('🎁 Removing gift - not enough items (need 2, have', otherItemsCount, ')');
 
       const miniCart = document.querySelector('mini-cart');
       const sections = miniCart ? miniCart.getSectionsToRender().map(s => s.id) : [];
@@ -757,12 +800,12 @@ async function autoRemoveGiftIfNotQualified() {
       });
 
       if (removeResponse.ok) {
-        console.log('🎁 Gift removed successfully');
+        // console.log('🎁 Gift removed successfully');
         const parsedState = await removeResponse.json();
 
         if (miniCart && typeof miniCart.renderContents === 'function') {
           miniCart.renderContents(parsedState);
-          console.log('🎁 Cart UI updated instantly via renderContents');
+          // console.log('🎁 Cart UI updated instantly via renderContents');
         }
 
         if (document.body.classList.contains('template-cart')) {
@@ -770,7 +813,7 @@ async function autoRemoveGiftIfNotQualified() {
         }
       }
     } else {
-      console.log('🎁 Gift qualifies - keeping it (', otherItemsCount, 'items)');
+      // console.log('🎁 Gift qualifies - keeping it (', otherItemsCount, 'items)');
       if (checkoutButton) {
         checkoutButton.removeAttribute('disabled');
         checkoutButton.disabled = false;
@@ -900,6 +943,11 @@ async function updateClaimButtons() {
     let cartData = await updateCartCache();
     if (!cartData) {
       cartData = getCartData();
+    }
+
+    if (!cartData) {
+      console.error('🎁 updateClaimButtons: Failed to get cart data');
+      return;
     }
 
     let nonGiftItemsCount = 0;
@@ -1037,7 +1085,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen for quantity changes
   document.addEventListener('change', (e) => {
     if (e.target.classList.contains('quantity__input')) {
-      console.log('🎁 Quantity input changed');
+      // console.log('🎁 Quantity input changed');
       setTimeout(() => {
         // autoRemoveGiftIfNotQualified(); // DISABLED: auto-remove not needed
         updateClaimButtons();
@@ -1047,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('click', (e) => {
     if (e.target.closest('.quantity__button')) {
-      console.log('🎁 Quantity button clicked');
+      // console.log('🎁 Quantity button clicked');
       setTimeout(() => {
         // autoRemoveGiftIfNotQualified(); // DISABLED: auto-remove not needed
         updateClaimButtons();
@@ -1056,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Также отслеживаем кнопки удаления товара
     if (e.target.closest('cart-remove-button') || e.target.closest('.delete-product')) {
-      console.log('🎁 Remove button clicked');
+      // console.log('🎁 Remove button clicked');
       setTimeout(() => {
         // autoRemoveGiftIfNotQualified(); // DISABLED: auto-remove not needed
         updateClaimButtons();
@@ -1074,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listen for cart drawer open events
   document.addEventListener('cart-drawer:open', () => {
-    console.log('🎁 Cart drawer opened, updating gift buttons');
+    // console.log('🎁 Cart drawer opened, updating gift buttons');
     setTimeout(() => {
       updateClaimButtons();
     }, 100);
