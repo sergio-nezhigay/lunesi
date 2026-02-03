@@ -45,11 +45,11 @@
   endif
 
   if settings.disable_collection_portion
-    assign card_url = card_product.url
-    assign card_url_with_default = card_product.url | default: '#'
+    assign card_url = card_product.url | prepend: shop.url
+    assign card_url_with_default = card_product.url | default: '#' | prepend: shop.url
   else
-    assign card_url = card_product.url | within: card_collection
-    assign card_url_with_default = card_product.url | within: card_collection | default: '#'
+    assign card_url = card_product.url | within: card_collection | prepend: shop.url
+    assign card_url_with_default = card_product.url | within: card_collection | default: '#' | prepend: shop.url
   endif
 -%}
 
@@ -169,7 +169,7 @@
                     data-collection-handle="{{ collection.handle | escape }}"
                   {% endif -%}
                 >
-                  <a href="{{ variant.url }}" tabindex="-1">
+                  <a href="{{ shop.url }}{{ variant.url }}" tabindex="-1">
                     <span class="visually-hidden">{{ value }}</span>
                   </a>
                 </color-swatch>

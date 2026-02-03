@@ -58,7 +58,7 @@
               <span>{{ block.settings.title | escape }}</span>
             </div>
           {%- else -%}
-            <a class="dock__item" href="{{ routes.cart_url }}" {{ block.shopify_attributes }}>
+            <a class="dock__item" href="{{ shop.url }}{{ routes.cart_url }}" {{ block.shopify_attributes }}>
               {%- if block.settings.custom_icon != blank-%}
                 {{ block.settings.custom_icon }}
               {%- else -%}
@@ -70,7 +70,7 @@
             </a>
           {%- endif -%}
         {%- when 'home' -%}
-          <a class="dock__item" href="{{ routes.root_url }}" {{ block.shopify_attributes }}>
+          <a class="dock__item" href="{{ shop.url }}{{ routes.root_url }}" {{ block.shopify_attributes }}>
             {%- liquid
               if block.settings.custom_icon != blank
                 echo block.settings.custom_icon
@@ -103,7 +103,7 @@
             <span>{{ block.settings.title | escape }}</span>
           </div>
         {%- when 'link' -%}
-          <a class="dock__item" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
+          <a class="dock__item" href="{{ shop.url }}{{ block.settings.link }}" {{ block.shopify_attributes }}>
             {%- liquid
               if block.settings.custom_icon != blank
                 echo block.settings.custom_icon

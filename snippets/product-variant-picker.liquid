@@ -12,7 +12,7 @@
     <variant-radios
       class="no-js-hidden"
       data-section="{{ section.id }}"
-      data-url="{{ product.url }}"
+      data-url="{{ shop.url }}{{ product.url }}"
       {% if update_url == false %}data-update-url="false"{% endif %}
       data-no-scroll
       {% if block.settings.enable_swatch_cross %}data-swatch-cross{% endif %}
@@ -145,7 +145,7 @@
                   <span class="label">{{ 'products.product.size_chart' | t | default: block.settings.size_chart.title }}</span>
                 </button>
               </modal-opener>
-              <a href="{{ block.settings.size_chart.url }}" class="link link-with-icon no-js">
+              <a href="{{ shop.url }}{{ block.settings.size_chart.url }}" class="link link-with-icon no-js">
                 {% render 'icon', icon: 'ruler' %}
                 <span class="label">{{ 'products.product.size_chart' | t | default: block.settings.size_chart.title }}</span>
               </a>
@@ -162,7 +162,7 @@
     <variant-selects
       class="no-js-hidden"
       data-section="{{ section.id }}"
-      data-url="{{ product.url }}"
+      data-url="{{ shop.url }}{{ product.url }}"
       {% if update_url == false %}data-update-url="false"{% endif %}
       {{ block.shopify_attributes }}
     >
@@ -210,7 +210,7 @@
                   <span class="label">{{ 'products.product.size_chart' | t | default: block.settings.size_chart.title }}</span>
                 </button>
               </modal-opener>
-              <a href="{{ block.settings.size_chart.url }}" class="link link-with-icon no-js">
+              <a href="{{ shop.url }}{{ block.settings.size_chart.url }}" class="link link-with-icon no-js">
                 {% render 'icon', icon: 'ruler' %}
                 <span class="label">{{ 'products.product.size_chart' | t | default: block.settings.size_chart.title }}</span>
               </a>

@@ -26,7 +26,7 @@
                         playsinline
                       ></video>
                     </div>
-                    <a class="main-link-video" href="{{ block.settings.main_product.url }}">
+                    <a class="main-link-video" href="{{ shop.url }}{{ block.settings.main_product.url }}">
                       <img src="{{ 'Vector112.svg' | asset_url }}" alt="Icon">
                       <span class="link-video-tooltip">{{ section.settings.link_text }}</span>
                     </a>
@@ -45,7 +45,7 @@
                       </svg>
                     </div>
                   </div>
-                  <a class="continer-bottom-tiktok" href="{{ block.settings.main_product.url }}">
+                  <a class="continer-bottom-tiktok" href="{{ shop.url }}{{ block.settings.main_product.url }}">
                     {% if block.settings.main_product.featured_image != blank %}
                       {% if block.settings.main_img != blank %}
                         {{ block.settings.main_img | image_url: width: block.settings.main_img.width | image_tag }}

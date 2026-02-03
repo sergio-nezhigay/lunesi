@@ -161,13 +161,13 @@
                             <button type="button" class="menu-drawer__close-button focus-inset" aria-expanded="true" data-close>
                               {% render 'icon', icon: 'arrow' %}
                             </button>
-                            <a class="menu-drawer__menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
+                            <a class="menu-drawer__menu-item" href="{{ shop.url }}{{ link.url }}">{{ link.title | escape }}</a>
                           </div>
                           <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
                             {%- for childlink in link.links -%}
                               <li>
                                 {%- if childlink.links == blank -%}
-                                  <a href="{{ childlink.url }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                  <a href="{{ shop.url }}{{ childlink.url }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
                                     {{ childlink.title | escape }}
                                   </a>
                                 {%- else -%}
@@ -186,12 +186,12 @@
                                         <button type="button" class="menu-drawer__close-button focus-inset" aria-expanded="true" data-close>
                                           {% render 'icon', icon: 'arrow' %}
                                         </button>
-                                        <a class="menu-drawer__menu-item" href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+                                        <a class="menu-drawer__menu-item" href="{{ shop.url }}{{ childlink.url }}">{{ childlink.title | escape }}</a>
                                       </div>
                                       <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
                                         {%- for grandchildlink in childlink.links -%}
                                           <li>
-                                            <a href="{{ grandchildlink.url }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                            <a href="{{ shop.url }}{{ grandchildlink.url }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
                                               {{ grandchildlink.title | escape }}
                                             </a>
                                           </li>
@@ -207,7 +207,7 @@
                       </div>
                     </details>
                   {%- else -%}
-                    <a href="{{ link.url }}" class="menu-drawer__menu-item list-menu__itemfocus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                    <a href="{{ shop.url }}{{ link.url }}" class="menu-drawer__menu-item list-menu__itemfocus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
                       {{ link.title | escape }}
                     </a>
                   {%- endif -%}
@@ -229,7 +229,7 @@
 
           <div class="menu-drawer__utility-links" data-animate data-animate-delay-{{ animate_count }}>
             {%- if shop.customer_accounts_enabled -%}
-              <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="menu-drawer__account link link-with-icon focus-inset">
+              <a href="{{ shop.url }}{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="menu-drawer__account link link-with-icon focus-inset">
                 {% render 'icon', icon: 'account' %}
                 <span class="label">
                   {%- liquid

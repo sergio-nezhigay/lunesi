@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{{ 'component-deferred-media.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
-<product-recommendations class="product-recommendations" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.product_list_limit }}">
+<product-recommendations class="product-recommendations" data-url="{{ shop.url }}{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.product_list_limit }}">
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
     <div class="section--padding{% if section.settings.show_divider %} section--divider{% endif %}">
       <div class="page-width">

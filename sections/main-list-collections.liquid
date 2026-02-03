@@ -39,7 +39,7 @@
       <li class="collection-list__item grid__item">
         <a
           class="card-wrapper card{% if featured_image != blank %} card--media{% else %} card--text{% endif %}"
-          {%- if collection.all_products_count > 0 %} href="{{ collection.url }}"{% endif -%}
+          {%- if collection.all_products_count > 0 %} href="{{ shop.url }}{{ collection.url }}"{% endif -%}
         >
           {%- if featured_image != blank -%}
             <div class="media-wrapper">

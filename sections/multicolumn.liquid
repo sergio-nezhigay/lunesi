@@ -76,7 +76,7 @@
                     }}
                   </div>
                   {%- if block.settings.button_link != blank -%}
-                    <a href="{{ block.settings.button_link }}" class="full-unstyled-link">&nbsp;</a>
+                    <a href="{{ shop.url }}{{ block.settings.button_link }}" class="full-unstyled-link">&nbsp;</a>
                   {%- endif -%}
                 </use-animate>
               {%- endif -%}
@@ -86,12 +86,12 @@
                   <div class="rte typeset">{{ block.settings.text }}</div>
                   {%- if block.settings.button_label != blank -%}
                     {%- if block.settings.button_style_secondary -%}
-                      <a class="button button--cta"{% if block.settings.button_link != blank %} href="{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                      <a class="button button--cta"{% if block.settings.button_link != blank %} href="{{ shop.url }}{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                         <span class="label">{{ block.settings.button_label | escape }}</span>
                         {% render 'icon', icon: 'arrow' %}
                       </a>
                     {%- else -%}
-                      <a class="button button--tertiary"{% if block.settings.button_link != blank %} href="{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                      <a class="button button--tertiary"{% if block.settings.button_link != blank %} href="{{ shop.url }}{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                         {{ block.settings.button_label | escape }}
                       </a>
                     {%- endif -%}

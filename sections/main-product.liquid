@@ -894,7 +894,7 @@
               {% render 'breadcrumbs', text_style: block.settings.text_style, show_divider: block.settings.show_divider %}
             </div>
           {%- when 'complementary' -%}
-            <product-recommendations class="complementary-products{% if block.settings.make_collapsible_row %} is-accordion{% endif %} no-js-hidden" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.product_list_limit }}&intent=complementary">
+            <product-recommendations class="complementary-products{% if block.settings.make_collapsible_row %} is-accordion{% endif %} no-js-hidden" data-url="{{ shop.url }}{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.product_list_limit }}&intent=complementary">
               {%- if recommendations.performed and recommendations.products_count > 0 -%}
                 {%- capture complementary_products -%}
                   <ul class="list-unstyled" role="list" style="--image-position: {{ block.settings.image_position }}">
@@ -1108,7 +1108,7 @@
                 {%- endif -%}
 
                 {%- unless product.has_only_default_variant -%}
-                  <variant-selects class="no-js-hidden small-hide" data-section="{{ section.id }}" data-url="{{ product.url }}" data-no-scroll>
+                  <variant-selects class="no-js-hidden small-hide" data-section="{{ section.id }}" data-url="{{ shop.url }}{{ product.url }}" data-no-scroll>
                     {%- for option in product.options_with_values -%}
                       {%- assign option_idx = forloop.index -%}
                       <div class="product-form__input variant-input-wrapper"

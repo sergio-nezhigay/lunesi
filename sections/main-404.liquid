@@ -149,7 +149,7 @@
         <h2 class="page-404__nav-heading">Featured Product</h2>
         <ul class="page-404__nav-list">
           <li>
-            <a href="/products/illuminating-leave" class="page-404__nav-link">
+            <a href="{{ shop.url }}/products/illuminating-leave" class="page-404__nav-link">
               Illuminating Leave-In
             </a>
           </li>
@@ -161,12 +161,12 @@
         <h2 class="page-404__nav-heading">Popular Collections</h2>
         <ul class="page-404__nav-list">
           <li>
-            <a href="{{ routes.collections_url }}/main-collection" class="page-404__nav-link">
+            <a href="{{ shop.url }}{{ routes.collections_url }}/main-collection" class="page-404__nav-link">
               All Products
             </a>
           </li>
           <li>
-            <a href="{{ routes.collections_url }}/bundles" class="page-404__nav-link">
+            <a href="{{ shop.url }}{{ routes.collections_url }}/bundles" class="page-404__nav-link">
               Bundles
             </a>
           </li>
@@ -179,13 +179,13 @@
         <ul class="page-404__nav-list">
           {%- if pages['contact'] -%}
             <li>
-              <a href="{{ pages['contact'].url }}" class="page-404__nav-link">
+              <a href="{{ shop.url }}{{ pages['contact'].url }}" class="page-404__nav-link">
                 Contact Us
               </a>
             </li>
           {%- endif -%}
           <li>
-            <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="page-404__nav-link">
+            <a href="{{ shop.url }}{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="page-404__nav-link">
               Browse All Products
             </a>
           </li>
@@ -195,7 +195,7 @@
   </div>
 
   <div class="page-404__cta">
-    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">
+    <a href="{{ shop.url }}{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">
       {{ 'general.continue_shopping' | t }}
     </a>
   </div>

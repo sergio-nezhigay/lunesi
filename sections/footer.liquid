@@ -1007,7 +1007,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       {%- when 'image' -%}
                         <div class="footer-block__details-content footer-block-image {{ block.settings.alignment }}">
                           {%- if block.settings.link != blank -%}
-                            <a href="{{ block.settings.link }}">
+                            <a href="{{ shop.url }}{{ block.settings.link }}">
                           {%- endif -%}
                           {%- if block.settings.image != blank -%}
                             {% assign image_width = block.settings.image_width %}
@@ -1064,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="privacy-agreement">
                               <div class="privacy-agreement-text">
                                 {% if section.settings.privacy_policy_url != blank %}
-                                  By signing up, you agree to our <a href="{{ section.settings.privacy_policy_url }}" target="_blank">Privacy Policy</a>*
+                                  By signing up, you agree to our <a href="{{ shop.url }}{{ section.settings.privacy_policy_url }}" target="_blank">Privacy Policy</a>*
                                 {% else %}
                                   By signing up, you agree to our Privacy Policy*
                                 {% endif %}
@@ -1123,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', function() {
       {%- if section.settings.show_policy -%}
         <div class="footer__column footer__column--info">
           <small class="copyright__content">
-            &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url }}.
+            &copy; {{ 'now' | date: '%Y' }}, <a href="{{ shop.url }}{{ routes.root_url }}">{{ shop.name }}</a>.
             {{ section.settings.copyright_text }}
           </small>
           <ul class="policies list-unstyled">

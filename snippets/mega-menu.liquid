@@ -5,7 +5,7 @@
   endif
 -%}
 <mega-menu class="is-megamenu{% if block.settings.show_menu_image %}{% if promo_images %} show-images{% else %} show-images-without-promo{% endif %}{% endif %}">
-  <a href="{{ link.url }}" class="header__menu-item{% if link.active or link.child_active %} header__active-menu-item{% endif %} header__menu-item--top list-menu__item focus-inset"{% if link.current %} aria-current="page"{% endif %}>
+  <a href="{{ shop.url }}{{ link.url }}" class="header__menu-item{% if link.active or link.child_active %} header__active-menu-item{% endif %} header__menu-item--top list-menu__item focus-inset"{% if link.current %} aria-current="page"{% endif %}>
     {%- liquid
       assign item_title = link.title | escape
       if enable_highlight and highlight_labels contains item_title
@@ -26,7 +26,7 @@
           <div class="list-mega-menu">
             {%- for childlink in link.links -%}
               <div class="mega-menu__item">
-                <a href="{{ childlink.url }}" class="mega-menu__item-link list-menu__item focus-inset{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                <a href="{{ shop.url }}{{ childlink.url }}" class="mega-menu__item-link list-menu__item focus-inset{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
                   {%- if childlink.type == 'collection_link' and childlink.object.image and block.settings.show_menu_image -%}
                     <div class="image-animate media media--wide">
                       {{ childlink.object.image | image_url: width: 1100 | image_tag:
@@ -47,7 +47,7 @@
                   <ul class="list-menu-child list-menu">
                     {%- for grandchildlink in childlink.links -%}
                       <li>
-                        <a href="{{ grandchildlink.url }}" class="header__menu-item list-menu__item focus-inset{% if grandchildlink.current %} list-menu__item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                        <a href="{{ shop.url }}{{ grandchildlink.url }}" class="header__menu-item list-menu__item focus-inset{% if grandchildlink.current %} list-menu__item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
                           <span class="label">{{ grandchildlink.title | escape }}</span>
                         </a>
                       </li>
@@ -64,7 +64,7 @@
 
         {%- if block.settings.promo_image_1 != blank -%}
           <div class="mega-menu__promo{% if block.settings.promo_overlay_content_1 %} mega-menu__promo--overlay{% endif %}">
-            <a class="mega-menu__promo-link media-wrapper"{% if block.settings.promo_link_1 != blank %} href="{{ block.settings.promo_link_1 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+            <a class="mega-menu__promo-link media-wrapper"{% if block.settings.promo_link_1 != blank %} href="{{ shop.url }}{{ block.settings.promo_link_1 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
               <div class="image-animate media media--{{ block.settings.promo_image_ratio_1 }}"
                 style="--image-position: {{ block.settings.promo_image_position_1 }};{% if block.settings.promo_image_ratio_1 == 'adapt' %}--image-ratio-percent: {{ 1 | divided_by: block.settings.promo_image_1.aspect_ratio | times: 100 }}%;{% endif %}"
               >
@@ -92,7 +92,7 @@
 
         {%- if block.settings.promo_image_2 != blank -%}
           <div class="mega-menu__promo{% if block.settings.promo_overlay_content_2 %} mega-menu__promo--overlay{% endif %}">
-            <a class="mega-menu__promo-link media-wrapper"{% if block.settings.promo_link_2 != blank %} href="{{ block.settings.promo_link_2 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+            <a class="mega-menu__promo-link media-wrapper"{% if block.settings.promo_link_2 != blank %} href="{{ shop.url }}{{ block.settings.promo_link_2 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
               <div class="image-animate media media--{{ block.settings.promo_image_ratio_2 }}"
                 style="--image-position: {{ block.settings.promo_image_position_2 }};{% if block.settings.promo_image_ratio_2 == 'adapt' %}--image-ratio-percent: {{ 1 | divided_by: block.settings.promo_image_2.aspect_ratio | times: 100 }}%;{% endif %}"
               >

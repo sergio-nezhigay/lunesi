@@ -275,7 +275,7 @@
                               <div class="no-js-hidden mobile-facets__footer">
                                 <button type="button" class="no-js-hidden button" onclick="this.closest('.mobile-facets__wrapper').querySelector('summary').click()">{{ 'products.facets.apply' | t }}</button>
                                 <facet-remove>
-                                  <a href="{{ filter.url_to_remove }}" class="mobile-facets__clear link link--underline">{{ 'products.facets.clear' | t }}</a>
+                                  <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="mobile-facets__clear link link--underline">{{ 'products.facets.clear' | t }}</a>
                                 </facet-remove>
                                 <noscript><button class="button">{{ 'products.facets.apply' | t }}</button></noscript>
                               </div>
@@ -393,7 +393,7 @@
       {%- for filter in results.filters -%}
         {%- for value in filter.active_values -%}
           <facet-remove>
-            <a class="active-facets__button" href="{{ value.url_to_remove }}">
+            <a class="active-facets__button" href="{{ shop.url }}{{ value.url_to_remove }}">
               {% render 'icon', icon: 'close-alt' %}
               {{ filter.label }}: {{ value.label | escape }}
             </a>
@@ -402,7 +402,7 @@
         {% if filter.type == "price_range" %}
           {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
             <facet-remove>
-              <a class="active-facets__button" href="{{ filter.url_to_remove }}">
+              <a class="active-facets__button" href="{{ shop.url }}{{ filter.url_to_remove }}">
                 {% render 'icon', icon: 'close-alt' %}
                 {% if filter.min_value.value != nil %}{{ filter.min_value.value | money_without_trailing_zeros }}{% else %}{{ 0 | money_without_trailing_zeros }}{% endif %} &ndash; {% if filter.max_value.value != nil %}{{ filter.max_value.value | money_without_trailing_zeros }}{% else %}{{ filter.range_max | money_without_trailing_zeros }}{% endif %}
               </a>

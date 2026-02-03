@@ -356,7 +356,7 @@
       <div class="mini-cart__empty-message typeset">{{ settings.empty_cart_message }}</div>
       {%- if settings.empty_cart_collections == blank -%}
         <a
-          href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}"
+          href="{{ shop.url }}{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}"
           class="button{% if settings.empty_cart_button_secondary %} button--tertiary{% endif %}"
         >
           {{- 'general.continue_shopping' | t -}}
@@ -366,7 +366,7 @@
           {%- for collection_card in settings.empty_cart_collections -%}
             <li>
               <a
-                href="{{ collection_card.url }}"
+                href="{{ shop.url }}{{ collection_card.url }}"
                 class="button{% if settings.empty_cart_button_secondary %} button--tertiary{% endif %} button--full-width"
               >
                 {{- collection_card.title | escape -}}
@@ -390,7 +390,7 @@
               <div class="product-container product-container--link{% unless recommendation.featured_media %} no-image{% endunless %}">
                 {% if recommendation.featured_media %}
                   <div class="product-image">
-                    <a href="{{ recommendation.url }}" class="media-wrapper media-wrapper--small">
+                    <a href="{{ shop.url }}{{ recommendation.url }}" class="media-wrapper media-wrapper--small">
                       <div
                         class="media media--adapt"
                         style="--image-ratio-percent: {{ 1 | divided_by: recommendation.featured_media.aspect_ratio | times: 100 }}%;"
@@ -414,7 +414,7 @@
                     <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                   {%- endif -%}
                   <div class="product-content">
-                    <a href="{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
+                    <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
                   </div>
                   {%- if settings.cart_recommendations_show_price -%}
                     {% render 'price', product: recommendation %}
@@ -442,7 +442,7 @@
                           </svg>
                         </add-to-cart>
                       {%- else -%}
-                        <a href="{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
+                        <a href="{{ shop.url }}{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
                           <span class="small-hide">
                             <span class="label">
                               {%- liquid
@@ -480,7 +480,7 @@
         -%}
         <cart-recommendations
           class="cart-recommendations"
-          data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ cart.items.first.product_id }}&limit={{ cart_recommendations_limit }}"
+          data-url="{{ shop.url }}{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ cart.items.first.product_id }}&limit={{ cart_recommendations_limit }}"
           data-animate
           data-animate-delay-{{ animate_count }}
         >
@@ -491,7 +491,7 @@
                 <div class="product-container product-container--link{% unless recommendation.featured_media %} no-image{% endunless %}">
                   {% if recommendation.featured_media %}
                     <div class="product-image">
-                      <a href="{{ recommendation.url }}" class="media-wrapper media-wrapper--small">
+                      <a href="{{ shop.url }}{{ recommendation.url }}" class="media-wrapper media-wrapper--small">
                         <div
                           class="media media--adapt"
                           style="--image-ratio-percent: {{ 1 | divided_by: recommendation.featured_media.aspect_ratio | times: 100 }}%;"
@@ -515,7 +515,7 @@
                       <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                     {%- endif -%}
                     <div class="product-content">
-                      <a href="{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
+                      <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
                     </div>
                     {%- if settings.cart_recommendations_show_price -%}
                       {% render 'price', product: recommendation %}
@@ -543,7 +543,7 @@
                             </svg>
                           </add-to-cart>
                         {%- else -%}
-                          <a href="{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
+                          <a href="{{ shop.url }}{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
                             <span class="small-hide">
                               <span class="label">
                                 {%- liquid
@@ -610,7 +610,7 @@
                 {% endif %}
               >
                 <a
-                  href="{{ item.url_to_remove }}"
+                  href="{{ shop.url }}{{ item.url_to_remove }}"
                   class="delete-product"
                   aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
                   data-no-instant
@@ -621,7 +621,7 @@
               <div class="product-container{% unless item.image %} no-image{% endunless %}">
                 {% if item.image %}
                   <div>
-                    <a href="{{ item.url }}" class="product-image media-wrapper media-wrapper--small">
+                    <a href="{{ shop.url }}{{ item.url }}" class="product-image media-wrapper media-wrapper--small">
                       <div
                         class="media media--adapt"
                         style="--image-ratio-percent: {{ 1 | divided_by: item.image.aspect_ratio | times: 100 }}%;"
@@ -641,7 +641,7 @@
                 {% endif %}
                 <div class="product-description">
                   <div class="product-content">
-                    <a href="{{ item.url }}" class="link product-title">{{ item.product.title }}</a>
+                    <a href="{{ shop.url }}{{ item.url }}" class="link product-title">{{ item.product.title }}</a>
                   </div>
 
                   {%- if item.product.has_only_default_variant == false
@@ -1339,7 +1339,7 @@
                       data-product-handle="{{ product.handle }}"
                     >
                       <div class="mini-cart__upsell-product">
-                        <a href="{{ product.url }}" class="mini-cart__upsell-image">
+                        <a href="{{ shop.url }}{{ product.url }}" class="mini-cart__upsell-image">
                           <img
                             src="{{ product.featured_image | img_url: '100x' }}"
                             alt="{{ product.featured_image.alt | escape }}"
@@ -1350,7 +1350,7 @@
                         </a>
 
                         <div class="mini-cart__upsell-details">
-                          <a href="{{ product.url }}" class="mini-cart__upsell-title">
+                          <a href="{{ shop.url }}{{ product.url }}" class="mini-cart__upsell-title">
                             {{ product.title | upcase }}
                           </a>
 
@@ -1941,7 +1941,7 @@
           {%- endif -%}
         </button>
         {%- unless settings.disable_view_cart -%}
-          <a class="button button--secondary" href="{{ routes.cart_url }}">{{ 'general.cart.view' | t }}</a>
+          <a class="button button--secondary" href="{{ shop.url }}{{ routes.cart_url }}">{{ 'general.cart.view' | t }}</a>
         {%- endunless -%}
       </div>
 

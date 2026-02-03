@@ -31,12 +31,12 @@
 <cart-items class="page-width{% if cart == empty %} is-empty{% endif %} section--padding">
   <div class="title-wrapper">
     <h1 class="title">{{ 'sections.cart.title' | t }}</h1>
-    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="link link--underline">{{ 'general.continue_shopping' | t }}</a>
+    <a href="{{ shop.url }}{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="link link--underline">{{ 'general.continue_shopping' | t }}</a>
   </div>
 
   <div class="cart__warnings">
     {% comment %} <p class="cart__empty-text h2">{{ 'sections.cart.empty' | t }}</p> {% endcomment %}
-    <a href="{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">{{ 'general.continue_shopping' | t }}</a>
+    <a href="{{ shop.url }}{{ settings.empty_cart_redirect_url | default: routes.all_products_collection_url }}" class="button button--tertiary">{{ 'general.continue_shopping' | t }}</a>
   </div>
 
   <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
@@ -82,7 +82,7 @@
                     {%- endif -%}
 
                     <div>
-                      <a href="{{ item.product.url }}" class="cart-item__name link">{{ item.product.title | escape }}</a>
+                      <a href="{{ shop.url }}{{ item.product.url }}" class="cart-item__name link">{{ item.product.title | escape }}</a>
                     </div>
 
                     {%- if item.product.has_only_default_variant == false or item.properties.size != 0 or item.selling_plan_allocation != null -%}
@@ -377,7 +377,7 @@
                     -%}
                     {%- unless hide_remove_for_gift -%}
                       <cart-remove-button id="Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
-                        <a href="{{ item.url_to_remove }}" class="button button--tertiary" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
+                        <a href="{{ shop.url }}{{ item.url_to_remove }}" class="button button--tertiary" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
                           {% render 'icon', icon: 'remove' %}
                         </a>
                       </cart-remove-button>

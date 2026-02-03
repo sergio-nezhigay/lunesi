@@ -67,7 +67,7 @@
 
         {%- when 'back_to_blog'-%}
           <div class="element-margin center" {{ block.shopify_attributes }}>
-            <a href="{{ blog.url }}" class="article-template__link button button--tertiary animate-arrow">
+            <a href="{{ shop.url }}{{ blog.url }}" class="article-template__link button button--tertiary animate-arrow">
               {% render 'icon', icon: 'arrow' %}
               {{ 'blogs.article.back_to_blog' | t: title: blog.title }}
             </a>
@@ -78,7 +78,7 @@
             <ul class="article-template__navigation page-width element-margin" {{ block.shopify_attributes }}>
               <li class="navigation__previous">
                 {%- if blog.previous_article -%}
-                  <a href="{{ blog.previous_article.url }}">
+                  <a href="{{ shop.url }}{{ blog.previous_article.url }}">
                     {% render 'icon', icon: 'arrow' %}
                     <span class="h3">{{ blog.previous_article.title }}</span>
                   </a>
@@ -87,7 +87,7 @@
 
               <li class="navigation__next">
                 {%- if blog.next_article -%}
-                  <a href="{{ blog.next_article.url }}">
+                  <a href="{{ shop.url }}{{ blog.next_article.url }}">
                     <span class="h3">{{ blog.next_article.title }}</span>
                     {% render 'icon', icon: 'arrow' %}
                   </a>

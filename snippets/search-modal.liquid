@@ -50,14 +50,14 @@
               <ul class="search__recommendation list-unstyled">
                 {%- for link in settings.search_recommendation.links -%}
                   <li class="menu-item{% if link.links != blank %} is-parent{% endif %}">
-                    <a href="{{ link.url }}">
+                    <a href="{{ shop.url }}{{ link.url }}">
                       {{ link.title }}
                     </a>
                     {%- if link.links != blank -%}
                       <ul class="list-unstyled">
                         {%- for childlink in link.links -%}
                           <li>
-                            <a href="{{ childlink.url }}">
+                            <a href="{{ shop.url }}{{ childlink.url }}">
                               {{ childlink.title }}
                             </a>
                           </li>

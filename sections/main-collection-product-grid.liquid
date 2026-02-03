@@ -123,7 +123,7 @@
                 if collection.filters.size > 0
                   echo 'sections.collection_template.empty' | t
                   echo '<br/>'
-                  echo 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "link link--underline"
+                  echo 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url | prepend: shop.url, class: "link link--underline"
                 else
                   echo 'sections.collection_template.no_products' | t
                 endif

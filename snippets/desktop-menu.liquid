@@ -109,7 +109,7 @@
                       <li data-animate data-animate-delay-{{ forloop.index }}>
                         {%- if childlink.links == blank -%}
                           {%- if childlink.type == 'collection_link' -%}
-                            <list-menu-item data-title="{{ childlink.title | escape }}" data-url="{{ childlink.url }}" data-image="{% if childlink.object.image %}{{ childlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ childlink.object.description | strip_html | truncatewords: 30 }}">
+                            <list-menu-item data-title="{{ childlink.title | escape }}" data-url="{{ shop.url }}{{ childlink.url }}" data-image="{% if childlink.object.image %}{{ childlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ childlink.object.description | strip_html | truncatewords: 30 }}">
                           {%- endif -%}
                               <a href="{{ shop.url }}{{ childlink.url }}" class="header__menu-item list-menu__item focus-inset{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
                                 <span class="label">{{ childlink.title | escape }}</span>
@@ -121,7 +121,7 @@
                           <details>
                             <summary>
                               {%- if childlink.type == 'collection_link' -%}
-                                <list-menu-item data-title="{{ childlink.title | escape }}" data-url="{{ childlink.url }}" data-image="{% if childlink.object.image %}{{ childlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ childlink.object.description | strip_html | truncatewords: 30 }}">
+                                <list-menu-item data-title="{{ childlink.title | escape }}" data-url="{{ shop.url }}{{ childlink.url }}" data-image="{% if childlink.object.image %}{{ childlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ childlink.object.description | strip_html | truncatewords: 30 }}">
                               {%- endif -%}
                                   <div class="header__menu-item{% if childlink.active or childlink.child_active %} header__active-menu-item{% endif %} list-menu__item focus-inset">
                                     <span class="label">{{ childlink.title | escape }}</span>
@@ -135,7 +135,7 @@
                               {%- for grandchildlink in childlink.links -%}
                                 <li>
                                   {%- if grandchildlink.type == 'collection_link' -%}
-                                    <list-menu-item data-title="{{ grandchildlink.title | escape }}" data-url="{{ grandchildlink.url }}" data-image="{% if grandchildlink.object.image %}{{ grandchildlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ grandchildlink.object.description | strip_html | truncatewords: 30 }}">
+                                    <list-menu-item data-title="{{ grandchildlink.title | escape }}" data-url="{{ shop.url }}{{ grandchildlink.url }}" data-image="{% if grandchildlink.object.image %}{{ grandchildlink.object.image | image_url: width: 460 }}{% endif %}" data-description="{{ grandchildlink.object.description | strip_html | truncatewords: 30 }}">
                                   {%- endif -%}
                                       <a href="{{ shop.url }}{{ grandchildlink.url }}" class="header__menu-item list-menu__item focus-inset{% if grandchildlink.current %} list-menu__item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
                                         <span class="label">{{ grandchildlink.title | escape }}</span>

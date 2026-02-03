@@ -207,7 +207,7 @@
 <noscript>{{ 'component-product-grid.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'section-recently-viewed-products.css' | asset_url | stylesheet_tag }}</noscript>
 
-<recently-viewed-products class="recently-viewed-products" data-url="{{ routes.search_url }}?section_id={{ section.id }}&type=product&q="{% if request.page_type == 'product' %} data-product-id="{{ product.id }}"{% endif %}>
+<recently-viewed-products class="recently-viewed-products" data-url="{{ shop.url }}{{ routes.search_url }}?section_id={{ section.id }}&type=product&q="{% if request.page_type == 'product' %} data-product-id="{{ product.id }}"{% endif %}>
   {%- if request.page_type == 'search' and search.performed and search.results_count > 0 -%}
     <div class="section--padding{% if section.settings.show_divider %} section--divider{% endif %}">
       <div class="page-width">

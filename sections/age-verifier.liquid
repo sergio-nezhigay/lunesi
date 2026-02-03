@@ -86,7 +86,7 @@
                       </button>
                     {%- endif -%}
                     {%- if block.settings.button_label_2 != blank -%}
-                      <a class="button button--small button--tertiary"{% if block.settings.button_link_2 != blank %} href="{{ block.settings.button_link_2 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                      <a class="button button--small button--tertiary"{% if block.settings.button_link_2 != blank %} href="{{ shop.url }}{{ block.settings.button_link_2 }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                         {{ block.settings.button_label_2 | escape }}
                       </a>
                     {%- endif -%}

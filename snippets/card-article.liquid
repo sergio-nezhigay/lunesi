@@ -12,7 +12,7 @@
 {% endcomment %}
 
 <article class="article-card{% if article.image == blank or show_image == false %} article-card--no-image{% endif %}" aria-labelledby="Article-{{ article.id }}">
-  <a href="{{ article.url }}" class="card">
+  <a href="{{ shop.url }}{{ article.url }}" class="card">
     {%- if show_image == true and article.image -%}
       <use-animate data-animate="zoom-fade-small" class="article-card__image-wrapper media-wrapper">
         <div class="article-card__image image-animate media media--{{ image_ratio }} media--hover-effect"

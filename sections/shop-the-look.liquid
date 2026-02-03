@@ -52,7 +52,7 @@
                 {%- if card_product != blank -%}
                   {%- if settings.quick_view_enabled and section.settings.enable_quick_view -%}
                     <noscript>
-                      <a href="{{ card_product.url }}" class="look__hotspot" style="--hotspot-color: {{ block.settings.color.red }}, {{ block.settings.color.green }}, {{ block.settings.color.blue }}; --hotspot-x: {{ block.settings.horizontal }}%; --hotspot-y: {{ block.settings.vertical }}%;" {{ block.shopify_attributes }}>
+                      <a href="{{ shop.url }}{{ card_product.url }}" class="look__hotspot" style="--hotspot-color: {{ block.settings.color.red }}, {{ block.settings.color.green }}, {{ block.settings.color.blue }}; --hotspot-x: {{ block.settings.horizontal }}%; --hotspot-y: {{ block.settings.vertical }}%;" {{ block.shopify_attributes }}>
                         <div class="look__hotspot-product{% if block.settings.horizontal < 15 %} look__hotspot-product--left{% elsif block.settings.horizontal > 85 %} look__hotspot-product--right{% endif %}{% if block.settings.vertical > 70 %} look__hotspot-product--bottom{% endif %}">
                           <div class="h5">{{ card_product.title | escape }}</div>
                           {% render 'price', product: card_product %}
@@ -70,13 +70,13 @@
                             </div>
                           </div>
                         </summary>
-                        <quick-view class="quick-view" data-product-url="{{ card_product.url }}">
+                        <quick-view class="quick-view" data-product-url="{{ shop.url }}{{ card_product.url }}">
                           <div role="dialog" aria-label="{{ 'products.product.choose_product_options' | t: product_name: card_product.title | escape }}" aria-modal="true" class="quick-view__content" tabindex="-1"></div>
                         </quick-view>
                       </details>
                     </quick-view-drawer>
                   {%- else -%}
-                    <a data-block-index="{{ forloop.index0 }}" href="{{ card_product.url }}" class="look__hotspot" style="--hotspot-color: {{ block.settings.color.red }}, {{ block.settings.color.green }}, {{ block.settings.color.blue }}; --hotspot-x: {{ block.settings.horizontal }}%; --hotspot-y: {{ block.settings.vertical }}%;" {{ block.shopify_attributes }}>
+                    <a data-block-index="{{ forloop.index0 }}" href="{{ shop.url }}{{ card_product.url }}" class="look__hotspot" style="--hotspot-color: {{ block.settings.color.red }}, {{ block.settings.color.green }}, {{ block.settings.color.blue }}; --hotspot-x: {{ block.settings.horizontal }}%; --hotspot-y: {{ block.settings.vertical }}%;" {{ block.shopify_attributes }}>
                       <div class="look__hotspot-product{% if block.settings.horizontal < 15 %} look__hotspot-product--left{% elsif block.settings.horizontal > 85 %} look__hotspot-product--right{% endif %}{% if block.settings.vertical > 70 %} look__hotspot-product--bottom{% endif %}">
                         <div class="h5">{{ card_product.title | escape }}</div>
                         {% render 'price', product: card_product %}

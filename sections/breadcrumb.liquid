@@ -101,7 +101,7 @@
       </div>
     {%- endif -%}
 
-    <a href="/" title="Home">Home</a>
+    <a href="{{ shop.url }}/" title="Home">Home</a>
     {%- case template.name -%}
       {%- when 'article' -%}
       {%- for link in linklists.main-menu.links -%}
@@ -341,7 +341,7 @@
           <a href="{{ blog.url }}">{{ blog.title }}</a>
           {%- when 'search' -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="/search">Search</a>
+          <a href="{{ shop.url }}/search">Search</a>
         {%- endcase -%}
       {%- endif -%}
     {%- endcase -%}

@@ -72,7 +72,7 @@
                     <div class="banner__buttons" data-animate {{ block.shopify_attributes }}>
                       {%- if block.settings.button_label != blank -%}
                         <p>
-                          <a class="button button--cta"{% if block.settings.button_link != blank %} href="{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                          <a class="button button--cta"{% if block.settings.button_link != blank %} href="{{ shop.url }}{{ block.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                             <span class="label">{{ block.settings.button_label | escape }}</span>
                             {% render 'icon', icon: 'arrow' %}
                           </a>
@@ -142,12 +142,12 @@
             <div class="banner__text{% if reveal.settings.secondary_color %} banner__text--colored{% endif %} {{ reveal.settings.text_size }} rte">{{ reveal.settings.text }}</div>
             {%- if reveal.settings.button_label != blank -%}
               {%- if reveal.settings.button_style_secondary -%}
-                <a class="button button--cta button--{{ reveal.settings.button_size }}"{% if reveal.settings.button_link != blank %} href="{{ reveal.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                <a class="button button--cta button--{{ reveal.settings.button_size }}"{% if reveal.settings.button_link != blank %} href="{{ shop.url }}{{ reveal.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                   <span class="label">{{ reveal.settings.button_label | escape }}</span>
                   {% render 'icon', icon: 'arrow' %}
                 </a>
               {%- else -%}
-                <a class="button button--{{ reveal.settings.button_size }}"{% if reveal.settings.button_link != blank %} href="{{ reveal.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+                <a class="button button--{{ reveal.settings.button_size }}"{% if reveal.settings.button_link != blank %} href="{{ shop.url }}{{ reveal.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %}>
                   {{ reveal.settings.button_label | escape }}
                 </a>
               {%- endif -%}

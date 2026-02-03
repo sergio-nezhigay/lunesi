@@ -19,7 +19,7 @@
   {%- endif -%}
 
   <div class="section--padding{% if section.settings.show_divider %} section--divider{% endif %}">
-    <product-recommendations class="product-recommendations page-width" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ cart.items.first.product_id }}&limit=4">
+    <product-recommendations class="product-recommendations page-width" data-url="{{ shop.url }}{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ cart.items.first.product_id }}&limit=4">
       {%- if recommendations.performed and recommendations.products_count > 0 -%}
         <div class="title-wrapper{% if section.settings.heading == blank %} title-wrapper--no-heading{% endif %} {{ section.settings.heading_alignment }}">
           <{{ section.settings.heading_tag }} class="title {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</{{ section.settings.heading_tag }}>

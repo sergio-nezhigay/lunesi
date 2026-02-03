@@ -78,7 +78,7 @@
                           </span>
                         {%- endif -%}
                         <facet-remove>
-                          <a href="{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
+                          <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
                         </facet-remove>
                         <ul class="facets__list{% if is_color or has_visual_display %} facets__list--swatch{% if color_swatches_add_label %} facets__list--swatch-label{% endif %}{% endif %} list-unstyled" role="list">
                           {%- liquid
@@ -237,7 +237,7 @@
                           {% render 'icon', icon: 'caret' %}
                         </summary>
                         <facet-remove>
-                          <a href="{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
+                          <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
                         </facet-remove>
                         <div class="facets__price">
                           <price-range class="price-range" data-min="0" data-max="{{ filter_range_max_amount }}" style="--progress-lower:{{ progress_lower }}%; --progress-upper:{{ progress_upper }}%;">

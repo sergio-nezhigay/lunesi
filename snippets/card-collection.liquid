@@ -19,7 +19,7 @@
   endif
 -%}
 
-<a class="card-wrapper card{% if featured_image != blank %} card--media{% else %} card--text{% endif %}" href="{{ collection_url | default: collection.url }}">
+<a class="card-wrapper card{% if featured_image != blank %} card--media{% else %} card--text{% endif %}" href="{{ shop.url }}{{ collection_url | default: collection.url }}">
   {%- if featured_image != blank -%}
     <div class="media-wrapper">
       <div class="media media--{{ image_ratio }} media--hover-effect overflow-hidden"

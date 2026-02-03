@@ -35,7 +35,7 @@
                     role="option"
                     aria-selected="false">
                     <a
-                      href="{{ query.url }}"
+                      href="{{ shop.url }}{{ query.url }}"
                       class="predictive-search__item predictive-search__item--link link link--text"
                       tabindex="-1">
                       <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -51,7 +51,7 @@
                     role="option"
                     aria-selected="false">
                     <a
-                      href="{{ collection.url }}"
+                      href="{{ shop.url }}{{ collection.url }}"
                       class="predictive-search__item predictive-search__item--link link link--text"
                       tabindex="-1">
                       <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -80,7 +80,7 @@
                     role="option"
                     aria-selected="false">
                     <a
-                      href="{{ page.url }}"
+                      href="{{ shop.url }}{{ page.url }}"
                       class="predictive-search__item predictive-search__item--link link link--text"
                       tabindex="-1">
                       <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -96,7 +96,7 @@
                     role="option"
                     aria-selected="false">
                     <a
-                      href="{{ article.url }}"
+                      href="{{ shop.url }}{{ article.url }}"
                       class="predictive-search__item predictive-search__item--link link link--text"
                       tabindex="-1">
                       <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -132,7 +132,7 @@
                       role="option"
                       aria-selected="false">
                       <a
-                        href="{{ product.url }}"
+                        href="{{ shop.url }}{{ product.url }}"
                         class="predictive-search__item predictive-search__item--link link link--text"
                         tabindex="-1">
                         {%- if product.featured_media != blank -%}
@@ -184,7 +184,7 @@
                       role="option"
                       aria-selected="false">
                       <a
-                        href="{{ page.url }}"
+                        href="{{ shop.url }}{{ page.url }}"
                         class="predictive-search__item predictive-search__item--link link link--text"
                         tabindex="-1">
                         <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -200,7 +200,7 @@
                       role="option"
                       aria-selected="false">
                       <a
-                        href="{{ article.url }}"
+                        href="{{ shop.url }}{{ article.url }}"
                         class="predictive-search__item predictive-search__item--link link link--text"
                         tabindex="-1">
                         <div class="predictive-search__item-content predictive-search__item-content--centered">

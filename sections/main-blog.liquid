@@ -18,7 +18,7 @@
       {%- if section.settings.show_tag_filter and blog.tags.size > 0 -%}
         <div class="small-hide medium-hide">
           <ul class="list-unstyled blog-filter">
-            <li><a href="{{ blog.url }}" class="link{% if current_tags == blank %} is-selected{% endif %}">{{ 'blogs.article.all_tags' | t }}</a></li>
+            <li><a href="{{ shop.url }}{{ blog.url }}" class="link{% if current_tags == blank %} is-selected{% endif %}">{{ 'blogs.article.all_tags' | t }}</a></li>
             {%- for tag in blog.all_tags -%}
               {%- liquid
                 if tag contains "_"
@@ -33,14 +33,14 @@
                   endif
                 endif
               -%}
-              <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="link{% if current_tags contains tag %} is-selected{% endif %}">{{ tag }}</a></li>
+              <li><a href="{{ shop.url }}{{ blog.url }}/tagged/{{ tag | handleize }}" class="link{% if current_tags contains tag %} is-selected{% endif %}">{{ tag }}</a></li>
             {%- endfor -%}
           </ul>
         </div>
         <div class="large-up-hide">
           <blog-filter class="select">
             <select class="select__select">
-              <option value="{{ blog.url }}">{{ 'blogs.article.all_tags' | t }}</option>
+              <option value="{{ shop.url }}{{ blog.url }}">{{ 'blogs.article.all_tags' | t }}</option>
               {%- for tag in blog.all_tags -%}
                 {%- liquid
                   if tag contains "_"
@@ -55,7 +55,7 @@
                     endif
                   endif
                 -%}
-                <option value="{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tags contains tag %}selected{% endif %}>{{ tag }}</option>
+                <option value="{{ shop.url }}{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tags contains tag %}selected{% endif %}>{{ tag }}</option>
               {%- endfor -%}
             </select>
             {% render 'icon', icon: 'caret' %}

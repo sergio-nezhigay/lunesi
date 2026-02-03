@@ -22,10 +22,10 @@
   assign sort_by = results.sort_by | default: results.default_sort_by
   assign total_active_values = 0
   if results.url
-    assign results_url = results.url
+    assign results_url = results.url | prepend: shop.url
   else 
     assign terms = results.terms | escape
-    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by | prepend: shop.url
   endif
 
   if enable_filtering
@@ -115,7 +115,7 @@
                                 </span>
                               {%- endif -%}
                               <facet-remove>
-                                <a href="{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
+                                <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
                               </facet-remove>
                               <ul class="facets__presentation--{{ filter.presentation }} facets__list{% if is_color or has_visual_display %} facets__list--swatch{% if color_swatches_add_label %} facets__list--swatch-label{% endif %}{% endif %} list-unstyled" role="list">
                                 {%- liquid
@@ -273,7 +273,7 @@
                                 </span>
                               </div>
                               <facet-remove>
-                                <a href="{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
+                                <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="facets__reset link link--underline" >{{ 'products.facets.reset' | t }}</a>
                               </facet-remove>
                               <div class="facets__price">
                                 <price-range class="price-range" data-min="0" data-max="{{ filter_range_max_amount }}" style="--progress-lower:{{ progress_lower }}%; --progress-upper:{{ progress_upper }}%;">
@@ -638,7 +638,7 @@
                               <div class="no-js-hidden mobile-facets__footer">
                                 <button type="button" class="no-js-hidden button" onclick="this.closest('.mobile-facets__wrapper').querySelector('summary').click()">{{ 'products.facets.apply' | t }}</button>
                                 <facet-remove>
-                                  <a href="{{ filter.url_to_remove }}" class="mobile-facets__clear link link--underline">{{ 'products.facets.clear' | t }}</a>
+                                  <a href="{{ shop.url }}{{ filter.url_to_remove }}" class="mobile-facets__clear link link--underline">{{ 'products.facets.clear' | t }}</a>
                                 </facet-remove>
                                 <noscript><button class="button">{{ 'products.facets.apply' | t }}</button></noscript>
                               </div>
@@ -756,8 +756,8 @@
         </facet-remove>
         {%- for filter in results.filters -%}
           {%- for value in filter.active_values -%}
-            <facet-remove>
-              <a class="active-facets__button" href="{{ value.url_to_remove }}">
+              <facet-remove>
+                <a class="active-facets__button" href="{{ shop.url }}{{ value.url_to_remove }}">
                 {% render 'icon', icon: 'close-alt' %}
                 {{ filter.label }}: {{ value.label | escape }}
               </a>
@@ -766,7 +766,7 @@
           {% if filter.type == "price_range" %}
             {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
               <facet-remove>
-                <a class="active-facets__button" href="{{ filter.url_to_remove }}">
+                <a class="active-facets__button" href="{{ shop.url }}{{ filter.url_to_remove }}">
                   {% render 'icon', icon: 'close-alt' %}
                   {% if filter.min_value.value != nil %}{{ filter.min_value.value | money_without_trailing_zeros }}{% else %}{{ 0 | money_without_trailing_zeros }}{% endif %} &ndash; {% if filter.max_value.value != nil %}{{ filter.max_value.value | money_without_trailing_zeros }}{% else %}{{ filter.range_max | money_without_trailing_zeros }}{% endif %}
                 </a>

@@ -21,7 +21,7 @@
         {%- when 'announcement' -%}
           <div class="promotion__item promotion-icon--{{ block.settings.icon_size }}">
             {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}" class="promotion__link">
+              <a href="{{ shop.url }}{{ block.settings.link }}" class="promotion__link">
             {%- endif -%}
               {%- if block.settings.custom_icon != blank -%}
                 <span class="promotion__icon">

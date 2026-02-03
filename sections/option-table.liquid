@@ -150,12 +150,12 @@
         </use-animate>
         {%- if section.settings.button_label != blank -%}
           {%- if section.settings.button_style_secondary -%}
-            <a class="button button--cta button--{{ section.settings.button_size }}"{% if section.settings.button_link != blank %} href="{{ section.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %} {{ section.shopify_attributes }}>
+            <a class="button button--cta button--{{ section.settings.button_size }}"{% if section.settings.button_link != blank %} href="{{ shop.url }}{{ section.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %} {{ section.shopify_attributes }}>
               <span class="label">{{ section.settings.button_label | escape }}</span>
               {% render 'icon', icon: 'arrow' %}
             </a>
           {%- else -%}
-            <a class="button button--{{ section.settings.button_size }}"{% if section.settings.button_link != blank %} href="{{ section.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %} {{ section.shopify_attributes }}>
+            <a class="button button--{{ section.settings.button_size }}"{% if section.settings.button_link != blank %} href="{{ shop.url }}{{ section.settings.button_link }}"{% else %} role="link" aria-disabled="true"{% endif %} {{ section.shopify_attributes }}>
               {{ section.settings.button_label | escape }}
             </a>
           {%- endif -%}

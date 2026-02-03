@@ -23,7 +23,7 @@
       <{{ section.settings.heading_tag }} class="title {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</{{ section.settings.heading_tag }}>
       
       {%- if has_mobile_link -%}
-        <a href="{{ routes.collections_url }}" class="link link-with-icon large-up-hide">
+        <a href="{{ shop.url }}{{ routes.collections_url }}" class="link link-with-icon large-up-hide">
           <span class="label">{{ 'sections.collection_list.view_all' | t }}</span>
         </a>
       {%- endif -%}
@@ -56,7 +56,7 @@
             -%}
             <a
               class="card-wrapper card{% if featured_image != blank %} card--media{% else %} card--text{% endif %}"
-              {%- if card_collection != blank and card_collection.all_products_count > 0 %} href="{{ card_collection.url }}"{% endif -%}
+              {%- if card_collection != blank and card_collection.all_products_count > 0 %} href="{{ shop.url }}{{ card_collection.url }}"{% endif -%}
             >
               {%- if featured_image != blank -%}
                 <use-animate data-animate="zoom-fade-small" class="media-wrapper">
@@ -112,7 +112,7 @@
 
     {%- if section.settings.show_view_all and section.blocks.size < collections.size -%}
       <div class="view-all center{% if section.settings.swipe_on_mobile and section.settings.heading == blank %} small-hide medium-hide{% endif %}">
-        <a href="{{ routes.collections_url }}" class="button">{{ 'sections.collection_list.view_all' | t }}</a>
+        <a href="{{ shop.url }}{{ routes.collections_url }}" class="button">{{ 'sections.collection_list.view_all' | t }}</a>
       </div>
     {%- endif -%}
   </div>

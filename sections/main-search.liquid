@@ -97,14 +97,14 @@
                 <ul class="search__recommendation list-unstyled">
                   {%- for link in settings.search_recommendation.links -%}
                     <li class="menu-item{% if link.links != blank %} is-parent{% endif %}">
-                      <a href="{{ link.url }}">
+                      <a href="{{ shop.url }}{{ link.url }}">
                         {{ link.title }}
                       </a>
                       {%- if link.links != blank -%}
                         <ul class="list-unstyled">
                           {%- for childlink in link.links -%}
                             <li>
-                              <a href="{{ childlink.url }}">
+                              <a href="{{ shop.url }}{{ childlink.url }}">
                                 {{ childlink.title }}
                               </a>
                             </li>
@@ -184,7 +184,7 @@
                     {%- liquid
                       if search.filters.size > 0
                         assign sort_by = search.sort_by | default: search.default_sort_by
-                        assign search_url = '?q=' | append: search.terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+                        assign search_url = '?q=' | append: search.terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by | prepend: shop.url
                         echo 'templates.search.empty' | t
                         echo '<br/>'
                         echo 'templates.search.use_fewer_filters_html' | t: link: search_url, class: "link link--underline"
@@ -241,7 +241,7 @@
                           %}
                         {%- when 'article' -%}
                           <div class="card-wrapper">
-                            <a href="{{ item.url }}" class="full-unstyled-link">
+                            <a href="{{ shop.url }}{{ item.url }}" class="full-unstyled-link">
                               <span class="visually-hidden">{{ item.title | truncate: 50 | escape }}</span>
                             </a>
                             <div class="card card--product card--search{% if item.image == nil %} card--text{% endif %}" tabindex="-1">
@@ -254,7 +254,7 @@
                                   endif
                                 -%}
                                 <use-animate data-animate="zoom-fade-small" class="card__media media-wrapper">
-                                  <a href="{{ item.url }}" class="image-animate media media--{{ section.settings.image_ratio }} media--hover-effect"
+                                  <a href="{{ shop.url }}{{ item.url }}" class="image-animate media media--{{ section.settings.image_ratio }} media--hover-effect"
                                     tabindex="-1"
                                     {%- if section.settings.image_ratio == 'adapt' %} style="--image-ratio-percent: {{ 1 | divided_by: featured_media_aspect_ratio | times: 100 }}%;"{% endif -%}
                                   >
@@ -295,7 +295,7 @@
                                 </div>
         
                                 {%- if item.image -%}
-                                  <a href="{{ item.url }}" class="card-information__text h4">
+                                  <a href="{{ shop.url }}{{ item.url }}" class="card-information__text h4">
                                     {{ item.title | truncate: 50 | escape }}
                                   </a>
                                 {%- endif -%}
@@ -303,7 +303,7 @@
                             </div>
                           </div>
                         {%- when 'page' -%}
-                          <a href="{{ item.url }}" class="card-wrapper">
+                          <a href="{{ shop.url }}{{ item.url }}" class="card-wrapper">
                             <div class="card card--page card--text">
                               <div class="card__media">
                                 <div class="media media--{{ section.settings.image_ratio }}"></div>
