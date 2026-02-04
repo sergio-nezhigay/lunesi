@@ -13,9 +13,6 @@
       "type": "nonbuy-product-collage",
       "settings": {
         "image_source": "product",
-        "image_1": "shopify://shop_images/Lunesi_assesories0053_3.jpg",
-        "image_2": "shopify://shop_images/Lunesi_assesories0066_98f7bc3e-72bd-4b70-be49-89d5e70302dd.jpg",
-        "image_3": "shopify://shop_images/Lunesi_assesories0063.jpg",
         "heading": "Lunesi Bundle",
         "heading_size": "h0",
         "heading_alignment": "center",

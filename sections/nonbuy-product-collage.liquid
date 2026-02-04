@@ -12,6 +12,7 @@
 
 {%- liquid
   assign product_images = product.media | where: 'media_type', 'image'
+  assign image_count = product_images.size
 
   if section.settings.image_source == 'product' and product_images[0] != nil
     assign slot_1 = product_images[0].preview_image
@@ -30,104 +31,163 @@
   else
     assign slot_3 = section.settings.image_3
   endif
+
+  if section.settings.image_source == 'product' and image_count < 3
+    assign layout_mode = 'two-col'
+  else
+    assign layout_mode = 'collage'
+  endif
 -%}
 
 <div class="section--padding{% if section.settings.show_divider %} section--divider{% endif %}">
   <div class="page-width">
-    {%- unless section.settings.heading == blank -%}
-      <div class="title-wrapper {{ section.settings.heading_alignment }}">
-        <{{ section.settings.heading_tag }} class="title {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</{{ section.settings.heading_tag }}>
-      </div>
-    {%- endunless -%}
 
-    <div class="collage collage--{{ section.settings.desktop_layout }}{% if section.settings.mobile_layout == 'collage' %} collage--mobile{% endif %}">
-      {% comment %}Slot 1{% endcomment %}
-      <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
-        <div class="collage-card">
-          <a class="collage-content card-wrapper">
-            <div class="card">
-              <use-animate data-animate="zoom-fade-small" class="media-wrapper">
-                {%- if slot_1 != blank -%}
-                  <div class="image-animate media media--adapt media--hover-effect"
-                    style="--image-ratio-percent: {{ 1 | divided_by: slot_1.aspect_ratio | times: 100 }}%;"
-                  >
-                    {{ slot_1 | image_url: width: 3000 | image_tag:
-                      loading: 'lazy',
-                      class: 'collage-card__image',
-                      sizes: sizes,
-                      widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
-                      is: 'lazy-image'
-                    }}
-                  </div>
-                {%- else -%}
-                  <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
-                    {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
-                  </div>
-                {%- endif -%}
+    {%- if layout_mode == 'two-col' -%}
+      <div class="nonbuy-collage nonbuy-collage--two-col">
+        <div class="nonbuy-collage__images">
+          {%- if slot_1 != blank -%}
+            <div class="nonbuy-collage__image-wrap">
+              <use-animate data-animate="zoom-fade-small">
+                {{ slot_1 | image_url: width: 1500 | image_tag:
+                  loading: 'lazy',
+                  class: 'nonbuy-collage__img',
+                  sizes: '(min-width: 750px) 40vw, 50vw',
+                  widths: '375, 750, 1100, 1500',
+                  is: 'lazy-image'
+                }}
               </use-animate>
             </div>
-          </a>
+          {%- endif -%}
+          {%- if slot_2 != blank -%}
+            <div class="nonbuy-collage__image-wrap">
+              <use-animate data-animate="zoom-fade-small">
+                {{ slot_2 | image_url: width: 1500 | image_tag:
+                  loading: 'lazy',
+                  class: 'nonbuy-collage__img',
+                  sizes: '(min-width: 750px) 40vw, 50vw',
+                  widths: '375, 750, 1100, 1500',
+                  is: 'lazy-image'
+                }}
+              </use-animate>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="nonbuy-collage__text">
+          {%- unless product.title == blank -%}
+            <h2 class="title h0">{{ product.title | escape }}</h2>
+          {%- endunless -%}
+          {%- if section.settings.show_description and product.description != blank -%}
+            <h3 class="product__description-title">Description</h3>
+            <div class="product__description rte">{{ product.description }}</div>
+          {%- endif -%}
         </div>
       </div>
 
-      {% comment %}Slot 2{% endcomment %}
-      <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
-        <div class="collage-card">
-          <a class="collage-content card-wrapper">
-            <div class="card">
-              <use-animate data-animate="zoom-fade-small" class="media-wrapper">
-                {%- if slot_2 != blank -%}
-                  <div class="image-animate media media--adapt media--hover-effect"
-                    style="--image-ratio-percent: {{ 1 | divided_by: slot_2.aspect_ratio | times: 100 }}%;"
-                  >
-                    {{ slot_2 | image_url: width: 3000 | image_tag:
-                      loading: 'lazy',
-                      class: 'collage-card__image',
-                      sizes: sizes,
-                      widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
-                      is: 'lazy-image'
-                    }}
-                  </div>
-                {%- else -%}
-                  <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
-                    {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
-                  </div>
-                {%- endif -%}
-              </use-animate>
-            </div>
-          </a>
+    {%- else -%}
+      {%- unless product.title == blank -%}
+        <div class="title-wrapper center">
+          <h2 class="title h0">{{ product.title | escape }}</h2>
+        </div>
+      {%- endunless -%}
+
+      <div class="collage collage--{{ section.settings.desktop_layout }}{% if section.settings.mobile_layout == 'collage' %} collage--mobile{% endif %}">
+        {% comment %}Slot 1{% endcomment %}
+        <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
+          <div class="collage-card">
+            <a class="collage-content card-wrapper">
+              <div class="card">
+                <use-animate data-animate="zoom-fade-small" class="media-wrapper">
+                  {%- if slot_1 != blank -%}
+                    <div class="image-animate media media--adapt media--hover-effect"
+                      style="--image-ratio-percent: {{ 1 | divided_by: slot_1.aspect_ratio | times: 100 }}%;"
+                    >
+                      {{ slot_1 | image_url: width: 3000 | image_tag:
+                        loading: 'lazy',
+                        class: 'collage-card__image',
+                        sizes: sizes,
+                        widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
+                        is: 'lazy-image'
+                      }}
+                    </div>
+                  {%- else -%}
+                    <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
+                    </div>
+                  {%- endif -%}
+                </use-animate>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {% comment %}Slot 2{% endcomment %}
+        <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
+          <div class="collage-card">
+            <a class="collage-content card-wrapper">
+              <div class="card">
+                <use-animate data-animate="zoom-fade-small" class="media-wrapper">
+                  {%- if slot_2 != blank -%}
+                    <div class="image-animate media media--adapt media--hover-effect"
+                      style="--image-ratio-percent: {{ 1 | divided_by: slot_2.aspect_ratio | times: 100 }}%;"
+                    >
+                      {{ slot_2 | image_url: width: 3000 | image_tag:
+                        loading: 'lazy',
+                        class: 'collage-card__image',
+                        sizes: sizes,
+                        widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
+                        is: 'lazy-image'
+                      }}
+                    </div>
+                  {%- else -%}
+                    <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
+                    </div>
+                  {%- endif -%}
+                </use-animate>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {% comment %}Slot 3{% endcomment %}
+        <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
+          <div class="collage-card">
+            <a class="collage-content card-wrapper">
+              <div class="card">
+                <use-animate data-animate="zoom-fade-small" class="media-wrapper">
+                  {%- if slot_3 != blank -%}
+                    <div class="image-animate media media--adapt media--hover-effect"
+                      style="--image-ratio-percent: {{ 1 | divided_by: slot_3.aspect_ratio | times: 100 }}%;"
+                    >
+                      {{ slot_3 | image_url: width: 3000 | image_tag:
+                        loading: 'lazy',
+                        class: 'collage-card__image',
+                        sizes: sizes,
+                        widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
+                        is: 'lazy-image'
+                      }}
+                    </div>
+                  {%- else -%}
+                    <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
+                    </div>
+                  {%- endif -%}
+                </use-animate>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
-      {% comment %}Slot 3{% endcomment %}
-      <div class="collage__item collage__item--image collage__item--{{ section.settings.desktop_layout }}">
-        <div class="collage-card">
-          <a class="collage-content card-wrapper">
-            <div class="card">
-              <use-animate data-animate="zoom-fade-small" class="media-wrapper">
-                {%- if slot_3 != blank -%}
-                  <div class="image-animate media media--adapt media--hover-effect"
-                    style="--image-ratio-percent: {{ 1 | divided_by: slot_3.aspect_ratio | times: 100 }}%;"
-                  >
-                    {{ slot_3 | image_url: width: 3000 | image_tag:
-                      loading: 'lazy',
-                      class: 'collage-card__image',
-                      sizes: sizes,
-                      widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
-                      is: 'lazy-image'
-                    }}
-                  </div>
-                {%- else -%}
-                  <div class="image-animate media media--adapt" style="--image-ratio-percent: 100%;">
-                    {{ 'image' | placeholder_svg_tag: 'placeholder collage-card__image' }}
-                  </div>
-                {%- endif -%}
-              </use-animate>
-            </div>
-          </a>
+      {%- if section.settings.show_description and product.description != blank -%}
+        <div class="nonbuy-collage__description {{ section.settings.description_alignment }}">
+          <h3 class="product__description-title">Description</h3>
+          <div class="product__description rte">{{ product.description }}</div>
         </div>
-      </div>
-    </div>
+      {%- endif -%}
+    {%- endif -%}
+
   </div>
 </div>
 
@@ -175,36 +235,17 @@
     },
     {
       "type": "header",
-      "content": "Heading"
+      "content": "Description"
     },
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading"
-    },
-    {
-      "type": "select",
-      "id": "heading_size",
-      "label": "Size",
-      "options": [
-        {
-          "value": "h2",
-          "label": "Small"
-        },
-        {
-          "value": "h1",
-          "label": "Medium"
-        },
-        {
-          "value": "h0",
-          "label": "Large"
-        }
-      ],
-      "default": "h0"
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show product description",
+      "default": true
     },
     {
       "type": "select",
-      "id": "heading_alignment",
+      "id": "description_alignment",
       "label": "Alignment",
       "options": [
         {
@@ -214,37 +255,9 @@
         {
           "value": "center",
           "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
         }
       ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "heading_tag",
-      "label": "HTML tag",
-      "options": [
-        {
-          "value": "h1",
-          "label": "H1"
-        },
-        {
-          "value": "h2",
-          "label": "H2"
-        },
-        {
-          "value": "h3",
-          "label": "H3"
-        },
-        {
-          "value": "p",
-          "label": "Paragraph"
-        }
-      ],
-      "default": "h2"
+      "default": "left"
     },
     {
       "type": "header",
