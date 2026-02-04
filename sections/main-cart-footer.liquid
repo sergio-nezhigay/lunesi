@@ -157,7 +157,7 @@
     </div>
 
     <div>
-      {%- if section.settings.show_discount_input -%}
+      {%- if settings.show_discount_input -%}
         <discount-code class="cart__discount cart__discount--prominent field">
           <label for="discount-code-input">{{ 'sections.cart.discount_code' | t }}</label>
           <div class="cart__discount-wrapper" style="display: flex; gap: 10px;">
@@ -618,12 +618,6 @@
       "id": "show_cart_note",
       "default": false,
       "label": "t:sections.main-cart-footer.settings.show_cart_note.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_discount_input",
-      "default": true,
-      "label": "t:sections.main-cart-footer.settings.show_discount_input.label"
     },
     {
       "type": "header",

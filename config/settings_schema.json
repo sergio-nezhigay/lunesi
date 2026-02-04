@@ -807,7 +807,8 @@
         "type": "checkbox",
         "id": "show_discount_input",
         "default": true,
-        "label": "Show discount codes"
+        "label": "Show discount codes",
+        "info": "Controls the discount code input in both the cart drawer and the cart page."
       },
       {
         "type": "text",
