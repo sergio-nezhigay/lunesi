@@ -9,49 +9,20 @@
  */
 {
   "sections": {
-    "collage_qWjDVA": {
-      "type": "collage",
-      "blocks": {
-        "image_WGHgFU": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Lunesi_assesories0053_3.jpg",
-            "heading": "",
-            "link": ""
-          }
-        },
-        "image_PAap3J": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Lunesi_assesories0066_98f7bc3e-72bd-4b70-be49-89d5e70302dd.jpg",
-            "heading": "",
-            "link": ""
-          }
-        },
-        "image_9K9jUQ": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Lunesi_assesories0063.jpg",
-            "heading": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "image_WGHgFU",
-        "image_PAap3J",
-        "image_9K9jUQ"
-      ],
-      "name": "t:sections.collage.presets.name",
+    "nonbuy_collage_main": {
+      "type": "nonbuy-product-collage",
       "settings": {
-        "desktop_layout": "left",
-        "mobile_layout": "collage",
-        "apply_overlay": false,
-        "show_divider": false,
+        "image_source": "product",
+        "image_1": "shopify://shop_images/Lunesi_assesories0053_3.jpg",
+        "image_2": "shopify://shop_images/Lunesi_assesories0066_98f7bc3e-72bd-4b70-be49-89d5e70302dd.jpg",
+        "image_3": "shopify://shop_images/Lunesi_assesories0063.jpg",
         "heading": "Lunesi Bundle",
         "heading_size": "h0",
         "heading_alignment": "center",
         "heading_tag": "h2",
+        "desktop_layout": "left",
+        "mobile_layout": "collage",
+        "show_divider": false,
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -89,6 +60,7 @@
         "image_ffWyAN",
         "image_prwdmA"
       ],
+      "disabled": true,
       "name": "t:sections.collage.presets.name",
       "settings": {
         "desktop_layout": "left",
@@ -737,6 +709,8 @@
       "type": "featured-collection",
       "disabled": true,
       "settings": {
+        "sold_out_product": false,
+        "limited_product": false,
         "collection": "main-collection",
         "products_to_show": 5,
         "enable_conditional_slider": true,
@@ -871,7 +845,7 @@
     }
   },
   "order": [
-    "collage_qWjDVA",
+    "nonbuy_collage_main",
     "collage_PAnXzX",
     "rich_text_KwLRWn",
     "main",
