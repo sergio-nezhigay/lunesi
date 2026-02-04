@@ -942,6 +942,50 @@
     ]
   },
   {
+    "name": "GB Promo Gift",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shows a free gift offer in the mini-cart for customers from Great Britain. Requires a Shopify Buy X Get Y discount code to make the gift free at checkout."
+      },
+      {
+        "type": "checkbox",
+        "id": "gb_promo_gift_enabled",
+        "label": "Enable GB Promo Gift",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "gb_promo_gift_variant_id",
+        "label": "Gift Variant ID",
+        "info": "The numeric variant ID of the free gift product."
+      },
+      {
+        "type": "text",
+        "id": "gb_promo_gift_discount_code",
+        "label": "Discount code",
+        "default": "Sweats",
+        "info": "The Shopify Buy X Get Y discount code to apply when the gift is claimed."
+      },
+      {
+        "type": "image_picker",
+        "id": "gb_promo_gift_image",
+        "label": "Gift product image"
+      },
+      {
+        "type": "text",
+        "id": "gb_promo_gift_title",
+        "label": "Gift product title"
+      },
+      {
+        "type": "text",
+        "id": "gb_promo_gift_button_text",
+        "label": "Button text",
+        "default": "Add Free Gift"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.search-behavior.name",
     "settings": [
       {

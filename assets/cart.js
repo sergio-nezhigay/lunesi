@@ -1127,7 +1127,8 @@ document.addEventListener("cart:updated", async () => {
   // Get gift variant IDs (convert to strings for consistent comparison)
   const giftVariants = [
     theme.shopSettings?.buyXGetY?.giftVariant1,
-    theme.shopSettings?.buyXGetY?.giftVariant2
+    theme.shopSettings?.buyXGetY?.giftVariant2,
+    theme.shopSettings?.gbPromoGift?.variantId
   ].filter(Boolean).map(v => String(v));
 
   if (giftVariants.length === 0) {

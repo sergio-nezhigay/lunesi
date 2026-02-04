@@ -59,6 +59,11 @@
         discountCode: {{ settings.buy_x_get_y_discount_code | default: '' | json }},
         giftVariant1: {{ settings.buy_x_get_y_gift_variant_1 | default: '' | json }},
         giftVariant2: {{ settings.buy_x_get_y_gift_variant_2 | default: '' | json }}
+      },
+      gbPromoGift: {
+        enabled: {{ settings.gb_promo_gift_enabled | default: false }},
+        variantId: {{ settings.gb_promo_gift_variant_id | default: '' | json }},
+        discountCode: {{ settings.gb_promo_gift_discount_code | default: 'Sweats' | json }}
       }
     };
 

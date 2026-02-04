@@ -13,10 +13,6 @@
       "type": "nonbuy-product-collage",
       "settings": {
         "image_source": "product",
-        "heading": "Lunesi Bundle",
-        "heading_size": "h0",
-        "heading_alignment": "center",
-        "heading_tag": "h2",
         "desktop_layout": "left",
         "mobile_layout": "collage",
         "show_divider": false,
