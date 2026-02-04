@@ -104,8 +104,8 @@
   }
 
   .gb-promo-gift__btn {
-    background: rgb(var(--color-base-text));
-    color: rgb(var(--color-base-background));
+    background: #212326;
+    color: #fff !important;
     border: none;
     border-radius: var(--button-radius, 4px);
     padding: 0.7rem 1.2rem;
@@ -124,6 +124,30 @@
   .gb-promo-gift__btn:disabled {
     opacity: 0.5;
     cursor: wait;
+  }
+
+  .gb-promo-gift__btn.loading {
+    color: transparent;
+    position: relative;
+    opacity: 1;
+  }
+
+  .gb-promo-gift__btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid #fff;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: gb-gift-spin 0.6s linear infinite;
+  }
+
+  @keyframes gb-gift-spin {
+    to { transform: rotate(360deg); }
   }
 </style>
 {% comment %}theme-check-disable TemplateLength{% endcomment %}
@@ -1249,13 +1273,26 @@
 
         .button--gift.loading {
           pointer-events: none;
-          opacity: 0.7;
+          color: transparent;
+          position: relative;
         }
 
-        @keyframes rotate {
-          100% {
-            transform: rotate(360deg);
-          }
+        .button--gift.loading::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 14px;
+          height: 14px;
+          margin: -7px 0 0 -7px;
+          border: 2px solid #2d2d2d;
+          border-right-color: transparent;
+          border-radius: 50%;
+          animation: gift-btn-spin 0.6s linear infinite;
+        }
+
+        @keyframes gift-btn-spin {
+          to { transform: rotate(360deg); }
         }
 
         @keyframes dash {

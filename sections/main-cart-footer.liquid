@@ -540,6 +540,30 @@
     transform: scale(0.98);
   }
 
+  .button--gift.loading {
+    color: transparent;
+    pointer-events: none;
+    position: relative;
+  }
+
+  .button--gift.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border: 2px solid #2d2d2d;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: gift-btn-spin 0.6s linear infinite;
+  }
+
+  @keyframes gift-btn-spin {
+    to { transform: rotate(360deg); }
+  }
+
   .gift-claim-icon {
     font-size: 28px;
     margin-right: 16px;

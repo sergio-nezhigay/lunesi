@@ -511,6 +511,13 @@ async function addGiftToCart(clickedButton = null) {
 
   giftAddInProgress = true;
 
+  function resetButton() {
+    if (clickedButton) {
+      clickedButton.classList.remove('loading');
+      clickedButton.disabled = false;
+    }
+  }
+
   try {
     // Check if we're on main cart page or mini-cart
     const miniCart = document.querySelector('mini-cart');
@@ -549,6 +556,7 @@ async function addGiftToCart(clickedButton = null) {
       } catch (parseError) {
         console.error('🎁 Add to cart response is not JSON:', text.substring(0, 200));
         giftAddInProgress = false;
+        resetButton();
         return;
       }
   // console.log('🎁 Gift added successfully');
@@ -574,10 +582,12 @@ async function addGiftToCart(clickedButton = null) {
       const errorData = await response.json();
       console.error('🎁 Failed to add gift:', errorData);
       giftAddInProgress = false;
+      resetButton();
     }
   } catch (error) {
     console.error('🎁 Error adding gift:', error);
     giftAddInProgress = false;
+    resetButton();
   }
 }
 
@@ -619,6 +629,8 @@ document.addEventListener('click', (e) => {
   if (e.target.closest('[data-gift-add]')) {
     e.preventDefault();
     const clickedButton = e.target.closest('[data-gift-add]');
+    clickedButton.classList.add('loading');
+    clickedButton.disabled = true;
     addGiftToCart(clickedButton);
   }
 });

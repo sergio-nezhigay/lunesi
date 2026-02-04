@@ -30,7 +30,10 @@ class GBPromoGiftHandler {
   async addGift() {
     this.isProcessing = true;
     const btn = document.querySelector('.gb-promo-gift__btn');
-    if (btn) btn.disabled = true;
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.add('loading');
+    }
 
     try {
       const addRes = await fetch('/cart/add.js', {
@@ -56,7 +59,10 @@ class GBPromoGiftHandler {
       console.error('GB promo gift: addGift error', error);
     } finally {
       this.isProcessing = false;
-      if (btn) btn.disabled = false;
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      }
     }
   }
 
