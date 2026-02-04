@@ -74,6 +74,7 @@
     "cart_drawer_enabled": true,
     "show_cart_note": true,
     "show_shipping_calculator": true,
+    "show_discount_input": false,
     "disable_view_cart": false,
     "show_free_shipping_message": false,
     "free_shipping_minimum_amount": "EUR:95, GBP:79, CHF:89, DKK:710, SEK:1095, NOK:1115, ISK:13850, PLN:406, CZK:2390, HUF:39500, RON:470, BGN:185, HRK:715, RSD:11100, UAH:4130, MDL:1820, GEL:285, TRY:3480",
