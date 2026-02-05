@@ -10,6 +10,17 @@ class CartRemoveButton extends HTMLElement {
 }
 customElements.define("cart-remove-button", CartRemoveButton);
 
+/**
+ * Returns all gift variant IDs as strings (BXGY + GB promo gift)
+ */
+function getGiftVariantIds() {
+  return [
+    theme.shopSettings?.buyXGetY?.giftVariant1,
+    theme.shopSettings?.buyXGetY?.giftVariant2,
+    theme.shopSettings?.gbPromoGift?.variantId
+  ].filter(Boolean).map(v => String(v));
+}
+
 class CartItems extends HTMLElement {
   constructor() {
     super();
@@ -86,13 +97,10 @@ class CartItems extends HTMLElement {
   }
 
   updateQuantity(line, quantity, name) {
-    // Protect Buy X Get Y gift items from quantity changes
-    const giftVariants = [
-      theme.shopSettings?.buyXGetY?.giftVariant1,
-      theme.shopSettings?.buyXGetY?.giftVariant2
-    ].filter(Boolean).map(v => String(v));
+    // Protect gift items from quantity changes (BXGY + GB promo)
+    const giftVariants = getGiftVariantIds();
 
-    // Check if the line item is a BXGY gift
+    // Check if the line item is a gift
     const cartItemRow = document.querySelector(`#CartItem-${line}, [data-index="${line}"]`)?.closest('[data-variant-id]');
     const variantId = cartItemRow?.dataset?.variantId;
 
@@ -128,6 +136,17 @@ class CartItems extends HTMLElement {
         if (parsedState.errors) {
           this.updateErrorLiveRegions(line, parsedState.errors);
         }
+
+        // Disable checkout before re-rendering sections if only gift items remain.
+        // This closes the window where a freshly rendered button would be clickable
+        // while the gift-only cart is still being cleaned up.
+        if (!window.isRemovingGifts && parsedState?.items?.length > 0) {
+          const _giftIds = getGiftVariantIds();
+          if (_giftIds.length > 0 && !parsedState.items.some(i => !_giftIds.includes(String(i.variant_id)))) {
+            disableCheckoutButtonsGlobal();
+          }
+        }
+
         this.getSectionsToRender().forEach((section) => {
           const element = document.getElementById(section.id);
           if (element) {
@@ -270,10 +289,7 @@ class CartItems extends HTMLElement {
       return;
     }
 
-    const giftVariants = [
-      theme.shopSettings?.buyXGetY?.giftVariant1,
-      theme.shopSettings?.buyXGetY?.giftVariant2
-    ].filter(Boolean).map(v => String(v));
+    const giftVariants = getGiftVariantIds();
 
     if (giftVariants.length === 0 || !parsedState?.items) {
       return;
@@ -1124,12 +1140,7 @@ document.addEventListener("cart:updated", async () => {
     return;
   }
 
-  // Get gift variant IDs (convert to strings for consistent comparison)
-  const giftVariants = [
-    theme.shopSettings?.buyXGetY?.giftVariant1,
-    theme.shopSettings?.buyXGetY?.giftVariant2,
-    theme.shopSettings?.gbPromoGift?.variantId
-  ].filter(Boolean).map(v => String(v));
+  const giftVariants = getGiftVariantIds();
 
   if (giftVariants.length === 0) {
     return;
