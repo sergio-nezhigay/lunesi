@@ -85,6 +85,7 @@
     "buy_x_get_y_enabled": false,
     "gb_promo_gift_enabled": true,
     "gb_promo_gift_product": "candies",
+    "gb_promo_gift_discount_code": "Sweets",
     "search_results": "product",
     "predictive_search_show_vendor": true,
     "social_instagram_link": "https://www.instagram.com/lunesibeauty",
