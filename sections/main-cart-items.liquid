@@ -43,6 +43,53 @@
     <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
       <div class="js-contents">
         {%- if cart != empty -%}
+          {%- liquid
+            assign gb_promo_gift_product = settings.gb_promo_gift_product
+            assign gb_promo_variant_id = gb_promo_gift_product.variants.first.id | plus: 0
+            assign gb_promo_gift_in_cart = false
+            assign gb_promo_has_regular_items = false
+            if settings.gb_promo_gift_enabled and localization.country.iso_code == 'GB' and gb_promo_variant_id != 0
+              for item in cart.items
+                if item.variant_id == gb_promo_variant_id
+                  assign gb_promo_gift_in_cart = true
+                else
+                  assign gb_promo_has_regular_items = true
+                endif
+              endfor
+            endif
+          -%}
+
+          {%- if settings.gb_promo_gift_enabled
+            and localization.country.iso_code == 'GB'
+            and gb_promo_variant_id != 0
+            and gb_promo_has_regular_items
+            and gb_promo_gift_in_cart == false
+          -%}
+            <div style="margin-bottom: 2rem;">
+              <div class="gb-promo-gift">
+                <div class="gb-promo-gift__content">
+                  {%- if gb_promo_gift_product.featured_image != blank -%}
+                    <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__image-wrap">
+                      {{ gb_promo_gift_product.featured_image | image_url: width: 120 | image_tag:
+                        class: 'gb-promo-gift__image',
+                        loading: 'lazy',
+                        sizes: '60px',
+                        widths: '60, 120'
+                      }}
+                    </a>
+                  {%- endif -%}
+                  <div class="gb-promo-gift__info">
+                    <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title">{{ gb_promo_gift_product.title }}</a>
+                    <span class="gb-promo-gift__price">FREE</span>
+                  </div>
+                  <button class="gb-promo-gift__btn" type="button">
+                    {{ settings.gb_promo_gift_button_text | default: 'Add Free Gift' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
           <table class="cart-items">
             <thead>
               <tr>
