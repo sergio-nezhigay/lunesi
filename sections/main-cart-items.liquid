@@ -236,7 +236,7 @@
                       endif
 
                       # Check if this is a GB Promo Gift item
-                      assign gb_promo_variant_chk = settings.gb_promo_gift_variant_id | plus: 0
+                      assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
                       if item.variant_id == gb_promo_variant_chk
                         assign is_bxgy_gift = true
                       endif
@@ -382,7 +382,7 @@
                       endif
 
                       # Check if this is a GB Promo Gift item
-                      assign gb_promo_variant_chk = settings.gb_promo_gift_variant_id | plus: 0
+                      assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
                       if item.variant_id == gb_promo_variant_chk
                         assign hide_remove_for_gift = true
                       endif

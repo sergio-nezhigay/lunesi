@@ -92,6 +92,16 @@
     font-weight: 500;
     line-height: 1.3;
     margin-bottom: 0.2rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .gb-promo-gift__title:hover {
+    text-decoration: underline;
+  }
+
+  a.gb-promo-gift__image-wrap {
+    display: block;
   }
 
   .gb-promo-gift__price {
@@ -672,7 +682,8 @@
         {%- assign animate_count = animate_count | plus: 1 -%}
         <ul class="mini-cart__navigation" data-animate data-animate-delay-{{ animate_count }}>
           {%- liquid
-            assign gb_promo_variant_id = settings.gb_promo_gift_variant_id | plus: 0
+            assign gb_promo_gift_product = settings.gb_promo_gift_product
+            assign gb_promo_variant_id = gb_promo_gift_product.variants.first.id | plus: 0
             assign gb_promo_gift_in_cart = false
             assign gb_promo_has_regular_items = false
             if settings.gb_promo_gift_enabled and localization.country.iso_code == 'GB' and gb_promo_variant_id != 0
@@ -693,20 +704,18 @@
           -%}
             <li class="gb-promo-gift">
               <div class="gb-promo-gift__content">
-                {%- if settings.gb_promo_gift_image != blank -%}
-                  <div class="gb-promo-gift__image-wrap">
-                    {{ settings.gb_promo_gift_image | image_url: width: 120 | image_tag:
+                {%- if gb_promo_gift_product.featured_image != blank -%}
+                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__image-wrap">
+                    {{ gb_promo_gift_product.featured_image | image_url: width: 120 | image_tag:
                       class: 'gb-promo-gift__image',
                       loading: 'lazy',
                       sizes: '60px',
                       widths: '60, 120'
                     }}
-                  </div>
+                  </a>
                 {%- endif -%}
                 <div class="gb-promo-gift__info">
-                  {%- unless settings.gb_promo_gift_title == blank -%}
-                    <span class="gb-promo-gift__title">{{ settings.gb_promo_gift_title | escape }}</span>
-                  {%- endunless -%}
+                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title">{{ gb_promo_gift_product.title }}</a>
                   <span class="gb-promo-gift__price">FREE</span>
                 </div>
                 <button class="gb-promo-gift__btn" type="button">
@@ -745,7 +754,7 @@
                 endif
 
                 # Check if this is a GB Promo Gift item
-                assign gb_promo_variant_chk = settings.gb_promo_gift_variant_id | plus: 0
+                assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
                 if item.variant_id == gb_promo_variant_chk
                   assign hide_remove_button = true
                 endif
@@ -882,7 +891,7 @@
                         endif
 
                         # Check if this is a GB Promo Gift item
-                        assign gb_promo_variant_chk = settings.gb_promo_gift_variant_id | plus: 0
+                        assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
                         if item.variant_id == gb_promo_variant_chk
                           assign is_bxgy_gift = true
                         endif

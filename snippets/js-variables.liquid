@@ -62,7 +62,7 @@
       },
       gbPromoGift: {
         enabled: {{ settings.gb_promo_gift_enabled | default: false }},
-        variantId: {{ settings.gb_promo_gift_variant_id | default: '' | json }},
+        variantId: {{ settings.gb_promo_gift_product.variants.first.id | default: '' | json }},
         discountCode: {{ settings.gb_promo_gift_discount_code | default: 'Sweats' | json }}
       }
     };

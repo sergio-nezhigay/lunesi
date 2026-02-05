@@ -956,10 +956,10 @@
         "default": false
       },
       {
-        "type": "text",
-        "id": "gb_promo_gift_variant_id",
-        "label": "Gift Variant ID",
-        "info": "The numeric variant ID of the free gift product."
+        "type": "product",
+        "id": "gb_promo_gift_product",
+        "label": "Gift product",
+        "info": "The product offered as a free gift. Image, title, and link are taken from this product. The first variant is added to cart."
       },
       {
         "type": "text",
@@ -967,16 +967,6 @@
         "label": "Discount code",
         "default": "Sweats",
         "info": "The Shopify Buy X Get Y discount code to apply when the gift is claimed."
-      },
-      {
-        "type": "image_picker",
-        "id": "gb_promo_gift_image",
-        "label": "Gift product image"
-      },
-      {
-        "type": "text",
-        "id": "gb_promo_gift_title",
-        "label": "Gift product title"
       },
       {
         "type": "text",
