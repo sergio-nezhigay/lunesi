@@ -758,6 +758,12 @@
                 if item.variant_id == gb_promo_variant_chk
                   assign hide_remove_button = true
                 endif
+
+                # Flag for promo gifts (BXGY + GB promo) — hides quantity + price block
+                assign is_promo_gift = false
+                if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id or item.variant_id == gb_promo_variant_chk
+                  assign is_promo_gift = true
+                endif
               -%}
               <cart-remove-button
                 id="Remove-{{ item.index | plus: 1 }}"
@@ -873,6 +879,7 @@
                     </ul>
                   {%- endif -%}
 
+                  {%- unless is_promo_gift -%}
                   <div class="product-quantity">
                     <dt>
                       {%- liquid
@@ -1086,6 +1093,7 @@
                       {%- endif -%}
                     {%- endif -%}
                   </div>
+                  {%- endunless -%}
                   <p class="cart-item__error form__message errors" id="Line-item-error-{{ item.index | plus: 1 }}">
                     <span class="cart-item__error-text"></span>
                   </p>

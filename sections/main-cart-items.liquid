@@ -139,7 +139,18 @@
                     </p>
                   </td>
 
-                  <td class="cart-item__prices small-hide right">
+                  {%- liquid
+                    # Flag for promo gifts (BXGY + GB promo) — hides quantity + price
+                    assign is_promo_gift = false
+                    assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
+                    assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
+                    assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
+                    if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id or item.variant_id == gb_promo_variant_chk
+                      assign is_promo_gift = true
+                    endif
+                  -%}
+
+                  <td class="cart-item__prices small-hide right"{% if is_promo_gift %} style="display:none"{% endif %}>
                     <div class="cart-item__price-wrapper">
                       {%- if item.original_price != item.final_price -%}
                         <dl class="cart-item__discounted-prices">
@@ -179,7 +190,7 @@
                     </div>
                   </td>
 
-                  <td class="medium-hide large-up-hide right">
+                  <td class="medium-hide large-up-hide right"{% if is_promo_gift %} style="display:none"{% endif %}>
                     <div class="cart-item__price-wrapper">
                       {%- if item.original_line_price != item.final_line_price -%}
                         <dl class="cart-item__discounted-prices">
@@ -219,7 +230,7 @@
                     </div>
                   </td>
 
-                  <td class="cart-item__quantity target">
+                  <td class="cart-item__quantity target"{% if is_promo_gift %} style="display:none"{% endif %}>
                     {%- liquid
                       # Check if this is gift bundle (variant_id = 43694372257923)
                       assign is_gift_bundle = false
@@ -335,7 +346,7 @@
                     </div>
                   </td>
 
-                  <td class="cart-item__totals right">
+                  <td class="cart-item__totals right"{% if is_promo_gift %} style="display:none"{% endif %}>
                     <div class="loading-overlay hidden">
                       <div class="loading-overlay__spinner">
                         {% render 'icon', icon: 'spinner' %}
