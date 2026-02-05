@@ -68,8 +68,8 @@
   }
 
   .gb-promo-gift__image-wrap {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     flex-shrink: 0;
     overflow: hidden;
     border-radius: var(--card-radius, 4px);
@@ -88,16 +88,9 @@
 
   .gb-promo-gift__title {
     display: block;
-    font-size: 1.3rem;
     font-weight: 500;
     line-height: 1.3;
     margin-bottom: 0.2rem;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .gb-promo-gift__title:hover {
-    text-decoration: underline;
   }
 
   a.gb-promo-gift__image-wrap {
@@ -706,16 +699,16 @@
               <div class="gb-promo-gift__content">
                 {%- if gb_promo_gift_product.featured_image != blank -%}
                   <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__image-wrap">
-                    {{ gb_promo_gift_product.featured_image | image_url: width: 120 | image_tag:
+                    {{ gb_promo_gift_product.featured_image | image_url: width: 140 | image_tag:
                       class: 'gb-promo-gift__image',
                       loading: 'lazy',
-                      sizes: '60px',
-                      widths: '60, 120'
+                      sizes: '70px',
+                      widths: '70, 140'
                     }}
                   </a>
                 {%- endif -%}
                 <div class="gb-promo-gift__info">
-                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title">{{ gb_promo_gift_product.title }}</a>
+                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title link">{{ gb_promo_gift_product.title }}</a>
                   <span class="gb-promo-gift__price">FREE</span>
                 </div>
                 <button class="gb-promo-gift__btn" type="button">
