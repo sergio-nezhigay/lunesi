@@ -199,6 +199,7 @@
                 <th class="medium-hide large-up-hide right caption-with-letter-spacing" colspan="1" scope="col">{{ 'sections.cart.headings.total' | t }}</th>
                 <th class="cart-items__heading--wide medium-up caption-with-letter-spacing" colspan="1" scope="col">{{ 'sections.cart.headings.quantity' | t }}</th>
                 <th class="small-hide right caption-with-letter-spacing" colspan="1" scope="col">{{ 'sections.cart.headings.total' | t }}</th>
+                <th class="caption-with-letter-spacing" colspan="1" scope="col"><span class="visually-hidden">{{ 'sections.cart.headings.remove' | t }}</span></th>
               </tr>
             </thead>
             <tbody>
@@ -233,7 +234,7 @@
                     {% endif %}
                   </td>
 
-                  <td class="cart-item__details"{% if is_promo_gift %} colspan="5"{% endif %}>
+                  <td class="cart-item__details"{% if is_promo_gift %} colspan="4"{% endif %}>
                     {%- if section.settings.show_vendor -%}
                       <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
                     {%- endif -%}
@@ -520,24 +521,14 @@
                         </span>
                       {%- endif -%}
                     </div>
+                  </td>
+                  {%- endunless -%}
 
+                  <td class="cart-item__remove">
                     {%- liquid
-                      # Check if this item should have remove button hidden
+                      # Hide remove button for gift wrapping only
                       assign hide_remove_for_gift = false
                       if gift_wrap_id and item.id == gift_wrap_id
-                        assign hide_remove_for_gift = true
-                      endif
-
-                      # Check if this is a Buy X Get Y gift item
-                      assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
-                      assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
-                      if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
-                        assign hide_remove_for_gift = true
-                      endif
-
-                      # Check if this is a GB Promo Gift item
-                      assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
-                      if item.variant_id == gb_promo_variant_chk
                         assign hide_remove_for_gift = true
                       endif
                     -%}
@@ -549,7 +540,6 @@
                       </cart-remove-button>
                     {%- endunless -%}
                   </td>
-                  {%- endunless -%}
                 </tr>
               {%- endfor -%}
             </tbody>

@@ -357,7 +357,8 @@
         "product": "Product",
         "price": "Price",
         "total": "Total",
-        "quantity": "Quantity"
+        "quantity": "Quantity",
+        "remove": "Remove"
       },
       "update": "Update",
       "gift_wrapping_html": "For {{ price }} please wrap the products in this order.",

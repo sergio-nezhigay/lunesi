@@ -733,24 +733,16 @@
                 </div>
               </div>
               {%- liquid
-                # Hide remove button for gift wrapping and Buy X Get Y gift items
+                # Hide remove button for gift wrapping only
                 assign hide_remove_button = false
                 if gift_wrap_id and item.id == gift_wrap_id
                   assign hide_remove_button = true
                 endif
 
-                # Check if this is a Buy X Get Y gift item
+                # Define variant IDs for promo gift checking
                 assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
                 assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
-                if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
-                  assign hide_remove_button = true
-                endif
-
-                # Check if this is a GB Promo Gift item
                 assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
-                if item.variant_id == gb_promo_variant_chk
-                  assign hide_remove_button = true
-                endif
 
                 # Flag for promo gifts (BXGY + GB promo) — hides quantity + price block
                 assign is_promo_gift = false
