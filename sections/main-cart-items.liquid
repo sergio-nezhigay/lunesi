@@ -36,16 +36,18 @@
 
   .gb-promo-gift__image-wrap {
     width: 70px;
-    height: 70px;
     flex-shrink: 0;
-    overflow: hidden;
     border-radius: var(--card-radius, 4px);
   }
 
+  .gb-promo-gift__image-wrap .media-wrapper {
+    border-radius: min(var(--card-radius), 0.3rem);
+  }
+
   .gb-promo-gift__image {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
   }
 
   .gb-promo-gift__info {
@@ -171,12 +173,21 @@
                 <div class="gb-promo-gift__content">
                   {%- if gb_promo_gift_product.featured_image != blank -%}
                     <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__image-wrap">
-                      {{ gb_promo_gift_product.featured_image | image_url: width: 140 | image_tag:
-                        class: 'gb-promo-gift__image',
-                        loading: 'lazy',
-                        sizes: '70px',
-                        widths: '70, 140'
-                      }}
+                      <span class="media-wrapper media-wrapper--small">
+                        <div class="media media--adapt"
+                          style="--image-ratio-percent: {{ 1 | divided_by: gb_promo_gift_product.featured_image.aspect_ratio | times: 100 }}%;"
+                        >
+                          <img class="gb-promo-gift__image"
+                            srcset="{{ gb_promo_gift_product.featured_image | image_url: width: 70 }} 1x, {{ gb_promo_gift_product.featured_image | image_url: width: 140 }} 2x"
+                            src="{{ gb_promo_gift_product.featured_image | image_url: width: 70 }}"
+                            alt="{{ gb_promo_gift_product.featured_image.alt | escape | split: '#' | first }}"
+                            loading="lazy"
+                            width="70"
+                            height="{{ 70 | divided_by: gb_promo_gift_product.featured_image.aspect_ratio | ceil }}"
+                            is="lazy-image"
+                          />
+                        </div>
+                      </span>
                     </a>
                   {%- endif -%}
                   <div class="gb-promo-gift__info">
