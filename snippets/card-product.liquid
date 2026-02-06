@@ -34,30 +34,10 @@
 
   assign is_gift_product = false
 
-  # Check 1: is_gift metafield
-  if card_product.metafields.custom.is_gift.value == true
+  # Only hide buy buttons for GB promo gift product when enabled
+  if settings.gb_promo_gift_enabled and settings.gb_promo_gift_product.id == card_product.id
     assign is_gift_product = true
   endif
-
-  # Check 2: General gift bundle variant (43694372257923)
-  unless is_gift_product
-    assign gift_variant_id = settings.gift_variant_id | default: "43694372257923"
-    for variant in card_product.variants
-      assign variant_id_str = variant.id | append: ''
-      assign gift_id_str = gift_variant_id | append: ''
-      if variant_id_str == gift_id_str or variant.id == 43694372257923
-        assign is_gift_product = true
-        break
-      endif
-    endfor
-  endunless
-
-  # Check 3: GB promo gift product
-  unless is_gift_product
-    if settings.gb_promo_gift_enabled and settings.gb_promo_gift_product.id == card_product.id
-      assign is_gift_product = true
-    endif
-  endunless
 
   assign show_quick_buy_2nd = true
   assign options_count = card_product.options.size
