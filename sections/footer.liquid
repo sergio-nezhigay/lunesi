@@ -1118,6 +1118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   {%- endif %}
 
+  {%- unless settings.gb_promo_gift_enabled -%}
   <div class="footer__content-bottom">
     <div class="footer__content-bottom-wrapper page-width">
       {%- if section.settings.show_policy -%}
@@ -1217,6 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
   </div>
+  {%- endunless -%}
 </footer>
 
 {%- schema -%}
