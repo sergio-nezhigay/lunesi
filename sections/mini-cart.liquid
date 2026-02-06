@@ -255,7 +255,7 @@
             endif
           endfor
 
-          assign items_needed = free_shipping_threshold | minus: current_items
+          
           assign progress_percentage = current_items | times: 100 | divided_by: free_shipping_threshold
           if progress_percentage > 100
             assign progress_percentage = 100
@@ -1138,7 +1138,7 @@
         assign gift_variant_id_string = '43694372257923'
         assign gift_in_cart = false
         assign non_gift_items_count = 0
-        assign customer_qualifies_for_gift = false
+
 
         for item in cart.items
           if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
@@ -1148,20 +1148,7 @@
           endif
         endfor
 
-        # Перевірити чи кастомер має право на подарунок (вже використовував раніше, підписаний, або мав подарунок в кошику)
-        assign gift_cookie_check = request.headers.cookie | split: 'beyours:gift-popup=true'
-        assign gift_claimed_cookie = request.headers.cookie | split: 'beyours:gift-bundle-claimed=true'
-
-        if gift_cookie_check.size > 1 or gift_claimed_cookie.size > 1 or customer or gift_in_cart
-          assign customer_qualifies_for_gift = true
-        endif
-
-        assign first_cart_item = cart.items.first
-        if first_cart_item.product.metafields.custom.cart_upsell_products_ != blank
-          assign upsell_products = first_cart_item.product.metafields.custom.cart_upsell_products_.value
-        else
-          assign upsell_products = settings.upsell_products
-        endif
+    
         assign upsell_heading = settings.upsell_heading | default: 'Complete your routine'
       -%}
 
@@ -1518,7 +1505,7 @@
                       <div class="mini-cart__upsell-product">
                         <a href="{{ shop.url }}{{ product.url }}" class="mini-cart__upsell-image">
                           <img
-                            src="{{ product.featured_image | img_url: '100x' }}"
+                            src="{{ product.featured_image | image_url: width: 100 }}"
                             alt="{{ product.featured_image.alt | escape }}"
                             width="40"
                             height="40"

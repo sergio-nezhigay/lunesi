@@ -379,11 +379,7 @@
 
                   <td class="cart-item__quantity target">
                     {%- liquid
-                      # Check if this is gift bundle (variant_id = 43694372257923)
-                      assign is_gift_bundle = false
-                      if item.variant_id == 43694372257923
-                        assign is_gift_bundle = true
-                      endif
+                 
 
                       # Check if this is a Buy X Get Y gift item
                       assign is_bxgy_gift = false
