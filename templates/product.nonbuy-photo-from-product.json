@@ -94,23 +94,23 @@
           "type": "description",
           "settings": {}
         },
-        "collapsible_tab-0": {
+        "collapsible_tab_WHDamb": {
           "type": "collapsible_tab",
           "settings": {
             "icon": "none",
-            "heading": "Benefits",
-            "content": "{{ product.metafields.custom.benefits | metafield_tag }}",
+            "heading": "Red Heart INGREDIENTS LIST",
+            "content": "<ul><li>dark chocolate</li><li>glucose</li><li>UHT Cream</li><li>invert sugar</li><li>butter</li><li>salt</li><li>vanilla</li><li>raspberry puree</li><li>pectine</li><li>citrus acid</li></ul>",
             "page": "",
             "custom_liquid": "",
             "keep_open": false
           }
         },
-        "collapsible_tab-1": {
+        "collapsible_tab_akmqGN": {
           "type": "collapsible_tab",
           "settings": {
             "icon": "none",
-            "heading": "HOW TO USE",
-            "content": "{{ product.metafields.custom.how_to_use | metafield_tag }}",
+            "heading": "Red Heart allergens",
+            "content": "<ul><li>soya</li><li>dairy</li></ul>",
             "page": "",
             "custom_liquid": "",
             "keep_open": false
@@ -120,19 +120,30 @@
           "type": "collapsible_tab",
           "settings": {
             "icon": "none",
-            "heading": "KEY INGREDIENTS",
-            "content": "{{ product.metafields.custom.key_ingredients | metafield_tag }}",
+            "heading": "Pink Heart INGREDIENTS list",
+            "content": "<ul><li>milk chocolate</li><li>dark chocolate</li><li>hazelnut praline</li><li>feuilletine</li><li>cocoa butter</li><li>salt</li></ul>",
             "page": "",
             "custom_liquid": "",
             "keep_open": false
           }
         },
-        "collapsible_tab_WHDamb": {
+        "collapsible_tab-1": {
           "type": "collapsible_tab",
           "settings": {
             "icon": "none",
-            "heading": "FULL INGREDIENTS LIST",
-            "content": "{{ product.metafields.custom.full_ingredients_list | metafield_tag }}",
+            "heading": "Pink Heart allergens",
+            "content": "<ul><li>soya</li><li>dairy</li><li>nuts</li><li>gluten</li></ul>",
+            "page": "",
+            "custom_liquid": "",
+            "keep_open": false
+          }
+        },
+        "collapsible_tab-0": {
+          "type": "collapsible_tab",
+          "settings": {
+            "icon": "none",
+            "heading": "Weight",
+            "content": "<p>220 g</p>",
             "page": "",
             "custom_liquid": "",
             "keep_open": false
@@ -149,6 +160,7 @@
         },
         "buy_buttons": {
           "type": "buy_buttons",
+          "disabled": true,
           "settings": {
             "show_quantity_selector": false,
             "show_dynamic_checkout": false,
@@ -187,10 +199,11 @@
         "countdown",
         "variant_picker",
         "description",
-        "collapsible_tab-0",
-        "collapsible_tab-1",
-        "collapsible_tab_KwUMCe",
         "collapsible_tab_WHDamb",
+        "collapsible_tab_akmqGN",
+        "collapsible_tab_KwUMCe",
+        "collapsible_tab-1",
+        "collapsible_tab-0",
         "text_XwJwzV",
         "buy_buttons",
         "inventory_status",
