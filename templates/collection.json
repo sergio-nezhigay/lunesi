@@ -16,7 +16,8 @@
         "breadcrumb_delimeter": "angle_right",
         "breadcrumb_bg_color": "rgba(0,0,0,0)",
         "breadcrumb_text_color": "#474345",
-        "breadcrumb_accent_color_bool": false
+        "breadcrumb_accent_color_bool": false,
+        "breadcrumb_accent_color": "#4770db"
       }
     },
     "banner": {
@@ -78,7 +79,7 @@
         "text_D4BwL4"
       ],
       "settings": {
-        "image": "shopify://shop_images/LUNESI_0252_3.jpg",
+        "image": "shopify://shop_images/IMG_0957.png",
         "video_controls": false,
         "rounded_corner": true,
         "image_position": "center center",
