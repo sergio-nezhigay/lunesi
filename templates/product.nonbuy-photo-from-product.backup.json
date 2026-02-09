@@ -9,6 +9,121 @@
  */
 {
   "sections": {
+    "nonbuy_collage_main": {
+      "type": "nonbuy-product-collage",
+      "settings": {
+        "image_source": "product",
+        "desktop_layout": "left",
+        "mobile_layout": "collage",
+        "show_divider": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "collage_PAnXzX": {
+      "type": "collage",
+      "blocks": {
+        "image_6JDxjc": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Lunesi_assesories0127_b7065b47-717c-4061-847d-3ed4561aab9c.jpg",
+            "heading": "",
+            "link": ""
+          }
+        },
+        "image_ffWyAN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Lunesi_assesories0125.jpg",
+            "heading": "",
+            "link": ""
+          }
+        },
+        "image_prwdmA": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Lunesi_assesories0124.jpg",
+            "heading": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_6JDxjc",
+        "image_ffWyAN",
+        "image_prwdmA"
+      ],
+      "disabled": true,
+      "name": "t:sections.collage.presets.name",
+      "settings": {
+        "desktop_layout": "left",
+        "mobile_layout": "collage",
+        "apply_overlay": true,
+        "show_divider": false,
+        "heading": "",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "heading_tag": "h2",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_KwLRWn": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_KNFmJg": {
+          "type": "heading",
+          "settings": {
+            "heading": "Oops! This item can’t be purchased",
+            "heading_size": "h1",
+            "heading_tag": "h2"
+          }
+        },
+        "text_xxmmbg": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Check your cart or visit our homepage to get it for free as part of a bundle.</p>",
+            "text_size": "typeset3",
+            "secondary_color": false,
+            "highlight_phrases": "",
+            "highlight_style": "marker"
+          }
+        },
+        "button_7XHhrB": {
+          "type": "button",
+          "settings": {
+            "button_label": "Home",
+            "button_link": "https://lunesi.co.uk",
+            "button_size": "medium",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_KNFmJg",
+        "text_xxmmbg",
+        "button_7XHhrB"
+      ],
+      "disabled": true,
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "text_alignment": "center",
+        "rounded_corner": false,
+        "mobile_text_alignment": "left",
+        "horizontal_content": false,
+        "narrow": false,
+        "show_divider": false,
+        "use_custom_colors": false,
+        "colors_button_label": "#ffffff",
+        "colors_button_background": "#1a1b18",
+        "colors_text": "#212326",
+        "colors_background": "#ffffff",
+        "colors_highlight": "#bbff00",
+        "gradient_background": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "main": {
       "type": "main-product",
       "blocks": {
@@ -173,12 +288,12 @@
         "related_buttons",
         "sticky_cart"
       ],
+      "disabled": true,
       "custom_css": [
         ".rte li {margin-bottom: 0.75rem;}",
         ".button {border: none; color: #353133; background-color: #e6cede;}",
         ".sticky-cart {padding-bottom: 2.5rem;}",
-        "p,span,h1 {color: #474345 !important;}",
-        "@media (min-width: 1024px) { .grid__item.product__media-wrapper { margin-top: -37px; transform: scale(0.8) !important; } }"
+        "p,span,h1 {color: #474345 !important;}"
       ],
       "settings": {
         "enable_sticky_info": true,
@@ -220,6 +335,7 @@
         "heading_gagPeL",
         "text_8rhgwc"
       ],
+      "disabled": true,
       "settings": {
         "image": "{{ product.metafields.custom.product_content.value.image_banner_1.value }}",
         "image_position": "center center",
@@ -323,6 +439,7 @@
       "block_order": [
         "image_drEUet"
       ],
+      "disabled": true,
       "custom_css": [
         ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
         "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
@@ -409,6 +526,7 @@
         "image_3zQY7q",
         "image_L97JNF"
       ],
+      "disabled": true,
       "custom_css": [
         ".tab-collage__heading {font-size: calc(var(--font-heading-scale) * 4rem);}",
         "@media only screen and (max-width: 768px) {.tab-collage__heading {font-size: calc(var(--font-heading-scale) * 2.8rem); }}",
@@ -584,6 +702,8 @@
       "type": "featured-collection",
       "disabled": true,
       "settings": {
+        "sold_out_product": false,
+        "limited_product": false,
         "collection": "main-collection",
         "products_to_show": 5,
         "enable_conditional_slider": true,
@@ -626,6 +746,7 @@
       "block_order": [
         "okendo_reviews_widget_PNUeQ8"
       ],
+      "disabled": true,
       "custom_css": [
         ".oke-w-reviews-controls {margin-top: 24px;}"
       ],
@@ -638,6 +759,7 @@
     },
     "add_on_products_pKGQQC": {
       "type": "add-on-products",
+      "disabled": true,
       "custom_css": [
         "p,span,h1 {color: #474345 !important;}",
         "@media screen and (max-width: 749px) {.button--small {transform: scale(0.8); top: -3px; }}"
@@ -682,6 +804,7 @@
       "block_order": [
         "stamped_product_reviews_ugc_main_widget_kNV9np"
       ],
+      "disabled": true,
       "settings": {
         "include_margins": true,
         "show_divider": false,
@@ -696,9 +819,9 @@
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {
             "review_data": "sample_data",
+            "max_width": 1200,
             "show_shop_reviews": false,
-            "empty_state": "empty_widget",
-            "max_width": 1200
+            "empty_state": "empty_widget"
           }
         }
       },
@@ -715,6 +838,9 @@
     }
   },
   "order": [
+    "nonbuy_collage_main",
+    "collage_PAnXzX",
+    "rich_text_KwLRWn",
     "main",
     "image_with_text_QJ6ftB",
     "product-recommendations",
