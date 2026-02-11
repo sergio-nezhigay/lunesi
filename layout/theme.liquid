@@ -208,9 +208,6 @@
       <script src="{{ 'gift-wrapping.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    {%- comment -%} EU IP Detection for cart shipping notices {%- endcomment -%}
-    <script src="{{ 'eu-ip-detection.js' | asset_url }}" defer="defer"></script>
-
     <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}">
     <script src="{{ 'cart-upsell.js' | asset_url }}" defer></script>
     {% render 'changable-upsell' %}
