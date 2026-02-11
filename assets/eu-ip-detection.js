@@ -8,6 +8,8 @@ class EUCountryDetector {
     this.euCountries = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
     this.cacheKey = 'visitor_country_code';
     this.cacheExpiry = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    this.detectedCountry = null;
+    this.isEUCountry = false;
 
     this.init();
   }
@@ -23,6 +25,42 @@ class EUCountryDetector {
       console.log('[EU Detection] Fetching country from IP...');
       this.fetchCountryFromIP();
     }
+
+    // Listen for cart updates to re-apply to dynamically loaded content
+    this.setupCartListeners();
+  }
+
+  setupCartListeners() {
+    // Listen for Shopify cart updates (theme uses pub/sub system)
+    if (typeof PubSub !== 'undefined') {
+      PubSub.subscribe('cart-update', () => {
+        console.log('[EU Detection] Cart updated, re-applying EU notices');
+        setTimeout(() => this.updateNotices(), 100);
+      });
+    }
+
+    // Listen for cart drawer opening (actual event from cart-drawer.js)
+    document.addEventListener('cartdrawer:opened', () => {
+      console.log('[EU Detection] Cart drawer opened, re-applying EU notices');
+      setTimeout(() => this.updateNotices(), 200);
+    });
+
+    // Also check periodically for new notices (fallback for dynamic content)
+    this.noticeCheckInterval = setInterval(() => {
+      if (this.detectedCountry) {
+        const notices = document.querySelectorAll('.eu-shipping-notice');
+        const visibleNotices = Array.from(notices).filter(n => n.offsetParent !== null);
+
+        // Only log if we find notices that need updating
+        if (visibleNotices.length > 0) {
+          const needsUpdate = visibleNotices.some(n => !n.hasAttribute('data-eu-detected'));
+          if (needsUpdate) {
+            console.log('[EU Detection] Found new notices, updating...');
+            this.updateNotices();
+          }
+        }
+      }
+    }, 1000);
   }
 
   getCachedCountry() {
@@ -86,14 +124,38 @@ class EUCountryDetector {
   }
 
   handleCountryDetected(countryCode) {
-    const isEU = this.euCountries.includes(countryCode);
-    console.log('[EU Detection] Country:', countryCode, '| Is EU:', isEU);
+    this.detectedCountry = countryCode;
+    this.isEUCountry = this.euCountries.includes(countryCode);
 
-    // Find all EU shipping notices
+    console.log('[EU Detection] Country:', countryCode, '| Is EU:', this.isEUCountry);
+
+    // Store globally for easy access
+    window.visitorCountry = countryCode;
+    window.isEUVisitor = this.isEUCountry;
+
+    // Store on document body as data attribute
+    document.body.setAttribute('data-visitor-country', countryCode);
+    document.body.setAttribute('data-is-eu-visitor', this.isEUCountry);
+
+    // Apply to all notices
+    this.updateNotices();
+
+    // Dispatch custom event for other scripts that might need this info
+    document.dispatchEvent(new CustomEvent('eu-country-detected', {
+      detail: { countryCode, isEU: this.isEUCountry }
+    }));
+  }
+
+  updateNotices() {
+    if (!this.detectedCountry) return;
+
+    // Find all EU shipping notices (including dynamically loaded ones)
     const notices = document.querySelectorAll('.eu-shipping-notice');
 
+    console.log('[EU Detection] Found', notices.length, 'EU notices to update');
+
     notices.forEach(notice => {
-      if (isEU) {
+      if (this.isEUCountry) {
         notice.style.display = 'block';
         notice.setAttribute('data-eu-detected', 'true');
       } else {
@@ -101,11 +163,6 @@ class EUCountryDetector {
         notice.setAttribute('data-eu-detected', 'false');
       }
     });
-
-    // Dispatch custom event for other scripts that might need this info
-    document.dispatchEvent(new CustomEvent('eu-country-detected', {
-      detail: { countryCode, isEU }
-    }));
   }
 
   handleDetectionFailed() {
