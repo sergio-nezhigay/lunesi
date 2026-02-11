@@ -24,7 +24,10 @@
       "WebFetch(domain:performance.shopify.com)",
       "WebFetch(domain:docs.google.com)",
       "WebFetch(domain:developers.cloudflare.com)",
-      "WebFetch(domain:www.capaxe.com)"
+      "WebFetch(domain:www.capaxe.com)",
+      "Bash(shopify theme pull:*)",
+      "Bash(shopify theme dev:*)",
+      "Bash(timeout 10 cmd:*)"
     ],
     "deny": [],
     "ask": []

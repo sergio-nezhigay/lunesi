@@ -283,6 +283,22 @@
         {%- endfor -%}
       {%- endif -%}
 
+      {%- comment -%} BREADCRUMB FALLBACK: Ensure all products have a collection breadcrumb {%- endcomment -%}
+      {%- if bc1 == blank and bc2 == blank and bc3 == blank -%}
+        {%- comment -%} No menu match found, use fallback collection {%- endcomment -%}
+        {%- assign fallback_collection = collections['main-collection'] -%}
+        {%- if fallback_collection -%}
+          {%- capture bc1 -%}
+            {{ fallback_collection.title | link_to: fallback_collection.url, fallback_collection.title }}
+          {%- endcapture -%}
+        {%- else -%}
+          {%- comment -%} Fallback collection doesn't exist, use generic Shop link {%- endcomment -%}
+          {%- capture bc1 -%}
+            {{ 'Shop' | link_to: '/collections/all', 'Shop' }}
+          {%- endcapture -%}
+        {%- endif -%}
+      {%- endif -%}
+
       {%- if bc1 -%}
         <span class="breadcrumb-delimeter" aria-hidden="true"></span>
         <!--Breadcrumb Delimeter -->
