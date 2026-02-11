@@ -916,28 +916,28 @@
           let position = 2;
 
           if (pageType === 'product') {
-            const productTitle = document.querySelector('.product__title, h1')?.textContent?.trim();
-            const pathParts = path.split('/').filter((p) => p);
+            // Read breadcrumbs from the DOM to ensure schema matches visible navigation
+            const breadcrumbLinks = document.querySelectorAll('[data-breadcrumb-item]');
 
-            if (window.ShopifyAnalytics?.meta?.product?.type) {
-              const collectionHandle = window.ShopifyAnalytics.meta.product.type.toLowerCase().replace(/\s+/g, '-');
-              itemListElement.push({
-                '@type': 'ListItem',
-                position: position,
-                name: window.ShopifyAnalytics.meta.product.type,
-                item: `${origin}/collections/${collectionHandle}`,
-              });
-              position++;
-            }
+            breadcrumbLinks.forEach((link) => {
+              const name = link.textContent?.trim();
+              const url = link.getAttribute('data-breadcrumb-url') || link.href;
 
-            if (productTitle) {
-              itemListElement.push({
-                '@type': 'ListItem',
-                position: position,
-                name: productTitle,
-                item: window.location.href,
-              });
-            }
+              if (name && url) {
+                // Skip the home link since it's already in itemListElement
+                if (position === 2 && (url === '/' || url === origin + '/')) {
+                  return;
+                }
+
+                itemListElement.push({
+                  '@type': 'ListItem',
+                  position: position,
+                  name: name,
+                  item: url.startsWith('http') ? url : origin + url,
+                });
+                position++;
+              }
+            });
           }
 
           if (pageType === 'collection') {
@@ -1033,8 +1033,18 @@
         }
 
         function init() {
-          const schema = generateBreadcrumbSchema();
-          injectBreadcrumbSchema(schema);
+          // For product pages, wait for breadcrumbs to be rendered
+          const pageType = getPageType();
+          if (pageType === 'product') {
+            // Use requestAnimationFrame to ensure DOM is fully painted
+            requestAnimationFrame(() => {
+              const schema = generateBreadcrumbSchema();
+              injectBreadcrumbSchema(schema);
+            });
+          } else {
+            const schema = generateBreadcrumbSchema();
+            injectBreadcrumbSchema(schema);
+          }
         }
 
         if (document.readyState === 'loading') {

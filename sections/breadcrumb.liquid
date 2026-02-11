@@ -101,19 +101,19 @@
       </div>
     {%- endif -%}
 
-    <a href="{{ shop.url }}/" title="Home">Home</a>
+    <a href="{{ shop.url }}/" title="Home" data-breadcrumb-item data-breadcrumb-url="{{ shop.url }}/">Home</a>
     {%- case template.name -%}
       {%- when 'article' -%}
       {%- for link in linklists.main-menu.links -%}
         {%- if link.url == blog.url -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
           <!--Breadcrumb Delimeter -->
-          {{ link.title | link_to: link.url }}
+          <a href="{{ link.url }}" data-breadcrumb-item data-breadcrumb-url="{{ link.url }}">{{ link.title }}</a>
           {% break %}
         {%- endif -%}
       {%- endfor -%}
       <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-      <a href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
+      <a href="{{ article.url }}" aria-current="page" data-breadcrumb-item data-breadcrumb-url="{{ article.url }}">{{ article.title }}</a>
       {%- when "product" -%}
       {%- capture product_url_string -%}
         {%- for collection in product.collections -%}
@@ -206,7 +206,7 @@
         {%- if object_urls contains url and llevels[forloop.index0] == depth -%}
           {%- unless url == product.url or url == collection.url -%}
             {%- capture bc3 -%}
-              {{ ltitles[forloop.index0] | link_to: url, ltitles[forloop.index0] }}{%- endcapture -%}
+              <a href="{{ url }}" data-breadcrumb-item data-breadcrumb-url="{{ url }}">{{ ltitles[forloop.index0] }}</a>{%- endcapture -%}
           {%- endunless -%}
           {%- assign bc3_parent_list_handle = lparents[forloop.index0] -%}
           {%- assign bc3_list_handle = lhandles[forloop.index0] -%}
@@ -223,7 +223,7 @@
             {%- if object_urls contains url -%}
               {%- unless url == product.url or url == collection.url -%}
                 {%- capture bc2 -%}
-                  {{ ltitles[forloop.index0] | link_to: url, ltitles[forloop.index0] }}{%- endcapture -%}
+                  <a href="{{ url }}" data-breadcrumb-item data-breadcrumb-url="{{ url }}">{{ ltitles[forloop.index0] }}</a>{%- endcapture -%}
               {% endunless %}
               {%- assign bc2_parent_list_handle = lparents[forloop.index0] -%}
               {%- break -%}
@@ -241,7 +241,7 @@
               {%- assign bc2_sibling_title_handleized = bc2_sibling_link.title | handle -%}
               {% if bc2_sibling_title_handleized == bc2_list_handle %}
                 {%- capture bc2 -%}
-                  {{ bc2_sibling_link.title | link_to: bc2_sibling_link.url, bc2_sibling_link.title }}{%- endcapture -%}
+                  <a href="{{ bc2_sibling_link.url }}" data-breadcrumb-item data-breadcrumb-url="{{ bc2_sibling_link.url }}">{{ bc2_sibling_link.title }}</a>{%- endcapture -%}
                 {% break %}
               {%- endif -%}
             {%- endfor -%}
@@ -258,7 +258,7 @@
           {%- if object_urls contains url and llevels[forloop.index0] == depth -%}
             {%- unless url == product.url or url == collection.url -%}
               {%- capture bc1 -%}
-                {{ ltitles[forloop.index0] | link_to: url, ltitles[forloop.index0] }}{%- endcapture -%}
+                <a href="{{ url }}" data-breadcrumb-item data-breadcrumb-url="{{ url }}">{{ ltitles[forloop.index0] }}</a>{%- endcapture -%}
             {% endunless %}
             {%- assign bc1_parent_list_handle = lparents[forloop.index0] -%}
             {%- break -%}
@@ -275,7 +275,7 @@
               {%- assign bc1_sibling_title_handleized = bc1_sibling_link.title | handle -%}
               {% if bc1_sibling_title_handleized == bc1_list_handle %}
                 {%- capture bc1 -%}
-                  {{ bc1_sibling_link.title | link_to: bc1_sibling_link.url, bc1_sibling_link.title }}{%- endcapture -%}
+                  <a href="{{ bc1_sibling_link.url }}" data-breadcrumb-item data-breadcrumb-url="{{ bc1_sibling_link.url }}">{{ bc1_sibling_link.title }}</a>{%- endcapture -%}
                 {% break %}
               {%- endif -%}
             {%- endfor -%}
@@ -289,12 +289,12 @@
         {%- assign fallback_collection = collections['main-collection'] -%}
         {%- if fallback_collection -%}
           {%- capture bc1 -%}
-            {{ fallback_collection.title | link_to: fallback_collection.url, fallback_collection.title }}
+            <a href="{{ fallback_collection.url }}" data-breadcrumb-item data-breadcrumb-url="{{ fallback_collection.url }}">{{ fallback_collection.title }}</a>
           {%- endcapture -%}
         {%- else -%}
           {%- comment -%} Fallback collection doesn't exist, use generic Shop link {%- endcomment -%}
           {%- capture bc1 -%}
-            {{ 'Shop' | link_to: '/collections/all', 'Shop' }}
+            <a href="/collections/all" data-breadcrumb-item data-breadcrumb-url="/collections/all">Shop</a>
           {%- endcapture -%}
         {%- endif -%}
       {%- endif -%}
@@ -314,7 +314,7 @@
       {%- endif -%}
 
       <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-      <a href="{{ product.url }}">{{ product.title }}</a>
+      <a href="{{ product.url }}" data-breadcrumb-item data-breadcrumb-url="{{ product.url }}">{{ product.title }}</a>
     {%- else -%}
       {%- assign rendered_link = false -%}
       {% for link in linklists.main-menu.links %}
@@ -322,19 +322,19 @@
           {%- assign rendered_link = true -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
           <!--Breadcrumb delimeter-->
-          <a href="{{ link.url }}">
+          <a href="{{ link.url }}" data-breadcrumb-item data-breadcrumb-url="{{ link.url }}">
             {{ link.title | escape }}
           </a>
           {% for clink in link.links %}
             {% if clink.child_active or clink.active %}
               <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-              <a href="{{ clink.url }}">
+              <a href="{{ clink.url }}" data-breadcrumb-item data-breadcrumb-url="{{ clink.url }}">
                 {{ clink.title | escape }}
               </a>
               {% for gclink in clink.links %}
                 {% if gclink.child_active or gclink.active %}
                   <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-                  <a href="{{ gclink.url }}">
+                  <a href="{{ gclink.url }}" data-breadcrumb-item data-breadcrumb-url="{{ gclink.url }}">
                     {{ gclink.title | escape }}
                   </a>
                 {% endif %}
@@ -348,16 +348,16 @@
         {%- case template.name -%}
           {%- when 'page' -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ page.url }}">{{ page.title }}</a>
+          <a href="{{ page.url }}" data-breadcrumb-item data-breadcrumb-url="{{ page.url }}">{{ page.title }}</a>
           {%- when 'collection' -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ collection.url }}">{{ collection.title }}</a>
+          <a href="{{ collection.url }}" data-breadcrumb-item data-breadcrumb-url="{{ collection.url }}">{{ collection.title }}</a>
           {%- when 'blog' -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ blog.url }}">{{ blog.title }}</a>
+          <a href="{{ blog.url }}" data-breadcrumb-item data-breadcrumb-url="{{ blog.url }}">{{ blog.title }}</a>
           {%- when 'search' -%}
           <span class="breadcrumb-delimeter" aria-hidden="true"></span>
-          <a href="{{ shop.url }}/search">Search</a>
+          <a href="{{ shop.url }}/search" data-breadcrumb-item data-breadcrumb-url="{{ shop.url }}/search">Search</a>
         {%- endcase -%}
       {%- endif -%}
     {%- endcase -%}
