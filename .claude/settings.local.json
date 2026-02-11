@@ -31,7 +31,8 @@
       "Bash(git log:*)",
       "Bash(shopify theme check:*)",
       "Bash(npm run check:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(npx @shopify/theme-check:*)"
     ],
     "deny": [],
     "ask": []
