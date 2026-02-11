@@ -67,17 +67,6 @@
   endif
 -%}
 
-<!-- TAX NOTE DEBUG START -->
-<!-- Country: {{ current_country_code }} -->
-<!-- Is GB: {{ is_gb }} -->
-<!-- Is EU: {{ is_eu_country }} -->
-<!-- Cart Total (cents): {{ cart_total_cents }} -->
-<!-- Cart Total (EUR): {{ cart_total_cents | divided_by: 100.0 }} -->
-<!-- Non-EU Threshold (cents): {{ non_eu_threshold_cents }} -->
-<!-- Non-EU Threshold (EUR): {{ settings.cart_tax_non_eu_threshold }} -->
-<!-- Show Custom Message: {{ show_custom_tax_message }} -->
-<!-- TAX NOTE DEBUG END -->
-
 <small class="tax-note caption-large rte">
   {%- if is_gb -%}
     {%- if settings.cart_tax_gb_message != blank -%}
