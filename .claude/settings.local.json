@@ -27,7 +27,8 @@
       "WebFetch(domain:www.capaxe.com)",
       "Bash(shopify theme pull:*)",
       "Bash(shopify theme dev:*)",
-      "Bash(timeout 10 cmd:*)"
+      "Bash(timeout 10 cmd:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
