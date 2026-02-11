@@ -185,6 +185,7 @@
     },
     "featured_collection_QmwLzF": {
       "type": "featured-collection",
+      "disabled": true,
       "name": "t:sections.featured-collection.presets.name",
       "settings": {
         "sold_out_product": false,

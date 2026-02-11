@@ -232,10 +232,10 @@
       {%- liquid
         assign product_form_id = 'product-form-' | append: section.id
         
-        assign title_block = section.blocks | where: "type", "title" | first
-        assign title_block_price = false
-        if title_block.settings.show_price == true
-          assign title_block_price = true
+        assign titleBlock = section.blocks | where: "type", "title" | first
+        assign titleBlockPrice = false
+        if titleBlock.settings.show_price == true
+          assign titleBlockPrice = true
         endif
       -%}
       <div class="product__info-wrapper grid__item">
@@ -303,7 +303,7 @@
                 </div>
               {%- endif -%}
             {%- when 'price' -%}
-              {%- if product == false or title_block_price == false -%}
+              {%- if product == false or titleBlockPrice == false -%}
                 <div class="no-js-hidden" id="price-{{ section.id }}" {{ block.shopify_attributes }}>
                   {%- liquid
                     assign show_badges = block.settings.show_badges
@@ -2383,6 +2383,7 @@
         }
       ]
     }
-  ]
+  ],
+  "templates": ["404", "article", "blog", "cart", "collection", "list-collections", "index", "page", "product", "search"]
 }
 {% endschema %}

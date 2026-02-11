@@ -102,7 +102,7 @@
     <div class="article-template__comment-wrapper">
       <div id="comments" class="page-width page-width--inner">
         {%- if article.comments_count > 0 -%}
-          {%- assign anchor_id = '#Comments-' | append: article.id -%}
+          {%- assign anchorId = '#Comments-' | append: article.id -%}
 
           <p id="Comments-{{ article.id }}" class="h3 uppercase">{{ 'blogs.article.comments' | t: count: article.comments_count }}</p>
           {% paginate article.comments by 5 %}
@@ -116,7 +116,7 @@
                   render 'comment', comment: comment, show_gravatar: section.settings.show_gravatar
                 endfor
 
-                render 'pagination', paginate: paginate, anchor: anchor_id
+                render 'pagination', paginate: paginate, anchor: anchorId
               -%}
             </div>
           {% endpaginate %}

@@ -134,11 +134,6 @@
 
 
       {%- assign level = 1 -%}
-      {%- assign link_titles = '' -%}
-      {%- assign link_urls = '' -%}
-      {%- assign link_levels = '' -%}
-      {%- assign link_parents = '' -%}
-      {%- assign link_handles = '' -%}
       {%- for link in linklists.main-menu.links -%}
         {%- assign link_handle = link.title | handle -%}
         {%- assign link_titles = link_titles | append: link.title | append: '|' -%}
@@ -158,6 +153,7 @@
             {%- assign link_urls = link_urls | append: clink.url | append: '|' -%}
             {%- assign link_levels = link_levels | append: level | append: '|' -%}
             {%- assign link_parents = link_parents | append: link_handle | append: '|' -%}
+            {%- assign handle = link.title | handleize -%}
             {%- assign link_handles = link_handles | append: clink_handle | append: '|' -%}
 
             {%- if linklist_titles contains clink_handle -%}
@@ -213,6 +209,7 @@
               <a href="{{ url }}" data-breadcrumb-item data-breadcrumb-url="{{ url }}">{{ ltitles[forloop.index0] }}</a>{%- endcapture -%}
           {%- endunless -%}
           {%- assign bc3_parent_list_handle = lparents[forloop.index0] -%}
+          {%- assign bc3_list_handle = lhandles[forloop.index0] -%}
           {% break %}
         {%- endif -%}
       {%- endfor -%}
@@ -239,6 +236,7 @@
           {%- if list_handle == bc3_parent_list_handle -%}
             {% assign bc2_list_handle = list_handle %}
             {%- assign bc2_parent_list_handle = lparents[forloop.index0] -%}
+            {%- assign bc2_list_title = ltitles[forloop.index0] -%}
             {%- for bc2_sibling_link in linklists[bc2_parent_list_handle].links -%}
               {%- assign bc2_sibling_title_handleized = bc2_sibling_link.title | handle -%}
               {% if bc2_sibling_title_handleized == bc2_list_handle %}
@@ -272,6 +270,7 @@
           {%- if bc2_parent_list_handle == list_handle -%}
             {% assign bc1_list_handle = list_handle %}
             {%- assign bc1_parent_list_handle = lparents[forloop.index0] -%}
+            {%- assign bc1_title = ltitles[forloop.index0] -%}
             {%- for bc1_sibling_link in linklists[bc1_parent_list_handle].links -%}
               {%- assign bc1_sibling_title_handleized = bc1_sibling_link.title | handle -%}
               {% if bc1_sibling_title_handleized == bc1_list_handle %}
@@ -295,7 +294,7 @@
         {%- else -%}
           {%- comment -%} Fallback collection doesn't exist, use generic Shop link {%- endcomment -%}
           {%- capture bc1 -%}
-            <a href="{{ routes.all_products_collection_url }}" data-breadcrumb-item data-breadcrumb-url="{{ routes.all_products_collection_url }}">Shop</a>
+            <a href="/collections/all" data-breadcrumb-item data-breadcrumb-url="/collections/all">Shop</a>
           {%- endcapture -%}
         {%- endif -%}
       {%- endif -%}
