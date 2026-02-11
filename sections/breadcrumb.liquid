@@ -134,6 +134,11 @@
 
 
       {%- assign level = 1 -%}
+      {%- assign link_titles = '' -%}
+      {%- assign link_urls = '' -%}
+      {%- assign link_levels = '' -%}
+      {%- assign link_parents = '' -%}
+      {%- assign link_handles = '' -%}
       {%- for link in linklists.main-menu.links -%}
         {%- assign link_handle = link.title | handle -%}
         {%- assign link_titles = link_titles | append: link.title | append: '|' -%}

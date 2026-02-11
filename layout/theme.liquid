@@ -74,10 +74,10 @@
     -%}
 
     {%- unless settings.type_body_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {%- endunless -%}
     {%- unless settings.type_header_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+      {{ settings.type_header_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {%- endunless -%}
 
     {%- if settings.predictive_search_enabled -%}
@@ -1197,7 +1197,7 @@
         applyGiftVisibility();
       }
     </script>
-    {{ 'upsell-swiper.js' | asset_url | script_tag }}
+    <script src="{{ 'upsell-swiper.js' | asset_url }}" defer></script>
     <!-- {% render 'quit-redirect' %} -->
     {% render 'gift-bundle-trigger' %}
 
@@ -1237,9 +1237,13 @@
           <!-- Right side: Image -->
           <div class="popup-right">
             {%- if settings.gift_popup_image != blank -%}
+              {%- assign img_width = 400 -%}
+              {%- assign img_height = settings.gift_popup_image.height | times: img_width | divided_by: settings.gift_popup_image.width -%}
               <img
-                src="{{ settings.gift_popup_image | image_url: width: 400 }}"
+                src="{{ settings.gift_popup_image | image_url: width: img_width }}"
                 alt="{{ settings.gift_popup_image.alt | escape }}"
+                width="{{ img_width }}"
+                height="{{ img_height }}"
                 class="popup-image"
               >
             {%- endif -%}

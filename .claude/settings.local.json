@@ -28,7 +28,10 @@
       "Bash(shopify theme pull:*)",
       "Bash(shopify theme dev:*)",
       "Bash(timeout 10 cmd:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(shopify theme check:*)",
+      "Bash(npm run check:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []
