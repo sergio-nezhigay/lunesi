@@ -13,7 +13,7 @@
     border-radius: 10px;
     border: none;
     font-family: var(--font-button-family);
-    box-shadow: inset 0 0 0 .1rem rgb(var(--color-border));
+    box-shadow: inset 0 0 0 0.1rem rgb(var(--color-border));
     color: rgb(var(--color-foreground));
     padding: 1rem 1.5rem;
     font-size: 12px;
@@ -25,7 +25,6 @@
     align-items: center;
     justify-content: center;
   }
-
 
   #discount-apply-btn-drawer:disabled {
     opacity: 0.6;
@@ -42,7 +41,9 @@
   }
 
   @keyframes btn-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .cart__discount-wrapper {
@@ -153,7 +154,9 @@
   }
 
   @keyframes gb-gift-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .gb-promo-gift__inventory {
@@ -271,7 +274,6 @@
             endif
           endfor
 
-          
           assign progress_percentage = current_items | times: 100 | divided_by: free_shipping_threshold
           if progress_percentage > 100
             assign progress_percentage = 100
@@ -530,7 +532,9 @@
                     <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                   {%- endif -%}
                   <div class="product-content">
-                    <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
+                    <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">
+                      {{- recommendation.title -}}
+                    </a>
                   </div>
                   {%- if settings.cart_recommendations_show_price -%}
                     {% render 'price', product: recommendation %}
@@ -558,7 +562,11 @@
                           </svg>
                         </add-to-cart>
                       {%- else -%}
-                        <a href="{{ shop.url }}{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
+                        <a
+                          href="{{ shop.url }}{{ recommendation.url }}"
+                          class="button button--small button--cta"
+                          tabindex="-1"
+                        >
                           <span class="small-hide">
                             <span class="label">
                               {%- liquid
@@ -631,7 +639,9 @@
                       <div class="caption-with-letter-spacing">{{ recommendation.vendor }}</div>
                     {%- endif -%}
                     <div class="product-content">
-                      <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">{{ recommendation.title }}</a>
+                      <a href="{{ shop.url }}{{ recommendation.url }}" class="link product-title">
+                        {{- recommendation.title -}}
+                      </a>
                     </div>
                     {%- if settings.cart_recommendations_show_price -%}
                       {% render 'price', product: recommendation %}
@@ -659,7 +669,11 @@
                             </svg>
                           </add-to-cart>
                         {%- else -%}
-                          <a href="{{ shop.url }}{{ recommendation.url }}" class="button button--small button--cta" tabindex="-1">
+                          <a
+                            href="{{ shop.url }}{{ recommendation.url }}"
+                            class="button button--small button--cta"
+                            tabindex="-1"
+                          >
                             <span class="small-hide">
                               <span class="label">
                                 {%- liquid
@@ -695,7 +709,13 @@
             assign gb_promo_variant_id = gb_promo_gift_product.variants.first.id | plus: 0
             assign gb_promo_gift_in_cart = false
             assign gb_promo_has_regular_items = false
-            if settings.gb_promo_gift_enabled and localization.country.iso_code == 'GB' and gb_promo_variant_id != 0
+            assign now_ts = 'now' | date: '%s' | plus: 0
+            assign gb_promo_end_ts = settings.gb_promo_end_date | date: '%s' | plus: 0
+            if settings.gb_promo_end_date == blank
+              assign gb_promo_end_ts = now_ts | plus: 86400
+            endif
+
+            if settings.gb_promo_gift_enabled and localization.country.iso_code == 'GB' and gb_promo_variant_id != 0 and now_ts < gb_promo_end_ts
               for item in cart.items
                 if item.variant_id == gb_promo_variant_id
                   assign gb_promo_gift_in_cart = true
@@ -715,6 +735,7 @@
           {%- endif -%}
 
           {%- if settings.gb_promo_gift_enabled
+            and now_ts < gb_promo_end_ts
             and localization.country.iso_code == 'GB'
             and gb_promo_variant_id != 0
             and gb_promo_has_regular_items
@@ -725,10 +746,12 @@
                 {%- if gb_promo_gift_product.featured_image != blank -%}
                   <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__image-wrap">
                     <span class="media-wrapper media-wrapper--small">
-                      <div class="media media--adapt"
+                      <div
+                        class="media media--adapt"
                         style="--image-ratio-percent: {{ 1 | divided_by: gb_promo_gift_product.featured_image.aspect_ratio | times: 100 }}%;"
                       >
-                        <img class="gb-promo-gift__image"
+                        <img
+                          class="gb-promo-gift__image"
                           srcset="{{ gb_promo_gift_product.featured_image | image_url: width: 70 }} 1x, {{ gb_promo_gift_product.featured_image | image_url: width: 140 }} 2x"
                           src="{{ gb_promo_gift_product.featured_image | image_url: width: 70 }}"
                           alt="{{ gb_promo_gift_product.featured_image.alt | escape | split: '#' | first }}"
@@ -736,13 +759,15 @@
                           width="70"
                           height="{{ 70 | divided_by: gb_promo_gift_product.featured_image.aspect_ratio | ceil }}"
                           is="lazy-image"
-                        />
+                        >
                       </div>
                     </span>
                   </a>
                 {%- endif -%}
                 <div class="gb-promo-gift__info">
-                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title link">{{ gb_promo_gift_product.title }}</a>
+                  <a href="{{ gb_promo_gift_product.url }}" class="gb-promo-gift__title link">
+                    {{- gb_promo_gift_product.title -}}
+                  </a>
                   <span class="gb-promo-gift__price">FREE</span>
                   {%- if gb_gift_show_inventory -%}
                     <div class="gb-promo-gift__inventory">
@@ -904,38 +929,139 @@
                   {%- endif -%}
 
                   {%- unless is_promo_gift -%}
-                  <div class="product-quantity">
-                    <dt>
-                      {%- liquid
-                        # Check if this is gift bundle (variant_id = 43694372257923)
-                        assign is_gift_bundle = false
-                        if item.variant_id == 43694372257923
-                          assign is_gift_bundle = true
-                        endif
+                    <div class="product-quantity">
+                      <dt>
+                        {%- liquid
+                          # Check if this is gift bundle (variant_id = 43694372257923)
+                          assign is_gift_bundle = false
+                          if item.variant_id == 43694372257923
+                            assign is_gift_bundle = true
+                          endif
 
-                        # Check if this is a Buy X Get Y gift item
-                        assign is_bxgy_gift = false
-                        assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
-                        assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
-                        if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
-                          assign is_bxgy_gift = true
-                        endif
+                          # Check if this is a Buy X Get Y gift item
+                          assign is_bxgy_gift = false
+                          assign bxgy_gift_1_id = settings.buy_x_get_y_gift_variant_1 | plus: 0
+                          assign bxgy_gift_2_id = settings.buy_x_get_y_gift_variant_2 | plus: 0
+                          if item.variant_id == bxgy_gift_1_id or item.variant_id == bxgy_gift_2_id
+                            assign is_bxgy_gift = true
+                          endif
 
-                        # Check if this is a GB Promo Gift item
-                        assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
-                        if item.variant_id == gb_promo_variant_chk
-                          assign is_bxgy_gift = true
-                        endif
-                      -%}
+                          # Check if this is a GB Promo Gift item
+                          assign gb_promo_variant_chk = settings.gb_promo_gift_product.variants.first.id | plus: 0
+                          if item.variant_id == gb_promo_variant_chk
+                            assign is_bxgy_gift = true
+                          endif
+                        -%}
 
-                      {%- if gift_wrap_id == null or item.id != gift_wrap_id -%}
-                        <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
-                          {{- 'products.product.quantity.label' | t -}}
-                        </label>
-                        {%- if is_bxgy_gift -%}
-                          {%- comment -%} Buy X Get Y gift - hide quantity controls {%- endcomment -%}
-                          <quantity-input class="quantity">
-                            <button class="quantity__button no-js-hidden visually-hidden" name="minus" type="button" disabled="disabled" style="display: none !important;">
+                        {%- if gift_wrap_id == null or item.id != gift_wrap_id -%}
+                          <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
+                            {{- 'products.product.quantity.label' | t -}}
+                          </label>
+                          {%- if is_bxgy_gift -%}
+                            {%- comment -%} Buy X Get Y gift - hide quantity controls {%- endcomment -%}
+                            <quantity-input class="quantity">
+                              <button
+                                class="quantity__button no-js-hidden visually-hidden"
+                                name="minus"
+                                type="button"
+                                disabled="disabled"
+                                style="display: none !important;"
+                              >
+                                <span class="visually-hidden">
+                                  {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                                </span>
+                                {% render 'icon', icon: 'minus' %}
+                              </button>
+                              <input
+                                class="quantity__input"
+                                type="number"
+                                name="updates[]"
+                                value="{{ item.quantity }}"
+                                min="0"
+                                max="{{item.variant.inventory_quantity }}"
+                                data-inventory-quantity="{{ item.variant.inventory_quantity }}"
+                                aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                                id="Quantity-{{ item.index | plus: 1 }}"
+                                data-index="{{ item.index | plus: 1 }}"
+                                readonly
+                                disabled="disabled"
+                              >
+                              <button
+                                class="quantity__button no-js-hidden visually-hidden"
+                                name="plus"
+                                type="button"
+                                disabled="disabled"
+                                style="display: none !important;"
+                              >
+                                <span class="visually-hidden">
+                                  {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                                </span>
+                                {% render 'icon', icon: 'plus' %}
+                              </button>
+                            </quantity-input>
+                          {%- else -%}
+                            {%- comment -%} Regular item - normal quantity controls {%- endcomment -%}
+                            <quantity-input class="quantity">
+                              <button class="quantity__button no-js-hidden test" name="minus" type="button">
+                                <span class="visually-hidden">
+                                  {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                                </span>
+                                {% render 'icon', icon: 'minus' %}
+                              </button>
+                              <input
+                                class="quantity__input d"
+                                type="number"
+                                name="updates[]"
+                                value="{{ item.quantity }}"
+                                min="0"
+                                max="{{item.variant.inventory_quantity }}"
+                                data-inventory-quantity="{{ item.variant.inventory_quantity }}"
+                                aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                                id="Quantity-{{ item.index | plus: 1 }}"
+                                data-index="{{ item.index | plus: 1 }}"
+                              >
+                              <button class="quantity__button no-js-hidden test" name="plus" type="button">
+                                <span class="visually-hidden">
+                                  {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                                </span>
+                                {% render 'icon', icon: 'plus' %}
+                              </button>
+                            </quantity-input>
+                          {%- endif -%}
+
+                          {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
+                          {%- assign variant_total = 0 -%}
+                          {%- for cart_item in cart.items -%}
+                            {%- if cart_item.variant_id == item.variant_id -%}
+                              {%- assign variant_total = variant_total | plus: cart_item.quantity -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                          <div
+                            class="cart-item-warning"
+                            data-line="{{ item.index | plus: 1 }}"
+                            data-max="{{ item.variant.inventory_quantity }}"
+                          >
+                            Last {{ item.variant.inventory_quantity }} available
+                            {%- if variant_total > item.quantity -%}
+                              ({{ variant_total }} total in cart across multiple lines)
+                            {%- endif -%}
+                          </div>
+                        {%- else -%}
+                          <gift-quantity
+                            class="quantity"
+                            cart-items-size="{{ cart.items.size }}"
+                            gift-wraps-in-cart="{{ gift_wraps_in_cart }}"
+                            items-in-cart="{{ items_in_cart }}"
+                          >
+                            <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
+                              {{- 'products.product.quantity.label' | t }}:</label
+                            >
+                            <button
+                              class="quantity__button no-js-hidden visually-hidden"
+                              name="minus"
+                              type="button"
+                              disabled="disabled"
+                            >
                               <span class="visually-hidden">
                                 {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
                               </span>
@@ -947,176 +1073,87 @@
                               name="updates[]"
                               value="{{ item.quantity }}"
                               min="0"
-                              max="{{item.variant.inventory_quantity }}"
-                              data-inventory-quantity="{{ item.variant.inventory_quantity }}"
                               aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                               id="Quantity-{{ item.index | plus: 1 }}"
                               data-index="{{ item.index | plus: 1 }}"
-                              readonly
                               disabled="disabled"
                             >
-                            <button class="quantity__button no-js-hidden visually-hidden" name="plus" type="button" disabled="disabled" style="display: none !important;">
-                              <span class="visually-hidden">
-                                {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
-                              </span>
-                              {% render 'icon', icon: 'plus' %}
-                            </button>
-                          </quantity-input>
-                        {%- else -%}
-                          {%- comment -%} Regular item - normal quantity controls {%- endcomment -%}
-                          <quantity-input class="quantity">
-                            <button class="quantity__button no-js-hidden test" name="minus" type="button">
-                              <span class="visually-hidden">
-                                {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
-                              </span>
-                              {% render 'icon', icon: 'minus' %}
-                            </button>
-                            <input
-                              class="quantity__input d"
-                              type="number"
-                              name="updates[]"
-                              value="{{ item.quantity }}"
-                              min="0"
-                              max="{{item.variant.inventory_quantity }}"
-                              data-inventory-quantity="{{ item.variant.inventory_quantity }}"
-                              aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                              id="Quantity-{{ item.index | plus: 1 }}"
-                              data-index="{{ item.index | plus: 1 }}"
+                            <button
+                              class="quantity__button no-js-hidden visually-hidden"
+                              name="plus"
+                              type="button"
+                              disabled="disabled"
                             >
-                            <button class="quantity__button no-js-hidden test" name="plus" type="button">
                               <span class="visually-hidden">
                                 {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
                               </span>
                               {% render 'icon', icon: 'plus' %}
                             </button>
-                          </quantity-input>
+                          </gift-quantity>
                         {%- endif -%}
+                      </dt>
 
-                        {%- comment -%} Max stock warning - only shows when limit reached {%- endcomment -%}
-                        {%- assign variant_total = 0 -%}
-                        {%- for cart_item in cart.items -%}
-                          {%- if cart_item.variant_id == item.variant_id -%}
-                            {%- assign variant_total = variant_total | plus: cart_item.quantity -%}
-                          {%- endif -%}
-                        {%- endfor -%}
-                        <div
-                          class="cart-item-warning"
-                          data-line="{{ item.index | plus: 1 }}"
-                          data-max="{{ item.variant.inventory_quantity }}"
-                        >
-                          Last {{ item.variant.inventory_quantity }} available
-                          {%- if variant_total > item.quantity -%}
-                            ({{ variant_total }} total in cart across multiple lines)
-                          {%- endif -%}
-                        </div>
-                      {%- else -%}
-                        <gift-quantity
-                          class="quantity"
-                          cart-items-size="{{ cart.items.size }}"
-                          gift-wraps-in-cart="{{ gift_wraps_in_cart }}"
-                          items-in-cart="{{ items_in_cart }}"
-                        >
-                          <label for="Quantity-{{ item.index | plus: 1 }}" class="visually-hidden">
-                            {{- 'products.product.quantity.label' | t }}:</label
-                          >
-                          <button
-                            class="quantity__button no-js-hidden visually-hidden"
-                            name="minus"
-                            type="button"
-                            disabled="disabled"
-                          >
-                            <span class="visually-hidden">
-                              {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
-                            </span>
-                            {% render 'icon', icon: 'minus' %}
-                          </button>
-                          <input
-                            class="quantity__input"
-                            type="number"
-                            name="updates[]"
-                            value="{{ item.quantity }}"
-                            min="0"
-                            aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                            id="Quantity-{{ item.index | plus: 1 }}"
-                            data-index="{{ item.index | plus: 1 }}"
-                            disabled="disabled"
-                          >
-                          <button
-                            class="quantity__button no-js-hidden visually-hidden"
-                            name="plus"
-                            type="button"
-                            disabled="disabled"
-                          >
-                            <span class="visually-hidden">
-                              {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
-                            </span>
-                            {% render 'icon', icon: 'plus' %}
-                          </button>
-                        </gift-quantity>
-                      {%- endif -%}
-                    </dt>
-
-                    {%- if is_gift_bundle -%}
-                      {%- comment -%} Gift bundle - show discounted price with strikethrough {%- endcomment -%}
-                      {%- if item.original_price != item.final_price -%}
-                        <dl class="cart-item__discounted-prices">
-                          <dt class="visually-hidden">
-                            {{ 'products.product.price.regular_price' | t }}
-                          </dt>
-                          <dd class="price--on-sale">
-                            <s class="price price-item--regular">
+                      {%- if is_gift_bundle -%}
+                        {%- comment -%} Gift bundle - show discounted price with strikethrough {%- endcomment -%}
+                        {%- if item.original_price != item.final_price -%}
+                          <dl class="cart-item__discounted-prices">
+                            <dt class="visually-hidden">
+                              {{ 'products.product.price.regular_price' | t }}
+                            </dt>
+                            <dd class="price--on-sale">
+                              <s class="price price-item--regular">
+                                <price-money
+                                  ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                >
+                              </s>
+                            </dd>
+                            <dt class="visually-hidden">
+                              {{ 'products.product.price.sale_price' | t }}
+                            </dt>
+                            <dd class="price">
                               <price-money
-                                ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                ><bdi>{{ item.final_price | money }}</bdi></price-money
                               >
-                            </s>
-                          </dd>
-                          <dt class="visually-hidden">
-                            {{ 'products.product.price.sale_price' | t }}
-                          </dt>
+                            </dd>
+                          </dl>
+                        {%- else -%}
                           <dd class="price">
                             <price-money
-                              ><bdi>{{ item.final_price | money }}</bdi></price-money
+                              ><bdi>{{ item.original_price | money }}</bdi></price-money
                             >
                           </dd>
-                        </dl>
+                        {%- endif -%}
                       {%- else -%}
-                        <dd class="price">
-                          <price-money
-                            ><bdi>{{ item.original_price | money }}</bdi></price-money
-                          >
-                        </dd>
-                      {%- endif -%}
-                    {%- else -%}
-                      {%- if item.original_price != item.final_price -%}
-                        <dl class="cart-item__discounted-prices">
-                          <dt class="visually-hidden">
-                            {{ 'products.product.price.regular_price' | t }}
-                          </dt>
-                          <dd class="price--on-sale">
-                            <s class="price price-item--regular">
+                        {%- if item.original_price != item.final_price -%}
+                          <dl class="cart-item__discounted-prices">
+                            <dt class="visually-hidden">
+                              {{ 'products.product.price.regular_price' | t }}
+                            </dt>
+                            <dd class="price--on-sale">
+                              <s class="price price-item--regular">
+                                <price-money
+                                  ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                >
+                              </s>
+                            </dd>
+                            <dt class="visually-hidden">
+                              {{ 'products.product.price.sale_price' | t }}
+                            </dt>
+                            <dd class="price">
                               <price-money
-                                ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                ><bdi>{{ item.final_price | money }}</bdi></price-money
                               >
-                            </s>
-                          </dd>
-                          <dt class="visually-hidden">
-                            {{ 'products.product.price.sale_price' | t }}
-                          </dt>
+                            </dd>
+                          </dl>
+                        {%- else -%}
                           <dd class="price">
                             <price-money
-                              ><bdi>{{ item.final_price | money }}</bdi></price-money
+                              ><bdi>{{ item.original_price | money }}</bdi></price-money
                             >
                           </dd>
-                        </dl>
-                      {%- else -%}
-                        <dd class="price">
-                          <price-money
-                            ><bdi>{{ item.original_price | money }}</bdi></price-money
-                          >
-                        </dd>
+                        {%- endif -%}
                       {%- endif -%}
-                    {%- endif -%}
-                  </div>
+                    </div>
                   {%- endunless -%}
                   <p class="cart-item__error form__message errors" id="Line-item-error-{{ item.index | plus: 1 }}">
                     <span class="cart-item__error-text"></span>
@@ -1170,7 +1207,6 @@
         assign gift_in_cart = false
         assign non_gift_items_count = 0
 
-
         for item in cart.items
           if item.variant_id == gift_variant_id or item.variant_id == gift_variant_id_string
             assign gift_in_cart = true
@@ -1179,7 +1215,6 @@
           endif
         endfor
 
-    
         assign upsell_heading = settings.upsell_heading | default: 'Complete your routine'
       -%}
 
@@ -1320,7 +1355,9 @@
         }
 
         @keyframes gift-btn-spin {
-          to { transform: rotate(360deg); }
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         @keyframes dash {
@@ -2096,7 +2133,9 @@
               id="discount-code-input-drawer"
               style="flex: 1;"
             >
-            <button type="button" class="promo-code-apply" id="discount-apply-btn-drawer">{{ 'sections.cart.apply' | t | default: 'Apply' }}</button>
+            <button type="button" class="promo-code-apply" id="discount-apply-btn-drawer">
+              {{ 'sections.cart.apply' | t | default: 'Apply' }}
+            </button>
           </div>
         </discount-code>
       {%- endif -%}
@@ -2136,7 +2175,9 @@
           {%- endif -%}
         </button>
         {%- unless settings.disable_view_cart -%}
-          <a class="button button--secondary" href="{{ shop.url }}{{ routes.cart_url }}">{{ 'general.cart.view' | t }}</a>
+          <a class="button button--secondary" href="{{ shop.url }}{{ routes.cart_url }}">
+            {{- 'general.cart.view' | t -}}
+          </a>
         {%- endunless -%}
       </div>
 

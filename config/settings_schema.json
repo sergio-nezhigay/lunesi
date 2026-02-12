@@ -973,6 +973,13 @@
         "id": "gb_promo_gift_button_text",
         "label": "Button text",
         "default": "Add Free Gift"
+      },
+      {
+        "type": "text",
+        "id": "gb_promo_end_date",
+        "label": "Promotion end date",
+        "info": "Format: YYYY-MM-DD (e.g., 2026-02-15). If blank, the promo will only be controlled by the 'Enable' checkbox.",
+        "default": "2026-02-15"
       }
     ]
   },
