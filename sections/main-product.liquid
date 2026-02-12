@@ -1293,10 +1293,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {%- comment -%}
-  Custom Product schema removed - now using Okendo app's native schema generation.
-  This eliminates duplicate Product schema issues and improves SEO performance.
-  Previous code (368 lines) removed on 2026-02-11.
+  Custom Product Schema with Okendo Reviews
+  Product data is injected via Liquid, schema generation handled by product-schema.js
 {%- endcomment -%}
+
+<script>
+{%- liquid
+  assign product_image = product.featured_media | image_url | prepend: "https:"
+  assign product_sku = product.selected_or_first_available_variant.sku
+  assign product_desc = product.description | strip_html
+-%}
+window.productSchemaData = {
+  id: {{ product.id | json }},
+  title: {{ product.title | json }},
+  handle: {{ product.handle | json }},
+  image: {{ product_image | json }},
+  description: {{ product_desc | json }},
+  sku: {{ product_sku | default: "" | json }},
+  brand: "Lunesi",
+  price: {{ product.selected_or_first_available_variant.price | divided_by: 100.00 }},
+  currency: {{ cart.currency.iso_code | json }},
+  url: {{ request.origin | append: product.url | json }},
+  availability: {% if product.selected_or_first_available_variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
+};
+</script>
+
+<script src="{{ 'product-schema.js' | asset_url }}" defer></script>
 
 <script>
 (function() {
