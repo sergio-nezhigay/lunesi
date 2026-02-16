@@ -740,9 +740,12 @@
 
                   <td class="cart-item__remove">
                     {%- liquid
-                      # Hide remove button for gift wrapping only
+                      # Hide remove button for gift wrapping AND promotional gifts
                       assign hide_remove_for_gift = false
                       if gift_wrap_id and item.id == gift_wrap_id
+                        assign hide_remove_for_gift = true
+                      endif
+                      if is_promo_gift
                         assign hide_remove_for_gift = true
                       endif
                     -%}

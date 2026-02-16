@@ -126,43 +126,45 @@
                   role="group"
                   aria-labelledby="predictive-search-products">
                   {%- for product in predictive_search.resources.products -%}
-                    <li
-                      id="predictive-search-option-{{ forloop.index }}"
-                      class="predictive-search__list-item"
-                      role="option"
-                      aria-selected="false">
-                      <a
-                        href="{{ shop.url }}{{ product.url }}"
-                        class="predictive-search__item predictive-search__item--link link link--text"
-                        tabindex="-1">
-                        {%- if product.featured_media != blank -%}
-                          <div>
-                            <span class="predictive-search__image media-wrapper media-wrapper--small">
-                              <div class="media media--adapt" style="--image-ratio-percent: {{ 1 | divided_by: product.featured_media.aspect_ratio | times: 100 }}%;">
-                                <img
-                                  srcset="{{ product.featured_media | image_url: width: 70 }} 1x, {{ product.featured_media | image_url: width: 140 }} 2x"
-                                  src="{{ product.featured_media | image_url: width: 70 }}"
-                                  alt="{{ product.featured_media.alt }}"
-                                  width="70"
-                                  height="{{ 70 | divided_by: product.featured_media.preview_image.aspect_ratio }}"
-                                  loading="lazy"
-                                  is="lazy-image" />
-                              </div>
-                            </span>
+                    {% unless product.tags contains 'hidden' or product.title == "Box" %}
+                      <li
+                        id="predictive-search-option-{{ forloop.index }}"
+                        class="predictive-search__list-item"
+                        role="option"
+                        aria-selected="false">
+                        <a
+                          href="{{ shop.url }}{{ product.url }}"
+                          class="predictive-search__item predictive-search__item--link link link--text"
+                          tabindex="-1">
+                          {%- if product.featured_media != blank -%}
+                            <div>
+                              <span class="predictive-search__image media-wrapper media-wrapper--small">
+                                <div class="media media--adapt" style="--image-ratio-percent: {{ 1 | divided_by: product.featured_media.aspect_ratio | times: 100 }}%;">
+                                  <img
+                                    srcset="{{ product.featured_media | image_url: width: 70 }} 1x, {{ product.featured_media | image_url: width: 140 }} 2x"
+                                    src="{{ product.featured_media | image_url: width: 70 }}"
+                                    alt="{{ product.featured_media.alt }}"
+                                    width="70"
+                                    height="{{ 70 | divided_by: product.featured_media.preview_image.aspect_ratio }}"
+                                    loading="lazy"
+                                    is="lazy-image" />
+                                </div>
+                              </span>
+                            </div>
+                          {%- endif -%}
+                          <div class="predictive-search__item-content">
+                            {%- if settings.predictive_search_show_vendor -%}
+                              <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+                              <div class="predictive-search__item-vendor card-article-info caption-with-letter-spacing">{{ product.vendor }}</div>
+                            {%- endif -%}
+                            <span class="predictive-search__item-heading h4">{{ product.title }}</span>
+                            {%- if settings.predictive_search_show_price -%}
+                              {% render 'price', product: product %}
+                            {%- endif -%}
                           </div>
-                        {%- endif -%}
-                        <div class="predictive-search__item-content">
-                          {%- if settings.predictive_search_show_vendor -%}
-                            <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
-                            <div class="predictive-search__item-vendor card-article-info caption-with-letter-spacing">{{ product.vendor }}</div>
-                          {%- endif -%}
-                          <span class="predictive-search__item-heading h4">{{ product.title }}</span>
-                          {%- if settings.predictive_search_show_price -%}
-                            {% render 'price', product: product %}
-                          {%- endif -%}
-                        </div>
-                      </a>
-                    </li>
+                        </a>
+                      </li>
+                    {% endunless %}
                   {%- endfor -%}
                 </ul>
               </div>
