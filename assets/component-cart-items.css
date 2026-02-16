@@ -218,8 +218,16 @@ cart-remove-button .icon-remove {
   }
 
   .cart-item__quantity {
-    grid-column: 2 / 4;
+    grid-column: 2 / 3;
     position: relative;
+  }
+
+  .cart-item__remove {
+    grid-column: 4;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cart-item__quantity label {
@@ -230,6 +238,8 @@ cart-remove-button .icon-remove {
   }
 
   .cart-item__totals {
+    grid-column: 4;
+    grid-row: 1;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
