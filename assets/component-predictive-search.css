@@ -399,7 +399,7 @@ predictive-search[loading] .search-modal__form .search__button[type=reset] {
   }
 
   .template-search__search .predictive-search__result-group:first-child {
-    flex: 0 0 20rem;
+    flex: 1;
   }
 
   .predictive-search__results-groups-wrapper--no-products .predictive-search__result-group:first-child,
