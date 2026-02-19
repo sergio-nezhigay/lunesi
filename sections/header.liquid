@@ -497,12 +497,42 @@ localization-form .localization-selector {
 
       {%- comment -%} Мобільне лого {%- endcomment -%}
       <div class="header__heading-logo medium-hide large-up-hide">
-        {% render 'logo-grey', width: mobile_logo_height, height: mobile_logo_height %}
+        {%- liquid
+          assign active_mobile_logo = section.settings.mobile_logo
+          if active_mobile_logo == blank
+            assign active_mobile_logo = section.settings.logo
+          endif
+        -%}
+        {%- if active_mobile_logo != blank -%}
+          <img
+            src="{{ active_mobile_logo | image_url: height: mobile_logo_height }}"
+            srcset="{{ active_mobile_logo | image_url: height: mobile_logo_height }} 1x, {{ active_mobile_logo | image_url: height: mobile_logo_height | times: 2 }} 2x"
+            alt="{{ active_mobile_logo.alt | default: shop.name | escape }}"
+            style="height: {{ mobile_logo_height }}px; width: auto;"
+            width="{{ active_mobile_logo.width }}"
+            height="{{ active_mobile_logo.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {% render 'logo-grey', width: mobile_logo_height, height: mobile_logo_height %}
+        {%- endif -%}
       </div>
 
       {%- comment -%} Десктопне лого {%- endcomment -%}
       <div class="header__heading-logo small-hide">
-        {% render 'logo-grey', width: logo_height, height: logo_height %}
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: height: logo_height }}"
+            srcset="{{ section.settings.logo | image_url: height: logo_height }} 1x, {{ section.settings.logo | image_url: height: logo_height | times: 2 }} 2x"
+            alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+            style="height: {{ logo_height }}px; width: auto;"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {% render 'logo-grey', width: logo_height, height: logo_height %}
+        {%- endif -%}
       </div>
 
     {%- if request.page_type != 'index' -%}
@@ -938,9 +968,9 @@ localization-form .localization-selector {
     {
       "type": "range",
       "id": "logo_height",
-      "min": 30,
-      "max": 200,
-      "step": 2,
+      "min": 10,
+      "max": 101,
+      "step": 1,
       "default": 50,
       "unit": "t:sections.header.settings.logo_height.unit",
       "label": "t:sections.header.settings.logo_height.label"
@@ -948,9 +978,9 @@ localization-form .localization-selector {
     {
       "type": "range",
       "id": "mobile_logo_height",
-      "min": 30,
-      "max": 200,
-      "step": 2,
+      "min": 10,
+      "max": 110,
+      "step": 1,
       "default": 44,
       "unit": "t:sections.header.settings.mobile_logo_height.unit",
       "label": "t:sections.header.settings.mobile_logo_height.label"

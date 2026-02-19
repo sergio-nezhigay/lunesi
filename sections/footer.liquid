@@ -939,7 +939,19 @@
   -%}
 
   <div class="logo-footer page-width">
-    {% render 'logo-grey' %}
+    {%- if section.settings.logo_image != blank -%}
+      <img
+        src="{{ section.settings.logo_image | image_url: width: 600 }}"
+        srcset="{{ section.settings.logo_image | image_url: width: 300 }} 300w, {{ section.settings.logo_image | image_url: width: 600 }} 600w"
+        alt="{{ section.settings.logo_image.alt | default: shop.name | escape }}"
+        style="width: {{ section.settings.logo_width }}%; height: auto;"
+        width="{{ section.settings.logo_image.width }}"
+        height="{{ section.settings.logo_image.height }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      {% render 'logo-grey' %}
+    {%- endif -%}
   </div>
 
   {%- if section.blocks.size > 0 or enable_right_column -%}

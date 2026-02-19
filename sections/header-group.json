@@ -98,9 +98,9 @@
         ".header-wrapper {padding-top: 16px;}"
       ],
       "settings": {
-        "logo": "shopify://shop_images/lunesi_sky_grey_logo_1166fa03-be37-4dc3-bf3f-c0bce3e2dfee.svg",
-        "logo_height": 200,
-        "mobile_logo_height": 120,
+        "logo": "shopify://shop_images/logo.svg",
+        "logo_height": 18,
+        "mobile_logo_height": 12,
         "logo_position": "middle-left",
         "menu": "main-menu",
         "menu_mobile": "main-menu",
