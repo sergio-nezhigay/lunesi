@@ -11,6 +11,19 @@
   Usage:
   {% render 'price', product: product %}
 {% endcomment %}
+{%- assign vat_mult = 1 -%}
+{%- if settings.vat_inclusive_prices_enabled -%}
+  {%- assign vat_iso = localization.country.iso_code | upcase -%}
+  {%- if cart.attributes.shipping_country != blank -%}
+    {%- assign vat_iso = cart.attributes.shipping_country | upcase -%}
+  {%- endif -%}
+  {%- for vat_entry in shop.metaobjects.vat_rates.values -%}
+    {%- if vat_entry['country_code'].value == vat_iso -%}
+      {%- assign vat_mult = vat_entry.vat_rate.value | divided_by: 100.0 | plus: 1 -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 {%- liquid
   if use_variant
     assign target = product.selected_or_first_available_variant
@@ -21,6 +34,18 @@
   assign compare_at_price = target.compare_at_price
   assign price = target.price | default: 1999
   assign available = target.available | default: false
+
+  if vat_mult != 1
+    assign price = price | times: vat_mult | round
+    if compare_at_price > 0
+      assign compare_at_price = compare_at_price | times: vat_mult | round
+    endif
+    assign vat_price_min = product.price_min | times: vat_mult | round
+    assign vat_price_max = product.price_max | times: vat_mult | round
+  else
+    assign vat_price_min = product.price_min
+    assign vat_price_max = product.price_max
+  endif
 -%}
 {%- capture money_price -%}
   {%- if target == product and product.price_varies -%}
@@ -30,8 +55,8 @@
       {%- endcapture -%}
       {{ 'products.product.price.from_price_html' | t: price: from_price }}
     {%- else -%}
-      <price-money><bdi>{% if settings.currency_code_enabled %}{{ product.price_min | money_with_currency }}{% else %}{{ product.price_min | money }}{% endif %}</bdi></price-money>
-      <price-money><bdi>{% if settings.currency_code_enabled %}{{ product.price_max | money_with_currency }}{% else %}{{ product.price_max | money }}{% endif %}</bdi></price-money>
+      <price-money><bdi>{% if settings.currency_code_enabled %}{{ vat_price_min | money_with_currency }}{% else %}{{ vat_price_min | money }}{% endif %}</bdi></price-money>
+      <price-money><bdi>{% if settings.currency_code_enabled %}{{ vat_price_max | money_with_currency }}{% else %}{{ vat_price_max | money }}{% endif %}</bdi></price-money>
     {%- endif -%}
   {%- else -%}
     <price-money><bdi>{% if settings.currency_code_enabled %}{{ price | money_with_currency }}{% else %}{{ price | money }}{% endif %}</bdi></price-money>
@@ -125,5 +150,30 @@
         </span>
       {%- endif -%}
     {%- endif -%}
+  {%- endif -%}
+  {%- if request.page_type == 'product' -%}
+    {%- assign vat_debug_iso = localization.country.iso_code | upcase -%}
+    {%- if cart.attributes.shipping_country != blank -%}
+      {%- assign vat_debug_iso = cart.attributes.shipping_country | upcase -%}
+    {%- endif -%}
+    {%- assign vat_debug_first = shop.metaobjects.vat_rates.values | first -%}
+    <div style="background:#1a1a2e;color:#eee;border-radius:4px;padding:7px 11px;margin-top:8px;font-size:10px;font-family:monospace;line-height:1.9;border-left:3px solid #ff6b6b;">
+      <span style="color:#ff6b6b;font-weight:bold;">▶ VAT DEBUG</span><br>
+      Country: <b style="color:#0ff">{{ vat_debug_iso }}</b> &nbsp;|&nbsp;
+      Multiplier: <b style="color:#0ff">{{ vat_mult }}</b> &nbsp;|&nbsp;
+      Setting: <b style="color:{% if settings.vat_inclusive_prices_enabled %}#90ee90{% else %}#ff6b6b{% endif %}">{{ settings.vat_inclusive_prices_enabled }}</b><br>
+      Base price: <b>{{ target.price | money }}</b> &nbsp;→&nbsp; Displayed: <b style="color:#ffd700">{{ price | money }}</b>
+      {%- if target.compare_at_price > 0 -%}
+        <br>Base compare-at: <b>{{ target.compare_at_price | money }}</b> &nbsp;→&nbsp; Displayed compare-at: <b style="color:#ffd700">{{ compare_at_price | money }}</b>
+      {%- endif -%}
+      <br><span style="color:#aaa;">── metaobject probe ──</span><br>
+      entries count: <b style="color:#0ff">{{ shop.metaobjects.vat_rates.values | size }}</b><br>
+      {%- if vat_debug_first != blank -%}
+        first[country_code].value: <b style="color:#0ff">"{{ vat_debug_first['country_code'].value }}"</b><br>
+        first[vat_rate].value: <b style="color:#0ff">"{{ vat_debug_first['vat_rate'].value }}"</b>
+      {%- else -%}
+        <span style="color:#ff6b6b;">⚠ no entries found — check metaobject type handle</span>
+      {%- endif -%}
+    </div>
   {%- endif -%}
 </div>

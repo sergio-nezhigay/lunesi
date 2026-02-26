@@ -1,3 +1,16 @@
+{%- assign cart_vat_mult = 1 -%}
+{%- if settings.vat_inclusive_prices_enabled -%}
+  {%- assign vat_iso = localization.country.iso_code | upcase -%}
+  {%- if cart.attributes.shipping_country != blank -%}
+    {%- assign vat_iso = cart.attributes.shipping_country | upcase -%}
+  {%- endif -%}
+  {%- for vat_entry in shop.metaobjects.vat_rates.values -%}
+    {%- if vat_entry['country_code'].value == vat_iso -%}
+      {%- assign cart_vat_mult = vat_entry.vat_rate.value | divided_by: 100.0 | plus: 1 -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 <style>
   .main_image_header {
     width: 50px !important;
@@ -1096,6 +1109,8 @@
                         {%- endif -%}
                       </dt>
 
+                      {%- assign vat_mc_orig = item.original_price | times: cart_vat_mult | round -%}
+                      {%- assign vat_mc_final = item.final_price | times: cart_vat_mult | round -%}
                       {%- if is_gift_bundle -%}
                         {%- comment -%} Gift bundle - show discounted price with strikethrough {%- endcomment -%}
                         {%- if item.original_price != item.final_price -%}
@@ -1106,7 +1121,7 @@
                             <dd class="price--on-sale">
                               <s class="price price-item--regular">
                                 <price-money
-                                  ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                  ><bdi>{{ vat_mc_orig | money }}</bdi></price-money
                                 >
                               </s>
                             </dd>
@@ -1115,14 +1130,14 @@
                             </dt>
                             <dd class="price">
                               <price-money
-                                ><bdi>{{ item.final_price | money }}</bdi></price-money
+                                ><bdi>{{ vat_mc_final | money }}</bdi></price-money
                               >
                             </dd>
                           </dl>
                         {%- else -%}
                           <dd class="price">
                             <price-money
-                              ><bdi>{{ item.original_price | money }}</bdi></price-money
+                              ><bdi>{{ vat_mc_orig | money }}</bdi></price-money
                             >
                           </dd>
                         {%- endif -%}
@@ -1135,7 +1150,7 @@
                             <dd class="price--on-sale">
                               <s class="price price-item--regular">
                                 <price-money
-                                  ><bdi>{{ item.original_price | money }}</bdi></price-money
+                                  ><bdi>{{ vat_mc_orig | money }}</bdi></price-money
                                 >
                               </s>
                             </dd>
@@ -1144,14 +1159,14 @@
                             </dt>
                             <dd class="price">
                               <price-money
-                                ><bdi>{{ item.final_price | money }}</bdi></price-money
+                                ><bdi>{{ vat_mc_final | money }}</bdi></price-money
                               >
                             </dd>
                           </dl>
                         {%- else -%}
                           <dd class="price">
                             <price-money
-                              ><bdi>{{ item.original_price | money }}</bdi></price-money
+                              ><bdi>{{ vat_mc_orig | money }}</bdi></price-money
                             >
                           </dd>
                         {%- endif -%}

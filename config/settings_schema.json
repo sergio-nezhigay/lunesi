@@ -779,6 +779,13 @@
         "default": "Please note: buyer pays taxes and duties",
         "label": "Non-EU message (above threshold)",
         "info": "Message shown when cart total exceeds threshold for non-EU countries."
+      },
+      {
+        "type": "checkbox",
+        "id": "vat_inclusive_prices_enabled",
+        "label": "Show VAT-inclusive prices",
+        "info": "Multiplies displayed prices by the country VAT rate from the vat_rates metaobject",
+        "default": true
       }
     ]
   },
