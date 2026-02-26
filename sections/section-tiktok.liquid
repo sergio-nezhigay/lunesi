@@ -1,3 +1,16 @@
+{%- assign vat_mult = 1 -%}
+{%- if settings.vat_inclusive_prices_enabled -%}
+  {%- assign vat_iso = localization.country.iso_code | upcase -%}
+  {%- if cart.attributes.shipping_country != blank -%}
+    {%- assign vat_iso = cart.attributes.shipping_country | upcase -%}
+  {%- endif -%}
+  {%- for vat_entry in shop.metaobjects.vat_rates.values -%}
+    {%- if vat_entry['country_code'].value == vat_iso -%}
+      {%- assign vat_mult = vat_entry['vat_rate'].value | divided_by: 100.0 | plus: 1 -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 {%- style -%}
   #shopify-section-{{ section.id }} {
     --section-padding-top: {{ section.settings.padding_top }}px;
@@ -61,16 +74,18 @@
                       <div class="main-slide-tiktok">
                         {{ block.settings.main_product.title }}
                       </div>
+                      {%- assign tiktok_price = block.settings.main_product.price | times: vat_mult | round -%}
+                      {%- assign tiktok_compare = block.settings.main_product.compare_at_price | times: vat_mult | round -%}
                       {% if product.compare_at_price > product.price %}
                         <span class="old-price price-slide-tiktok-product">
-                          {{ block.settings.main_product.compare_at_price | money }}
+                          {{ tiktok_compare | money }}
                         </span>
                         <span class="sale-price price-slide-tiktok-product">
-                          {{ block.settings.main_product.price | money }}
+                          {{ tiktok_price | money }}
                         </span>
                       {% else %}
                         <span class="price price-slide-tiktok-product">
-                          {{ block.settings.main_product.price | money }}
+                          {{ tiktok_price | money }}
                         </span>
                       {% endif %}
                     </div>

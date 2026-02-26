@@ -2159,9 +2159,10 @@
       {%- endif -%}
 
       {%- unless settings.disable_view_cart -%}
+        {%- assign vat_cart_total = cart.total_price | times: cart_vat_mult | round -%}
         <div class="subtotal">
           <div class="label h3">{{ 'sections.cart.subtotal' | t }}</div>
-          <div class="value price" id="mini-cart-subtotal">{{ cart.total_price | money_with_currency }}</div>
+          <div class="value price" id="mini-cart-subtotal">{{ vat_cart_total | money_with_currency }}</div>
         </div>
       {%- endunless -%}
 
@@ -2189,7 +2190,8 @@
         >
           {{ 'sections.cart.checkout' | t }}
           {%- if settings.disable_view_cart -%}
-            <span class="price" id="mini-cart-subtotal">{{ cart.total_price | money_with_currency }}</span>
+            {%- assign vat_cart_total = cart.total_price | times: cart_vat_mult | round -%}
+            <span class="price" id="mini-cart-subtotal">{{ vat_cart_total | money_with_currency }}</span>
           {%- endif -%}
         </button>
         {%- unless settings.disable_view_cart -%}
