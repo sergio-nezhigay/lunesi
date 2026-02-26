@@ -32,7 +32,7 @@
 
 <{% if enable_sticky_facet %}sticky-facet-filters class="facet-filters facet-filters-sticky"{% else %}div class="facet-filters"{% endif %} data-id="{{ section.id }}">
   {%- if enable_filtering -%}
-    <facet-filters-form class="facets small-hide">
+    <facet-filters-form class="facets small-hide" data-vat-mult="{{ vat_mult }}">
       <form id="FacetFiltersForm" class="facets__form">
         {%- if results.terms -%}
           <input type="hidden" name="q" value="{{ results.terms | escape }}"/>
@@ -284,9 +284,9 @@
                                   max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
                                   {%- if filter.min_value.value -%}
                                     {%- if uses_comma_decimals %}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                     {%- else -%}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                                      value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
                                     {% endif -%}
                                   {%- endif -%}
                                 />
@@ -303,9 +303,9 @@
                                   max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
                                   {%- if filter.max_value.value -%}
                                     {%- if uses_comma_decimals %}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                     {%- else -%}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                                      value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
                                     {% endif -%}
                                   {%- endif -%}
                                 />

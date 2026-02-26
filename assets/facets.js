@@ -206,8 +206,17 @@ facetsToRender.forEach((element) => {
     event.preventDefault();
 
     const currentForm = event.target.closest('form');
+    const vatMult = parseFloat(this.dataset.vatMult || 1);
+
     if (currentForm.id === 'FacetFiltersFormMobile') {
       const searchParams = this.createSearchParams(currentForm);
+      if (vatMult !== 1) {
+        searchParams.forEach((value, key) => {
+          if (key === 'filter.v.price.gte' || key === 'filter.v.price.lte') {
+            searchParams.set(key, Math.round(parseFloat(value) / vatMult));
+          }
+        });
+      }
       this.onSubmitForm(searchParams.toString(), event);
     }
     else {
@@ -225,6 +234,14 @@ facetsToRender.forEach((element) => {
           searchParams = this.mergeSearchParams(form, searchParams);
         }
       });
+
+      if (vatMult !== 1) {
+        searchParams.forEach((value, key) => {
+          if (key === 'filter.v.price.gte' || key === 'filter.v.price.lte') {
+            searchParams.set(key, Math.round(parseFloat(value) / vatMult));
+          }
+        });
+      }
 
       this.onSubmitForm(searchParams.toString(), event);
     }
