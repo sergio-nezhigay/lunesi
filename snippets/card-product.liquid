@@ -64,21 +64,6 @@
   if button_style == 'transparent'
     assign button_style_class = 'button--transparent'
   endif
-
-  assign vat_mult = 1
-  if settings.vat_inclusive_prices_enabled
-    assign vat_iso = localization.country.iso_code | upcase
-    if cart.attributes.shipping_country != blank
-      assign vat_iso = cart.attributes.shipping_country | upcase
-    endif
-    for vat_entry in shop.metaobjects.vat_rates.values
-      if vat_entry['country_code'].value == vat_iso
-        assign vat_mult = vat_entry['vat_rate'].value | divided_by: 100.0 | plus: 1
-        break
-      endif
-    endfor
-  endif
-  assign vat_card_price = card_product.selected_or_first_available_variant.price | times: vat_mult | round
 -%}
 {%- if enable_color_swatches -%}
   {%- capture color_swatches -%}
@@ -457,7 +442,7 @@
           <span class="buy-bold">JOIN</span>
           <span class="buy-normal">WAITLIST</span>
         </span>
-        <span class="price-display">{{ vat_card_price | money }}</span>
+        <span class="price-display">{{ card_product.selected_or_first_available_variant.price | money }}</span>
       </span>
 
       <svg class="icon icon-cart" aria-hidden="true" focusable="false">
@@ -475,7 +460,7 @@
             <span class="buy-normal">{{ card_product.metafields.custom.buy_text }}</span>
             {%- endif -%}
           </span>
-          <span class="price-display">{{ vat_card_price | money }}</span>
+          <span class="price-display">{{ card_product.selected_or_first_available_variant.price | money }}</span>
         </span>
 
         <svg class="icon icon-cart" aria-hidden="true" focusable="false">

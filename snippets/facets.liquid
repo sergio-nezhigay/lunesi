@@ -1,17 +1,4 @@
 {% comment %}theme-check-disable TemplateLength{% endcomment %}
-{%- assign vat_mult = 1 -%}
-{%- if settings.vat_inclusive_prices_enabled -%}
-  {%- assign vat_iso = localization.country.iso_code | upcase -%}
-  {%- if cart.attributes.shipping_country != blank -%}
-    {%- assign vat_iso = cart.attributes.shipping_country | upcase -%}
-  {%- endif -%}
-  {%- for vat_entry in shop.metaobjects.vat_rates.values -%}
-    {%- if vat_entry['country_code'].value == vat_iso -%}
-      {%- assign vat_mult = vat_entry['vat_rate'].value | divided_by: 100.0 | plus: 1 -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
 {% comment %}
   Renders facets (filtering and sorting)
 
@@ -57,7 +44,7 @@
 <{% if enable_sticky_facet %}sticky-facet-filters class="facet-filters facet-filters-sticky"{% else %}div class="facet-filters"{% endif %} id="main-facet-filters" data-id="{{ section.id }}">
   <div class="page-width{% if enable_filtering and filter_type == 'drawer' %} facets-container-drawer{% endif %}">
     {%- if enable_filtering or enable_sorting or enable_viewing -%}
-      <facet-filters-form class="facets small-hide" data-vat-mult="{{ vat_mult }}">
+      <facet-filters-form class="facets small-hide">
         <form id="FacetSortFiltersForm" class="facets__form"{% if enable_filtering %} data-filter-type="{{ filter_type }}"{% endif %}>
           {%- if results.terms -%}
             <input type="hidden" name="q" value="{{ results.terms | escape }}"/>
@@ -262,11 +249,11 @@
                               assign progress_lower = filter_min_value | times: 100.0 | divided_by: filter_range_max
                               assign progress_upper = filter_max_value | times: 100.0 | divided_by: filter_range_max
         
-                              assign filter_min_price_amount = filter_min_value | times: vat_mult | round | money_without_trailing_zeros
-                              assign filter_max_price_amount = filter_max_value | times: vat_mult | round | money_without_trailing_zeros
-                              assign filter_range_max_amount = filter_range_max | divided_by: 100.0 | times: vat_mult | ceil
-                              assign filter_min_value_amount = filter_min_value | times: vat_mult | round | money_without_trailing_zeros | remove: cart.currency.symbol
-                              assign filter_max_value_amount = filter_max_value | times: vat_mult | round | money_without_trailing_zeros | remove: cart.currency.symbol
+                              assign filter_min_price_amount = filter_min_value | money_without_trailing_zeros
+                              assign filter_max_price_amount = filter_max_value | money_without_trailing_zeros
+                              assign filter_range_max_amount = filter_range_max | divided_by: 100.0 | ceil
+                              assign filter_min_value_amount = filter_min_value | money_without_trailing_zeros | remove: cart.currency.symbol
+                              assign filter_max_value_amount = filter_max_value | money_without_trailing_zeros | remove: cart.currency.symbol
 
                               if uses_comma_decimals
                                 assign filter_min_value_amount = filter_min_value_amount | replace: '.', '' | replace: ',', '.'
@@ -317,12 +304,12 @@
                                         type="number"
                                         placeholder="0"
                                         min="0"
-                                        max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                        max="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                         {%- if filter.min_value.value -%}
                                           {%- if uses_comma_decimals %}
-                                            value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                            value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                           {%- else -%}
-                                            value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
+                                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
                                           {% endif -%}
                                         {%- endif -%}
                                       />
@@ -334,14 +321,14 @@
                                         name="{{ filter.max_value.param_name }}"
                                         id="Filter-{{ filter.label | escape }}-LTE"
                                         type="number"
-                                        placeholder="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                        placeholder="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                         min="0"
-                                        max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                        max="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                         {%- if filter.max_value.value -%}
                                           {%- if uses_comma_decimals %}
-                                            value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                            value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                           {%- else -%}
-                                            value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
+                                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
                                           {% endif -%}
                                         {%- endif -%}
                                       />
@@ -463,7 +450,7 @@
                 {% render 'icon', icon: 'close-alt' %}
               </span>
             </summary>
-            <facet-filters-form data-vat-mult="{{ vat_mult }}">
+            <facet-filters-form>
               <form id="FacetFiltersFormMobile" class="mobile-facets">
                 <div class="mobile-facets__inner">
                   <div class="mobile-facets__header">
@@ -684,12 +671,12 @@
                                       type="number"
                                       placeholder="0"
                                       min="0"
-                                      max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                      max="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                       {%- if filter.min_value.value -%}
                                         {%- if uses_comma_decimals %}
-                                          value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                          value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                         {%- else -%}
-                                          value="{{ filter.min_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
+                                          value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
                                         {% endif -%}
                                       {%- endif -%}
                                     />
@@ -701,14 +688,14 @@
                                       name="{{ filter.max_value.param_name }}"
                                       id="Mobile-Filter-{{ filter.label | escape }}-LTE"
                                       type="number"
-                                      placeholder="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                      placeholder="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                       min="0"
-                                      max="{{ filter.range_max | divided_by: 100.0 | times: vat_mult | ceil }}"
+                                      max="{{ filter.range_max | divided_by: 100.0 | ceil }}"
                                       {%- if filter.max_value.value -%}
                                         {%- if uses_comma_decimals %}
-                                          value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                          value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
                                         {%- else -%}
-                                          value="{{ filter.max_value.value | times: vat_mult | round | money_without_currency | replace: ',', '' }}"
+                                          value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
                                         {% endif -%}
                                       {%- endif -%}
                                     />
@@ -781,15 +768,7 @@
               <facet-remove>
                 <a class="active-facets__button" href="{{ shop.url }}{{ filter.url_to_remove }}">
                   {% render 'icon', icon: 'close-alt' %}
-                  {%- assign filter_min_value_money = 0 | money_without_trailing_zeros -%}
-                  {%- if filter.min_value.value != nil -%}
-                    {%- assign filter_min_value_money = filter.min_value.value | times: vat_mult | round | money_without_trailing_zeros -%}
-                  {%- endif -%}
-                  {%- assign filter_max_value_money = filter.range_max | times: vat_mult | round | money_without_trailing_zeros -%}
-                  {%- if filter.max_value.value != nil -%}
-                    {%- assign filter_max_value_money = filter.max_value.value | times: vat_mult | round | money_without_trailing_zeros -%}
-                  {%- endif -%}
-                  {{ filter_min_value_money }} &ndash; {{ filter_max_value_money }}
+                  {% if filter.min_value.value != nil %}{{ filter.min_value.value | money_without_trailing_zeros }}{% else %}{{ 0 | money_without_trailing_zeros }}{% endif %} &ndash; {% if filter.max_value.value != nil %}{{ filter.max_value.value | money_without_trailing_zeros }}{% else %}{{ filter.range_max | money_without_trailing_zeros }}{% endif %}
                 </a>
               </facet-remove>
             {%- endif -%}

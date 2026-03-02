@@ -12,20 +12,6 @@
     endfor
     assign items_in_cart = cart.item_count | minus: gift_wraps_in_cart
   endif
-
-  assign cart_vat_mult = 1
-  if settings.vat_inclusive_prices_enabled
-    assign vat_iso = localization.country.iso_code | upcase
-    if cart.attributes.shipping_country != blank
-      assign vat_iso = cart.attributes.shipping_country | upcase
-    endif
-    for vat_entry in shop.metaobjects.vat_rates.values
-      if vat_entry['country_code'].value == vat_iso
-        assign cart_vat_mult = vat_entry.vat_rate.value | divided_by: 100.0 | plus: 1
-        break
-      endif
-    endfor
-  endif
 -%}
 
 {%- style -%}
@@ -394,10 +380,6 @@
                   </td>
 
                   {%- unless is_promo_gift -%}
-                    {%- assign vat_ci_orig = item.original_price | times: cart_vat_mult | round -%}
-                    {%- assign vat_ci_final = item.final_price | times: cart_vat_mult | round -%}
-                    {%- assign vatvat_ci_orig_line = item.original_line_price | times: cart_vat_mult | round -%}
-                    {%- assign vatvat_ci_final_line = item.final_line_price | times: cart_vat_mult | round -%}
                     <td class="cart-item__prices small-hide right">
                       <div class="cart-item__price-wrapper">
                         {%- if item.original_price != item.final_price -%}
@@ -410,9 +392,9 @@
                                 <price-money
                                   ><bdi>
                                     {%- if settings.currency_code_enabled -%}
-                                      {{- vat_ci_orig | money_with_currency -}}
+                                      {{- item.original_price | money_with_currency -}}
                                     {%- else -%}
-                                      {{- vat_ci_orig | money -}}
+                                      {{- item.original_price | money -}}
                                     {%- endif -%}
                                   </bdi></price-money
                                 >
@@ -425,9 +407,9 @@
                               <price-money
                                 ><bdi>
                                   {%- if settings.currency_code_enabled -%}
-                                    {{- vat_ci_final | money_with_currency -}}
+                                    {{- item.final_price | money_with_currency -}}
                                   {%- else -%}
-                                    {{- vat_ci_final | money -}}
+                                    {{- item.final_price | money -}}
                                   {%- endif -%}
                                 </bdi></price-money
                               >
@@ -438,9 +420,9 @@
                             <price-money
                               ><bdi>
                                 {%- if settings.currency_code_enabled -%}
-                                  {{- vat_ci_orig | money_with_currency -}}
+                                  {{- item.original_price | money_with_currency -}}
                                 {%- else -%}
-                                  {{- vat_ci_orig | money -}}
+                                  {{- item.original_price | money -}}
                                 {%- endif -%}
                               </bdi></price-money
                             >
@@ -484,9 +466,9 @@
                                 <price-money
                                   ><bdi>
                                     {%- if settings.currency_code_enabled -%}
-                                      {{- vatvat_ci_orig_line | money_with_currency -}}
+                                      {{- item.original_line_price | money_with_currency -}}
                                     {%- else -%}
-                                      {{- vatvat_ci_orig_line | money -}}
+                                      {{- item.original_line_price | money -}}
                                     {%- endif -%}
                                   </bdi></price-money
                                 >
@@ -499,9 +481,9 @@
                               <price-money
                                 ><bdi>
                                   {%- if settings.currency_code_enabled -%}
-                                    {{- vatvat_ci_final_line | money_with_currency -}}
+                                    {{- item.final_line_price | money_with_currency -}}
                                   {%- else -%}
-                                    {{- vatvat_ci_final_line | money -}}
+                                    {{- item.final_line_price | money -}}
                                   {%- endif -%}
                                 </bdi></price-money
                               >
@@ -512,9 +494,9 @@
                             <price-money
                               ><bdi>
                                 {%- if settings.currency_code_enabled -%}
-                                  {{- vatvat_ci_orig_line | money_with_currency -}}
+                                  {{- item.original_line_price | money_with_currency -}}
                                 {%- else -%}
-                                  {{- vatvat_ci_orig_line | money -}}
+                                  {{- item.original_line_price | money -}}
                                 {%- endif -%}
                               </bdi></price-money
                             >
@@ -716,9 +698,9 @@
                                 <price-money
                                   ><bdi>
                                     {%- if settings.currency_code_enabled -%}
-                                      {{- vatvat_ci_orig_line | money_with_currency -}}
+                                      {{- item.original_line_price | money_with_currency -}}
                                     {%- else -%}
-                                      {{- vatvat_ci_orig_line | money -}}
+                                      {{- item.original_line_price | money -}}
                                     {%- endif -%}
                                   </bdi></price-money
                                 >
@@ -731,9 +713,9 @@
                               <price-money
                                 ><bdi>
                                   {%- if settings.currency_code_enabled -%}
-                                    {{- vatvat_ci_final_line | money_with_currency -}}
+                                    {{- item.final_line_price | money_with_currency -}}
                                   {%- else -%}
-                                    {{- vatvat_ci_final_line | money -}}
+                                    {{- item.final_line_price | money -}}
                                   {%- endif -%}
                                 </bdi></price-money
                               >
@@ -744,9 +726,9 @@
                             <price-money
                               ><bdi>
                                 {%- if settings.currency_code_enabled -%}
-                                  {{- vatvat_ci_orig_line | money_with_currency -}}
+                                  {{- item.original_line_price | money_with_currency -}}
                                 {%- else -%}
-                                  {{- vatvat_ci_orig_line | money -}}
+                                  {{- item.original_line_price | money -}}
                                 {%- endif -%}
                               </bdi></price-money
                             >
