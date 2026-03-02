@@ -288,13 +288,6 @@ localization-form .localization-selector {
   max-width: 100%;
   height: auto;
   color: currentColor;
-  /* Видаляємо transition з CSS, тепер керуємо ним через JS */
-  /* transition: filter 0.3s ease; */
-  /* Додаємо will-change для оптимізації анімацій */
-  will-change: filter;
-  /* Оптимізація для кращої продуктивності анімацій */
-  transform: translateZ(0); /* Створює новий композитний шар */
-  backface-visibility: hidden;
 }
 
 /* Забезпечуємо стабільні розміри для логотипу */
@@ -770,7 +763,7 @@ localization-form .localization-selector {
       const header = document.querySelector('.header-wrapper');
 
       // Встановлюємо transition тільки коли потрібно
-      const transitionValue = withTransition ? 'filter 0.3s ease' : 'none';
+      const transitionValue = withTransition ? 'color 0.3s ease' : 'none';
 
       if (newState === 'inverted') {
         // Стан для головної сторінки на топі
@@ -782,11 +775,13 @@ localization-form .localization-selector {
 
         headerLogosDesktop.forEach(logo => {
           logo.style.transition = transitionValue;
-          logo.style.filter = 'invert(100%)';
+          logo.style.filter = '';
+          logo.style.color = '#e8c8d8';
         });
         headerLogosMobile.forEach(logo => {
           logo.style.transition = transitionValue;
-          logo.style.filter = 'invert(100%)';
+          logo.style.filter = '';
+          logo.style.color = '#e8c8d8';
         });
         if (headerRightText) {
           headerRightText.style.color = 'white';
@@ -800,11 +795,13 @@ localization-form .localization-selector {
 
         headerLogosDesktop.forEach(logo => {
           logo.style.transition = transitionValue;
-          logo.style.filter = 'invert(0%)';
+          logo.style.filter = '';
+          logo.style.color = '#e8c8d8';
         });
         headerLogosMobile.forEach(logo => {
           logo.style.transition = transitionValue;
-          logo.style.filter = 'invert(0%)';
+          logo.style.filter = '';
+          logo.style.color = '#e8c8d8';
         });
         if (headerRightText) {
           headerRightText.style.color = 'rgb(var(--color-header-foreground))';

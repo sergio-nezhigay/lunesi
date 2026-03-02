@@ -12,7 +12,7 @@
 * **Schema Safety:** When modifying `schema` JSON in sections, always validate syntax to prevent JSON errors that break the editor.
 
 ## 3. Critical Commands
-* **Start Local Dev:** `npm run dev` (Use this for all previews).
+* **Start Local Dev:** `npm run dev` (Use   this for all previews).
 * **Lint / Validate:** `shopify theme check` (Run this before marking a task complete).
 * **Pull Changes:** `shopify theme pull` (To sync remote changes to local).
 * **FORBIDDEN:** `shopify theme push` (Do not use).
