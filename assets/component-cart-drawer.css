@@ -184,6 +184,7 @@ details[open].menu-opening > .cart-drawer {
   position: relative;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 @media screen and (min-width: 750px) {
