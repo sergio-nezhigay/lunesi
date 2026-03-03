@@ -181,6 +181,9 @@ details[open].menu-opening > .cart-drawer {
 .mini-cart__header {
   padding: 2rem;
   padding-bottom: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 @media screen and (min-width: 750px) {
